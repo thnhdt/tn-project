@@ -1,0 +1,11 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+.next/
+.vinext/
+.wrangler/
+coverage/
+npm-debug.log*

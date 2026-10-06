@@ -1,0 +1,9 @@
+# Hai function này tự kiểm soát truy cập nên tắt bước kiểm tra JWT của gateway:
+# giphy là endpoint công khai (link tải GIF không gửi được header), còn
+# telegram-bot xác thực bằng secret token của webhook.
+
+[functions.giphy]
+verify_jwt = false
+
+[functions.telegram-bot]
+verify_jwt = false

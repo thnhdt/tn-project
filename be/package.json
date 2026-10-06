@@ -1,0 +1,19 @@
+{
+    "name": "le-thanh-dat-graduation-be",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "engines": {
+        "node": ">=22"
+    },
+    "scripts": {
+        "db:migrate": "node scripts/migrate.mjs",
+        "db:seed": "node scripts/seed.mjs",
+        "db:admin": "node scripts/grant-admin.mjs",
+        "telegram:webhook": "node scripts/telegram-webhook.mjs"
+    },
+    "dependencies": {
+        "dotenv": "^17.2.1",
+        "pg": "^8.16.3"
+    }
+}

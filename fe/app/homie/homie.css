@@ -1,0 +1,682 @@
+.homie-shell {
+    position: relative;
+    display: grid;
+    min-height: 100vh;
+    overflow: hidden;
+    place-items: center;
+    padding: 100px 24px 64px;
+    color: #082d72;
+    background: #eaf5ff;
+    font-family: var(--font-be-vietnam);
+}
+
+.homie-shell::before {
+    position: absolute;
+    bottom: 8%;
+    left: 6%;
+    width: 90px;
+    height: 60px;
+    border-top: 4px solid #0868ff;
+    border-radius: 50%;
+    content: "";
+    opacity: 0.72;
+    transform: rotate(-18deg);
+}
+
+.homie-shell::after {
+    position: absolute;
+    top: 12%;
+    right: 7%;
+    color: #0868ff;
+    content: "///  ✦  ///";
+    font-family: var(--font-doodle);
+    font-size: 25px;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    transform: rotate(8deg);
+}
+
+.homie-grid {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(rgba(8, 104, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(8, 104, 255, 0.1) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+
+.homie-logo {
+    position: absolute;
+    top: 24px;
+    left: 28px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.homie-logo span {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    color: #ffffff;
+    background: #0868ff;
+    box-shadow: 3px 3px 0 #082d72;
+    font-weight: 900;
+}
+
+.homie-logo strong {
+    font-family: var(--font-roboto-mono);
+    font-size: 10px;
+}
+
+.homie-lookup-card {
+    position: relative;
+    z-index: 2;
+    width: min(760px, 100%);
+    border: 3px solid #082d72;
+    background: #ffffff;
+    box-shadow: 12px 12px 0 #082d72;
+    transform: rotate(-0.6deg);
+}
+
+
+.homie-lookup-card::after {
+    position: absolute;
+    top: -22px;
+    left: 14%;
+    width: 115px;
+    height: 35px;
+    background:
+        repeating-linear-gradient(
+            -45deg,
+            rgba(217, 255, 81, 0.88) 0 7px,
+            rgba(192, 232, 55, 0.88) 7px 9px
+        );
+    content: "";
+    transform: rotate(-4deg);
+}
+
+.homie-window-bar {
+    display: flex;
+    height: 42px;
+    align-items: center;
+    gap: 6px;
+    padding: 0 12px;
+    border-bottom: 3px solid #082d72;
+    background: #0868ff;
+}
+
+.homie-window-bar span {
+    width: 11px;
+    height: 11px;
+    border: 1.5px solid #082d72;
+    border-radius: 50%;
+    background: #ffffff;
+}
+
+.homie-window-bar b {
+    margin-left: 6px;
+    color: #ffffff;
+    font-family: var(--font-roboto-mono);
+    font-size: 9px;
+}
+
+.homie-card-body {
+    position: relative;
+    padding: clamp(32px, 7vw, 72px);
+}
+
+.homie-card-body::before {
+    position: absolute;
+    top: 97px;
+    left: 20px;
+    color: #0868ff;
+    content: "↘";
+    font-family: var(--font-doodle);
+    font-size: 42px;
+    font-weight: 750;
+    transform: rotate(18deg);
+}
+
+.homie-sticker {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    padding: 9px 13px;
+    border: 2px solid #082d72;
+    background: #d9ff51;
+    box-shadow: 3px 3px 0 #082d72;
+    font-family: var(--font-roboto-mono);
+    font-size: 12px;
+    font-weight: 900;
+    text-align: center;
+    transform: rotate(5deg);
+}
+
+.homie-sticker small {
+    display: block;
+    margin-top: 2px;
+    font-size: 7px;
+}
+
+.homie-kicker {
+    margin: 0 0 10px;
+    color: #0868ff;
+    font-family: var(--font-doodle);
+    font-size: 22px;
+    font-weight: 700;
+    transform: rotate(-2deg);
+}
+
+.homie-card-body h1,
+.homie-invite-heading h1 {
+    margin: 0;
+    font-size: clamp(46px, 8vw, 84px);
+    font-weight: 900;
+    letter-spacing: -0.07em;
+    line-height: 0.9;
+}
+
+.homie-card-body h1 span,
+.homie-invite-heading h1 span {
+    display: block;
+    width: fit-content;
+    margin-top: 8px;
+    padding: 1px 9px 8px;
+    color: #ffffff;
+    background: #0868ff;
+    font-family: var(--font-doodle);
+    font-weight: 650;
+    letter-spacing: -0.04em;
+    transform: rotate(-1deg);
+}
+
+.homie-card-body h1 span::after,
+.homie-invite-heading h1 span::after {
+    display: block;
+    width: 92%;
+    height: 7px;
+    margin: 2px auto -8px;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    content: "";
+    opacity: 0.8;
+    transform: rotate(1deg);
+}
+
+.homie-description {
+    max-width: 560px;
+    margin: 28px 0;
+    color: #486991;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.homie-camera {
+    position: relative;
+    display: none;
+    margin-bottom: 14px;
+    overflow: hidden;
+    border: 2px solid #082d72;
+    background: #082d72;
+    aspect-ratio: 4 / 3;
+}
+
+.homie-camera.is-open {
+    display: block;
+}
+
+.homie-camera video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.homie-camera-frame {
+    position: absolute;
+    inset: 18%;
+    border: 3px dashed #d9ff51;
+    border-radius: 8px;
+}
+
+.homie-qr-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.homie-qr-actions button,
+.homie-qr-actions label {
+    display: grid;
+    min-height: 52px;
+    padding: 10px 12px;
+    place-items: center;
+    border: 2px solid #082d72;
+    color: #ffffff;
+    background: #0868ff;
+    box-shadow: 4px 4px 0 #082d72;
+    cursor: pointer;
+    font-family: var(--font-roboto-mono);
+    font-size: 11px;
+    font-weight: 800;
+    text-align: center;
+}
+
+.homie-qr-actions label {
+    color: #082d72;
+    background: #d9ff51;
+}
+
+.homie-qr-actions input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.homie-qr-actions label:focus-within {
+    outline: 3px solid #ff8fcf;
+    outline-offset: 2px;
+}
+
+.homie-qr-actions button:disabled,
+.homie-qr-actions .is-disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.homie-error {
+    margin: 12px 0 0;
+    padding: 9px 11px;
+    border: 1.5px solid #a71635;
+    color: #a71635;
+    background: #fff0f4;
+    font-size: 11px;
+}
+
+.homie-helper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    color: #6680a7;
+    font-size: 9px;
+}
+
+.homie-helper::after {
+    width: 40px;
+    height: 16px;
+    border-top: 3px solid #0868ff;
+    border-radius: 50%;
+    content: "";
+    transform: rotate(-8deg);
+}
+
+.homie-helper span,
+.homie-helper code {
+    font-family: var(--font-roboto-mono);
+}
+
+.homie-helper span {
+    padding: 3px 5px;
+    color: #082d72;
+    background: #d9ff51;
+    font-weight: 800;
+}
+
+.homie-helper p {
+    margin: 0;
+}
+
+.homie-doodle {
+    position: absolute;
+    z-index: 3;
+    margin: 0;
+    color: #0868ff;
+    font-family: var(--font-doodle);
+    font-size: 22px;
+    font-weight: 650;
+}
+
+.doodle-one {
+    top: 18%;
+    left: 4%;
+    transform: rotate(-9deg);
+}
+
+.doodle-one::after {
+    display: block;
+    width: 100%;
+    height: 8px;
+    border-top: 3px solid currentColor;
+    border-radius: 50%;
+    content: "";
+    transform: rotate(4deg);
+}
+
+.doodle-two {
+    right: 4%;
+    bottom: 20%;
+    transform: rotate(7deg);
+}
+
+.homie-shell > footer {
+    position: absolute;
+    right: 24px;
+    bottom: 18px;
+    color: #496a95;
+    font-family: var(--font-roboto-mono);
+    font-size: 8px;
+}
+
+.homie-result-shell {
+    padding-top: 120px;
+}
+
+.homie-invitation {
+    position: relative;
+    z-index: 2;
+    width: min(900px, 100%);
+}
+
+.homie-invite-heading {
+    margin-bottom: 36px;
+}
+
+.homie-invite-heading > p {
+    margin: 0 0 15px;
+    font-family: var(--font-roboto-mono);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.homie-invite-heading h1 span {
+    display: inline-block;
+    margin-left: 15px;
+}
+
+.homie-invite-heading > small {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 5px 8px;
+    border: 1.5px solid #082d72;
+    background: #ffffff;
+    font-family: var(--font-roboto-mono);
+}
+
+.homie-letter {
+    position: relative;
+    padding: clamp(30px, 7vw, 70px);
+    border: 3px solid #082d72;
+    background: #fffef8;
+    box-shadow: 10px 10px 0 #082d72;
+    transform: rotate(-1deg);
+}
+
+
+.homie-letter::after {
+    position: absolute;
+    right: 24px;
+    bottom: -34px;
+    color: #0868ff;
+    content: "real words > perfect code";
+    font-family: var(--font-doodle);
+    font-size: 17px;
+    font-weight: 700;
+    transform: rotate(-4deg);
+}
+
+.homie-tape {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    width: 130px;
+    height: 36px;
+    background: rgba(217, 255, 81, 0.82);
+    transform: translateX(-50%) rotate(-3deg);
+}
+
+.homie-letter > span {
+    font-family: var(--font-roboto-mono);
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.homie-letter p {
+    margin: 30px 0;
+    font-family: var(--font-doodle);
+    font-size: clamp(24px, 4vw, 38px);
+    font-weight: 520;
+    line-height: 1.55;
+}
+
+.homie-letter strong {
+    display: block;
+    text-align: right;
+}
+
+.homie-event-card {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 56px;
+    border: 2px solid #082d72;
+    background: #ffffff;
+    box-shadow: 5px 5px 0 rgba(8, 45, 114, 0.18);
+    transform: rotate(0.4deg);
+}
+
+.homie-event-card > div {
+    padding: 17px 20px;
+    border-right: 1.5px dashed #9eb4d4;
+}
+
+.homie-event-card > div:last-child {
+    border-right: 0;
+}
+
+.homie-event-card small,
+.homie-event-card strong {
+    display: block;
+}
+
+.homie-event-card small {
+    margin-bottom: 5px;
+    color: #6680a7;
+    font-family: var(--font-roboto-mono);
+    font-size: 8px;
+}
+
+.homie-event-card strong {
+    font-size: 12px;
+}
+
+.homie-event-card span {
+    display: block;
+    margin-top: 4px;
+    color: #5d77a1;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.homie-photo {
+    position: relative;
+    width: min(420px, 100%);
+    margin: 0 0 48px;
+    padding: 14px 14px 12px;
+    border: 2px solid #082d72;
+    background: #ffffff;
+    box-shadow: 6px 6px 0 rgba(8, 45, 114, 0.18);
+    transform: rotate(-1.4deg);
+}
+
+.homie-photo img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+}
+
+.homie-photo figcaption {
+    margin-top: 10px;
+    color: #0868ff;
+    text-align: center;
+    font-family: var(--font-doodle);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.homie-invitation .countdown-section {
+    width: 100%;
+    margin-top: 56px;
+    padding: 0;
+}
+
+.homie-map {
+    margin-top: 22px;
+    border: 2px solid #082d72;
+    background: #ffffff;
+    box-shadow: 5px 5px 0 rgba(8, 45, 114, 0.18);
+}
+
+.homie-map iframe {
+    display: block;
+    width: 100%;
+    height: 320px;
+    border: 0;
+}
+
+.homie-result-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.homie-result-actions a,
+.homie-not-found a {
+    padding: 11px 14px;
+    border: 1.5px solid #082d72;
+    color: #ffffff;
+    background: #0868ff;
+    box-shadow: 3px 3px 0 #082d72;
+    text-decoration: none;
+    font-family: var(--font-roboto-mono);
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.homie-result-actions a:last-child {
+    color: #082d72;
+    background: #ffffff;
+}
+
+.result-doodle {
+    right: 3%;
+    top: 18%;
+    transform: rotate(7deg);
+}
+
+.homie-loading,
+.homie-not-found {
+    position: relative;
+    z-index: 2;
+    max-width: 620px;
+    padding: 50px;
+    border: 3px solid #082d72;
+    background: #ffffff;
+    box-shadow: 8px 8px 0 #082d72;
+}
+
+.homie-loading span,
+.homie-not-found > span {
+    font-family: var(--font-roboto-mono);
+    font-size: 9px;
+}
+
+.homie-loading strong {
+    display: block;
+    margin-top: 10px;
+    font-family: var(--font-doodle);
+    font-size: 28px;
+}
+
+.homie-not-found h1 {
+    margin: 14px 0;
+    font-size: 40px;
+    letter-spacing: -0.05em;
+}
+
+.homie-not-found p {
+    margin-bottom: 28px;
+}
+
+@media (max-width: 740px) {
+    .homie-qr-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .homie-shell {
+        align-items: start;
+        padding: 100px 14px 50px;
+    }
+
+    .homie-logo {
+        left: 18px;
+    }
+
+    .homie-card-body {
+        padding-top: 80px;
+    }
+
+    .homie-card-body::before,
+    .homie-shell::before,
+    .homie-shell::after {
+        display: none;
+    }
+
+    .homie-helper {
+        align-items: start;
+        flex-wrap: wrap;
+    }
+
+    .homie-doodle {
+        display: none;
+    }
+
+    .homie-invite-heading h1 span {
+        display: block;
+        margin-left: 0;
+    }
+
+    .homie-event-card {
+        grid-template-columns: 1fr;
+    }
+
+    .homie-event-card > div {
+        border-right: 0;
+        border-bottom: 1.5px dashed #9eb4d4;
+    }
+
+    .homie-result-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .homie-letter::after {
+        right: 8px;
+        font-size: 14px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .homie-shell *,
+    .homie-shell *::before,
+    .homie-shell *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
