@@ -2,25 +2,33 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { recordPageVisit } from "./lib/api";
+import { getVisitorId, recordPageVisit, reportError } from "./lib/api";
 
-const visitorIdKey = "graduation_visitor_id";
 const lastVisitKey = "graduation_last_visit";
-
-function getVisitorId(): string {
-    const existingId = window.localStorage.getItem(visitorIdKey);
-
-    if (existingId) {
-        return existingId;
-    }
-
-    const visitorId = window.crypto.randomUUID();
-    window.localStorage.setItem(visitorIdKey, visitorId);
-    return visitorId;
-}
 
 export function PageVisitTracker() {
     const pathname = usePathname();
+
+    // Lỗi JavaScript không ai bắt: báo về Telegram để biết khách đang gặp sự cố.
+    useEffect(() => {
+        const onError = (event: ErrorEvent) => {
+            // "Script error." là lỗi từ script bên thứ ba, không có thông tin gì.
+            if (event.message && event.message !== "Script error.") {
+                reportError("window", event.error ?? event.message);
+            }
+        };
+        const onRejection = (event: PromiseRejectionEvent) => {
+            reportError("promise", event.reason);
+        };
+
+        window.addEventListener("error", onError);
+        window.addEventListener("unhandledrejection", onRejection);
+
+        return () => {
+            window.removeEventListener("error", onError);
+            window.removeEventListener("unhandledrejection", onRejection);
+        };
+    }, []);
 
     useEffect(() => {
         if (!pathname || pathname.startsWith("/dev")) {

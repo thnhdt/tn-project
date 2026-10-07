@@ -135,6 +135,7 @@ Toàn bộ bảo mật nằm ở `be/supabase/migrations/008_static_site_access.
 | `page_visits` | không truy cập | đọc |
 | Ảnh trong bucket `invitation-photos` | xem khi biết đúng tên file | tải lên, xoá |
 | `admins` | không truy cập | không truy cập |
+| `client_errors` | không truy cập | không truy cập (chỉ Edge Function) |
 | `open_invitation(code)` | gọi được | gọi được |
 | `record_page_visit(...)` | gọi được | gọi được |
 
@@ -155,6 +156,22 @@ với secret đã khai báo cho function) vào `.env.local` rồi trỏ webhook 
 cd be
 npm run telegram:webhook
 ```
+
+### Báo lỗi của khách
+
+Edge Function `error-report` là webhook công khai: khi khách gặp lỗi (QR không
+hợp lệ, không mở được thiệp, không lấy được GIF, lỗi JavaScript), trình duyệt
+gọi vào đây, function ghi lỗi vào bảng `client_errors` rồi nhắn cho `CHAT_ID`
+qua Telegram. Để bot không bị spam, mỗi visitor chỉ báo tối đa 5 lỗi và cả
+website tối đa 20 tin trong 10 phút; lỗi trùng không báo lại. Lỗi khi chạy ở
+`localhost` và trong dashboard `/dev` không được báo.
+
+```bash
+cd be
+npx supabase functions deploy error-report
+```
+
+Function này dùng chung secret `TELE_BOT_TOKEN` và `CHAT_ID` với `telegram-bot`.
 
 Không còn tiến trình monitor chạy nền nên bot không tự gửi cảnh báo downtime.
 Nếu cần, dùng một dịch vụ uptime bên ngoài trỏ vào domain của website.

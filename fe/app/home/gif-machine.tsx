@@ -1,7 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { errorMessage, getRandomGif, giphyFunctionUrl, type RandomGif } from "../lib/api";
+import {
+    errorMessage,
+    getRandomGif,
+    giphyFunctionUrl,
+    type RandomGif,
+    reportError,
+} from "../lib/api";
 import { gifMachine as content } from "../site-content";
 
 export function GifMachine() {
@@ -16,6 +22,7 @@ export function GifMachine() {
         try {
             setGif(await getRandomGif());
         } catch (generateError) {
+            reportError("gif", generateError);
             setError(errorMessage(generateError));
         } finally {
             setLoading(false);

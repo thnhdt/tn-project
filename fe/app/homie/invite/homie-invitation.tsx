@@ -9,6 +9,7 @@ import {
     invitationPhotoUrl,
     openInvitation,
     readInviteCode,
+    reportError,
     saveInviteCode,
 } from "../../lib/api";
 import {
@@ -47,8 +48,12 @@ export function HomieInvitation() {
 
                 // Mã đã bị thay bằng QR mới: quên mã cũ để khách quét lại.
                 saveInviteCode(null);
+                if (code) {
+                    reportError("invite", "Mã QR đã lưu không còn hợp lệ.");
+                }
                 setError(wrongCodeMessage);
             } catch (loadError) {
+                reportError("invite", loadError);
                 setError(errorMessage(loadError, "Không tìm thấy lời mời này."));
             } finally {
                 setLoading(false);

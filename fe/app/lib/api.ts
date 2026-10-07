@@ -7,6 +7,8 @@ export const giphyFunctionUrl = `${supabaseUrl}/functions/v1/giphy`;
 export const photoBucket = "invitation-photos";
 
 const inviteCodeKey = "homie_invite_code";
+const visitorIdKey = "graduation_visitor_id";
+const reportedErrors = new Set<string>();
 
 export type GuestInvitation = {
     display_name: string;
@@ -49,6 +51,55 @@ async function callRpc<T>(
     }
 
     return (await response.json()) as T;
+}
+
+/** Mã ẩn danh của trình duyệt này, dùng cho log truy cập và báo lỗi. */
+export function getVisitorId(): string {
+    const existingId = window.localStorage.getItem(visitorIdKey);
+    if (existingId) {
+        return existingId;
+    }
+
+    const visitorId = window.crypto.randomUUID();
+    window.localStorage.setItem(visitorIdKey, visitorId);
+    return visitorId;
+}
+
+/**
+ * Báo một lỗi khách gặp phải cho quản trị viên qua Telegram (Edge Function
+ * `error-report`). Không báo khi đang chạy local hoặc trong dashboard, và mỗi
+ * lỗi chỉ báo một lần cho mỗi lần mở trang.
+ */
+export function reportError(source: string, error: unknown) {
+    try {
+        const message = (error instanceof Error ? error.message : String(error)).trim();
+        const key = `${source}:${message}`;
+        if (
+            !message ||
+            reportedErrors.has(key) ||
+            ["localhost", "127.0.0.1"].includes(window.location.hostname) ||
+            window.location.pathname.startsWith("/dev")
+        ) {
+            return;
+        }
+
+        reportedErrors.add(key);
+        void fetch(`${supabaseUrl}/functions/v1/error-report`, {
+            method: "POST",
+            keepalive: true,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                visitorId: getVisitorId(),
+                path: window.location.pathname,
+                source,
+                message: message.slice(0, 500),
+            }),
+        }).catch(() => {
+            // Báo lỗi không bao giờ được làm phiền khách.
+        });
+    } catch {
+        // Trình duyệt chặn localStorage hoặc fetch: bỏ qua.
+    }
 }
 
 /** Đường dẫn công khai của ảnh chụp chung (tên file là UUID ngẫu nhiên). */

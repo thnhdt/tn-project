@@ -9,3 +9,4 @@ dist/
 .wrangler/
 coverage/
 npm-debug.log*
+be/supabase/.temp/

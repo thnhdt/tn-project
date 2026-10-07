@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
-import { errorMessage, openInvitation as fetchInvitation, saveInviteCode } from "../lib/api";
+import {
+    errorMessage,
+    openInvitation as fetchInvitation,
+    reportError,
+    saveInviteCode,
+} from "../lib/api";
 import { decodeImageData, decodeQrFile, extractInviteCode } from "../lib/qr";
 
 type Status = "idle" | "camera" | "checking";
@@ -37,6 +42,7 @@ export function QrGate() {
             saveInviteCode(code);
             window.location.assign("/homie/invite");
         } catch (verifyError) {
+            reportError("qr-gate", verifyError);
             setError(errorMessage(verifyError));
             setStatus("idle");
         }
