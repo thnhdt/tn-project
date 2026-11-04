@@ -1,5 +1,53 @@
 # Graduation Invitation — Lê Thành Đạt
 
+## Domain gốc và subdomain thiệp mời
+
+Repository chứa hai website triển khai riêng:
+
+| Tên miền | Nội dung | Thư mục đưa lên hosting |
+| --- | --- | --- |
+| `thnhdt.site` | Trang chào, thông báo đang xây nhà và link mở thiệp | `landing/` |
+| `tn.thnhdt.site` | Website tốt nghiệp hiện tại | `fe/dist/client/` sau khi build |
+
+Trang chào là HTML/CSS tĩnh, không cần cài dependency hay build. Chữ “đây” và
+nút “Mở thiệp mời của tui” đều dẫn đến `https://tn.thnhdt.site/` trong cùng tab.
+Trang không tự động chuyển hướng để khách có thời gian đọc lời nhắn.
+Sửa nội dung trong `landing/index.html`, giao diện trong `landing/styles.css`.
+Font Be Vietnam Pro đã được kiểm tra subset `vietnamese` trong metadata Google Fonts:
+<https://github.com/google/fonts/blob/main/ofl/bevietnampro/METADATA.pb>.
+
+Xem riêng trang chào tại local (chạy từ thư mục repository):
+
+```bash
+python3 -m http.server 4174 --directory landing
+```
+
+Mở `http://localhost:4174`. Link mở thiệp luôn dùng tên miền production,
+nên chỉ mở được thiệp sau khi subdomain đã deploy.
+
+Ví dụ dùng Cloudflare Pages, tạo **hai Pages project** từ cùng repository:
+
+| Cấu hình | Project trang chào | Project thiệp tốt nghiệp |
+| --- | --- | --- |
+| Root directory | Để trống (gốc repository) | `fe` |
+| Build command | `exit 0` | `npm run build` |
+| Build output directory | `landing` | `dist/client` |
+| Custom domain | `thnhdt.site` | `tn.thnhdt.site` |
+
+Project thiệp cần các biến môi trường frontend như phần cấu hình hiện tại;
+project trang chào không cần biến môi trường. Sau khi deploy thành công, vào
+**Workers & Pages → chọn project → Custom domains → Set up a domain** để gắn
+đúng tên miền cho từng project. Thêm custom domain trong Pages trước khi tạo
+CNAME thủ công; dùng các bản ghi DNS mà dashboard hướng dẫn. Với domain gốc
+được quản lý như một zone, Cloudflare Pages yêu cầu zone/nameserver ở Cloudflare.
+Không cấu hình redirect toàn bộ domain gốc sang `tn`, vì domain gốc cần hiển thị
+trang chào. Hướng dẫn chính thức:
+<https://developers.cloudflare.com/pages/configuration/custom-domains/>.
+
+Sau khi gắn domain, kiểm tra HTTPS của cả hai trang và bấm link từ domain gốc.
+Khi tạo QR/thiệp, dùng origin `https://tn.thnhdt.site` để QR trỏ tới website
+tốt nghiệp. Hai project có thể cập nhật độc lập trong cùng repository.
+
 Website là trang tĩnh, mọi dữ liệu đi thẳng từ trình duyệt đến Supabase. Project
 gồm hai phần:
 
@@ -68,6 +116,15 @@ một QR chỉ đường. Ảnh chụp chung chỉ hiện trên web, không in v
 - Bố cục thiệp A4 khi tải về nằm trong `fe/app/lib/qr-card.ts`.
 
 ## Vào thiệp riêng bằng QR
+
+Thiệp mời chung ở `/invite`, mở trực tiếp không cần đăng nhập hoặc mã khách.
+Trang này có nút tải QR và thiệp PNG/PDF. QR trong các file mở thẳng `/invite`.
+Khi tải từ localhost, QR sẽ chứa localhost; để gửi khách hãy tải trên domain chính thức.
+
+Theme khách mời: `desktop` (mặc định), `love` (hồng), `discord` (hội bạn thân).
+Dashboard cho phép chọn cả ba. Theme Discord dùng nền tối trên web và nền sáng
+với điểm nhấn tím trên thiệp in. Migration `012_discord_theme.sql` bổ sung theme
+mới mà không thay đổi quyền truy cập.
 
 Trang `/homie` không có đăng nhập. Mỗi khách có một mã `qr_code`: mặc định là
 mã ngẫu nhiên 128-bit, hoặc mã tự đặt trên dashboard (8–64 ký tự chữ không

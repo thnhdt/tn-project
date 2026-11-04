@@ -1,0 +1,120 @@
+/* Discord-inspired private server, with the app's Vietnamese doodle typography. */
+.homie-shell.is-discord {
+    --ink: #f2f3ff;
+    --accent: #a6adff;
+    --accent-2: #b8f5d8;
+    --white: #24263b;
+    color: #f2f3ff;
+    background: #191a2b;
+}
+
+.is-discord .homie-grid {
+    opacity: 0.15;
+}
+
+.is-discord .homie-logo span {
+    background: #5865f2;
+    box-shadow: 3px 3px 0 #b8f5d8;
+}
+
+.is-discord .homie-logo,
+.is-discord .homie-invite-heading > p,
+.is-discord .homie-letter > span,
+.is-discord .homie-event-card small,
+.is-discord .homie-event-card span {
+    color: #b8bde6;
+}
+
+.is-discord .homie-invite-heading h1 span {
+    color: #ffffff;
+    background: #5865f2;
+    box-shadow: 5px 5px 0 #11121f;
+}
+
+.is-discord .homie-invite-heading > small {
+    color: #b8f5d8;
+    border-color: #5865f2;
+    border-radius: 16px;
+    background: #24263b;
+}
+
+.is-discord .homie-letter,
+.is-discord .homie-event-card,
+.is-discord .homie-photo,
+.is-discord .homie-map {
+    border-color: #7c86ff;
+    border-radius: 12px;
+    color: #f2f3ff;
+    background: #292b43;
+    box-shadow: 6px 6px 0 #11121f;
+}
+
+.is-discord .homie-letter {
+    transform: none;
+}
+
+.is-discord .homie-letter p {
+    font-family: var(--font-be-vietnam);
+    font-size: clamp(20px, 3vw, 28px);
+    line-height: 1.8;
+}
+
+.is-discord .homie-letter::after {
+    color: #b8f5d8;
+    content: "📌 ghim lại để còn lên kèo";
+}
+
+.is-discord .homie-letter strong,
+.is-discord .homie-doodle,
+.is-discord .homie-photo figcaption {
+    color: #b8f5d8;
+}
+
+.is-discord .homie-event-card > div {
+    border-color: #454963;
+}
+
+.is-discord .clock-face {
+    color: #23243d;
+    background: #f4f3ff;
+}
+
+.is-discord .homie-result-actions a {
+    border-color: #7c86ff;
+    color: #ffffff;
+    background: #5865f2;
+    box-shadow: 3px 3px 0 #11121f;
+}
+
+.is-discord .homie-result-actions a:last-child {
+    color: #f2f3ff;
+    background: #292b43;
+}
+
+.discord-event-banner {
+    margin-top: 36px;
+    padding: 16px 20px;
+    border: 1px solid #7c86ff;
+    border-radius: 10px;
+    color: #b8f5d8;
+    background: #292b43;
+    font-family: var(--font-roboto-mono);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.discord-reactions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #292b43;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.discord-reactions span {
+    color: #b8f5d8;
+    font-family: var(--font-doodle);
+}

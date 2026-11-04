@@ -7,6 +7,7 @@ import {
     errorMessage,
     type GuestInvitation,
     invitationPhotoUrl,
+    loveTheme,
     openInvitation,
     readInviteCode,
     reportError,
@@ -21,6 +22,8 @@ import {
     mapEmbedUrl,
 } from "../../lib/ceremony";
 import { graduate } from "../../site-content";
+import { LoveEffects } from "./love-effects";
+import { ImportedStickers } from "./imported-stickers";
 
 const eventDetails = [
     { label: "NGÀY", value: ceremonyDate, detail: null },
@@ -30,12 +33,19 @@ const eventDetails = [
 
 const wrongCodeMessage = "Trang này chỉ mở được bằng đúng mã QR trên thiệp của bạn.";
 
-export function HomieInvitation() {
-    const [invitation, setInvitation] = useState<GuestInvitation | null>(null);
-    const [loading, setLoading] = useState(true);
+export function HomieInvitation({ publicInvitation = false }: { publicInvitation?: boolean }) {
+    const [invitation, setInvitation] = useState<GuestInvitation | null>(publicInvitation ? {
+        display_name: "Bạn",
+        instagram_handle: null,
+        personal_message: "Mời bạn đến chung vui trong ngày tốt nghiệp của Đạt! Có bạn ở đó, khoảnh khắc này sẽ đáng nhớ hơn rất nhiều. Hẹn gặp bạn tại buổi lễ nhé!",
+        theme_variant: "desktop",
+        photo_path: null,
+    } : null);
+    const [loading, setLoading] = useState(!publicInvitation);
     const [error, setError] = useState("");
 
     useEffect(() => {
+        if (publicInvitation) return;
         const loadInvitation = async () => {
             const code = readInviteCode();
 
@@ -61,7 +71,7 @@ export function HomieInvitation() {
         };
 
         void loadInvitation();
-    }, []);
+    }, [publicInvitation]);
 
     if (loading) {
         return (
@@ -89,17 +99,25 @@ export function HomieInvitation() {
         );
     }
 
+    const love = invitation.theme_variant === loveTheme;
+    const discord = invitation.theme_variant === "discord";
+
     return (
-        <main className="homie-shell homie-result-shell">
+        <main className={`homie-shell homie-result-shell ${love ? "is-love" : discord ? "is-discord" : ""}`}>
             <div className="homie-grid" aria-hidden="true" />
+            {love ? <LoveEffects /> : null}
             <Link className="homie-logo" href="/">
                 <span>LD</span>
-                <strong>HOMIE_INVITE.exe</strong>
+                <strong>{love ? "LOVE_LETTER.exe" : discord ? "# graduation-party" : "HOMIE_INVITE.exe"}</strong>
             </Link>
 
             <section className="homie-invitation">
                 <div className="homie-invite-heading">
-                    <p>PERSONAL_MESSAGE DELIVERED ✓</p>
+                    {love ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img className="love-cat-sticker" src="/stickers/ig-cat.webp" alt="" aria-hidden="true" />
+                    ) : null}
+                    <p>{love ? "LOVE_LETTER DELIVERED ♥" : discord ? "● PRIVATE SERVER / HỘI BẠN THÂN" : publicInvitation ? "THÂN MỜI BẠN CHUNG VUI" : "PERSONAL_MESSAGE DELIVERED ✓"}</p>
                     <h1>
                         Hey,
                         <span>{invitation.display_name}!</span>
@@ -108,6 +126,8 @@ export function HomieInvitation() {
                         <small>{invitation.instagram_handle}</small>
                     ) : null}
                 </div>
+
+                {love ? <ImportedStickers group={0} /> : null}
 
                 {invitation.photo_path ? (
                     <figure className="homie-photo">
@@ -125,12 +145,17 @@ export function HomieInvitation() {
 
                 <article className="homie-letter">
                     <div className="homie-tape" aria-hidden="true" />
-                    <span>TO: {invitation.display_name.toLocaleUpperCase("vi")}</span>
+                    <span>{discord ? "● ĐẠT / TIN NHẮN GHIM" : `TO: ${invitation.display_name.toLocaleUpperCase("vi")}`}</span>
                     <p>{invitation.personal_message}</p>
-                    <strong>— Đạt ✦</strong>
+                    <strong>{love ? "— Đạt ♥" : "— Đạt ✦"}</strong>
                 </article>
 
+                {love ? <ImportedStickers group={1} /> : null}
+
+                {discord ? <div className="discord-event-banner">🎓 SỰ KIỆN SẮP DIỄN RA / GRADUATION EVENT</div> : null}
                 <CountdownClock />
+
+                {love ? <ImportedStickers group={2} /> : null}
 
                 <div className="homie-event-card">
                     {eventDetails.map((detail) => (
@@ -153,21 +178,25 @@ export function HomieInvitation() {
                     </div>
                 ) : null}
 
+                {discord ? <p className="discord-reactions"><span aria-hidden="true">❤️ · 😂 · 🔥</span> <span>Hẹn gặp nhau ngoài đời!</span></p> : null}
+
                 <div className="homie-result-actions">
                     <Link href="/">XEM THIỆP CHÍNH →</Link>
                     {directionsUrl ? (
                         <a href={directionsUrl} target="_blank" rel="noreferrer">
-                            CHỈ ĐƯỜNG ↗
+                            {discord ? "THAM GIA NGOÀI ĐỜI ↗" : "CHỈ ĐƯỜNG ↗"}
                         </a>
                     ) : null}
-                    <Link href="/homie" onClick={() => saveInviteCode(null)}>
-                        KHÔNG PHẢI BẠN?
-                    </Link>
+                    {!publicInvitation ? (
+                        <Link href="/homie" onClick={() => saveInviteCode(null)}>
+                            KHÔNG PHẢI BẠN?
+                        </Link>
+                    ) : null}
                 </div>
             </section>
 
             <p className="homie-doodle result-doodle" aria-hidden="true">
-                made just for you!
+                {love ? "only for you ♥" : discord ? "voice chat → gặp ngoài đời ✦" : "made just for you!"}
             </p>
         </main>
     );

@@ -1,6 +1,7 @@
 import { InteractiveStickers } from "../interactive-stickers";
 import { CountdownClock } from "./countdown-clock";
 import { GifMachine } from "./gif-machine";
+import { OpeningFireworks } from "./opening-fireworks";
 import {
     EventInfo,
     Footer,
@@ -18,6 +19,7 @@ import {
 export function HomePage() {
     return (
         <main className="theme-shell" data-theme="notebook">
+            <OpeningFireworks />
             <InteractiveStickers />
             <Toolbar />
             <Hero />

@@ -18,7 +18,7 @@ export const graduate = {
 export const ceremony = {
     title: "LỄ TỐT NGHIỆP",
     /** Mốc đồng hồ đếm ngược, luôn ghi kèm múi giờ +07:00. */
-    startsAt: "2026-11-01T00:00:00+07:00",
+    startsAt: "2026-11-28T00:00:00+07:00",
     /** Để `null` khi chưa chốt; trang sẽ hiện "sẽ được cập nhật". */
     time: null as string | null,
     /** Tên địa điểm ngắn gọn, ví dụ "Hội trường A5". */
@@ -100,14 +100,14 @@ export const invite = {
 
 export const countdown = {
     kicker: "02 / TICK TOCK",
-    title: ["ĐẾM NGƯỢC", "TỚI NGÀY ĐẶC BIỆT"],
+    title: ["ĐỒNG HỒ", "ĐẾM NGƯỢC !!!"],
     text: "Đồng hồ đang compile từng giây tới ngày",
 };
 
 export const gifMachine = {
     kicker: "05 / RANDOM JOY MACHINE",
     title: ["BỐC MỘT CHIẾC", "GIF TỐT NGHIỆP"],
-    text: "Bấm nút để gọi một reaction ngẫu nhiên từ GIPHY. Hợp mood thì tải về, chưa hợp thì bốc lại!",
+    text: "Bốc mọi chủ đề hoặc chọn tag meme quen thuộc bên dưới. Hợp mood thì tải về, chưa hợp thì bốc tiếp!",
     /** Tự bốc một GIF khi mở trang. */
     autoLoad: true,
 };

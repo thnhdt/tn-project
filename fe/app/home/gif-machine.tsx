@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
     errorMessage,
     getRandomGif,
@@ -10,17 +10,34 @@ import {
 } from "../lib/api";
 import { gifMachine as content } from "../site-content";
 
+const memeTags = [
+    { label: "Mọi GIF", tag: "" },
+    { label: "Meme bất kỳ", tag: "meme" },
+    { label: "Mèo 🐈", tag: "cat meme" },
+    { label: "Doge", tag: "doge" },
+    { label: "SpongeBob", tag: "spongebob meme" },
+    { label: "Minions", tag: "minions" },
+    { label: "The Office", tag: "the office reaction" },
+    { label: "This is fine", tag: "this is fine" },
+    { label: "Ăn mừng 🎉", tag: "celebration" },
+];
+
 export function GifMachine() {
     const [gif, setGif] = useState<RandomGif | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [selectedTag, setSelectedTag] = useState("");
+    const offsets = useRef<Record<string, number>>({});
 
-    const generateGif = useCallback(async () => {
+    const generateGif = useCallback(async (tag = "") => {
         setLoading(true);
         setError("");
 
         try {
-            setGif(await getRandomGif());
+            const offset = offsets.current[tag] ?? 0;
+            const nextGif = await getRandomGif(tag, offset);
+            setGif(nextGif);
+            offsets.current[tag] = (offset + 1) % 50;
         } catch (generateError) {
             reportError("gif", generateError);
             setError(errorMessage(generateError));
@@ -46,11 +63,27 @@ export function GifMachine() {
                     {content.title[1]}
                 </h2>
                 <p>{content.text}</p>
+                <div className="gif-meme-tags" role="group" aria-label="Chọn chủ đề GIF">
+                    {memeTags.map(({ label, tag }) => (
+                        <button
+                            key={tag}
+                            type="button"
+                            aria-pressed={selectedTag === tag}
+                            disabled={loading}
+                            onClick={() => {
+                                setSelectedTag(tag);
+                                void generateGif(tag);
+                            }}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                </div>
                 <div className="gif-machine-actions">
                     <button
                         type="button"
                         disabled={loading}
-                        onClick={() => void generateGif()}
+                        onClick={() => void generateGif(selectedTag)}
                     >
                         {loading ? "ĐANG BỐC GIF..." : "BỐC GIF NGẪU NHIÊN ✦"}
                     </button>

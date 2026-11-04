@@ -1,0 +1,308 @@
+:root {
+    color-scheme: light;
+    font-family: "Be Vietnam Pro";
+    color: #163d96;
+    background: #f8f5ec;
+    font-synthesis: none;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-image: radial-gradient(#163d961a 0.8px, transparent 0.8px);
+    background-size: 22px 22px;
+}
+
+a {
+    color: inherit;
+}
+
+.page {
+    max-width: 1240px;
+    min-height: 100svh;
+    margin: auto;
+    padding: 30px 48px 22px;
+    display: flex;
+    flex-direction: column;
+}
+
+.header, footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.wordmark {
+    font-weight: 900;
+    font-size: 25px;
+    letter-spacing: -1.4px;
+    text-decoration: none;
+}
+
+.wordmark > span {
+    color: #c74e30;
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid #163d9633;
+    border-radius: 30px;
+    padding: 9px 13px;
+    background: #f8f5ec;
+}
+
+.status > span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #b96b16;
+}
+
+main {
+    flex: 1;
+    padding: 62px 0 48px;
+    text-align: center;
+}
+
+.eyebrow, .note-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+h1 {
+    font-size: clamp(38px, 5.8vw, 68px);
+    font-weight: 900;
+    line-height: 1.3;
+    letter-spacing: -2.7px;
+    margin: 22px 0;
+}
+
+.good-news {
+    position: relative;
+    white-space: nowrap;
+}
+
+.good-news svg {
+    position: absolute;
+    width: 100%;
+    height: 18px;
+    bottom: -9px;
+    left: 0;
+    fill: none;
+    stroke: #dc6948;
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+.description {
+    color: #58627a;
+    font-size: 13px;
+    line-height: 1.95;
+    margin: 24px 0 42px;
+}
+
+.invitation {
+    position: relative;
+    width: min(100%, 550px);
+    margin: auto;
+    padding: 31px 24px 27px;
+    border: 1.5px solid #163d96;
+    background: #fffdf6;
+    box-shadow: 7px 7px 0 #163d96;
+    transform: rotate(-1.5deg);
+}
+
+.tape {
+    position: absolute;
+    top: -14px;
+    left: calc(50% - 48px);
+    width: 96px;
+    height: 27px;
+    transform: rotate(5deg);
+    background: #efcf72c9;
+    clip-path: polygon(3% 0, 98% 0, 96% 20%, 100% 40%, 96% 60%, 99% 80%, 97% 100%, 0 100%, 3% 80%, 0 60%, 4% 40%, 0 20%);
+}
+
+.note-label {
+    letter-spacing: 1.5px;
+    font-size: 9px;
+    color: #636b7c;
+}
+
+.cap {
+    width: 82px;
+    height: 66px;
+    margin-top: 16px;
+    transform: rotate(-8deg);
+}
+
+h2 {
+    font-size: clamp(22px, 4vw, 29px);
+    letter-spacing: -1px;
+    font-weight: 800;
+    margin: 6px 0 12px;
+}
+
+.invitation p {
+    font-size: 13px;
+    line-height: 1.95;
+    margin: 0 0 23px;
+}
+
+.inline-link {
+    font-weight: 800;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    background: #ffe173;
+    padding: 1px 5px;
+}
+
+.button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    background: #163d96;
+    color: #fffdf6;
+    padding: 15px 23px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    border: 2px solid #163d96;
+    box-shadow: 3px 3px 0 #e5bd53;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.button span {
+    font-size: 23px;
+    line-height: 1;
+}
+
+.button:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 #e5bd53;
+}
+
+a:focus-visible {
+    outline: 3px solid #c74e30;
+    outline-offset: 6px;
+}
+
+.destination {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin-top: 15px;
+    color: #636b7c;
+}
+
+.spark {
+    position: absolute;
+    color: #c74e30;
+}
+
+.spark-one {
+    top: 58px;
+    left: 30px;
+    font-size: 42px;
+    transform: rotate(12deg);
+}
+
+.spark-two {
+    bottom: 34px;
+    right: 26px;
+    font-size: 30px;
+}
+
+.postscript {
+    font-size: 11px;
+    color: #636b7c;
+    margin: 30px 0 0;
+}
+
+footer {
+    border-top: 1px solid #163d9626;
+    padding-top: 18px;
+    font-size: 10px;
+    color: #636b7c;
+}
+
+footer > span:first-child {
+    font-weight: 700;
+    color: #163d96;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 600px) {
+    .page {
+        padding: 22px 23px;
+    }
+
+    main {
+        padding: 48px 0 36px;
+    }
+
+    h1 {
+        letter-spacing: -1.6px;
+    }
+
+    .description {
+        font-size: 12px;
+        margin-bottom: 36px;
+    }
+
+    .invitation {
+        padding: 30px 17px 25px;
+    }
+
+    .spark-one {
+        left: 13px;
+        top: 61px;
+        font-size: 28px;
+    }
+
+    .spark-two {
+        right: 12px;
+        bottom: 15px;
+        font-size: 22px;
+    }
+
+    .invitation p {
+        font-size: 12px;
+    }
+
+    .desktop-break {
+        display: none;
+    }
+
+    footer {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .button {
+        transition: none;
+    }
+}

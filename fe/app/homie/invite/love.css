@@ -1,0 +1,311 @@
+/* Thiệp hồng dành cho người thương: đổi màu của homie.css và thêm hiệu ứng. */
+
+.love-imported-stickers {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px 12px;
+    margin: 32px 0;
+    padding: 16px 4px;
+    pointer-events: none;
+}
+
+.love-imported-stickers img {
+    display: block;
+    width: min(var(--sticker-size), 23vw);
+    height: min(var(--sticker-size), 23vw);
+    object-fit: contain;
+    transform: rotate(var(--sticker-angle));
+    filter: drop-shadow(2px 4px 3px rgba(122, 15, 69, 0.12));
+}
+
+.is-love .homie-invite-heading {
+    position: relative;
+    padding-right: clamp(76px, 15vw, 130px);
+}
+
+.love-cat-sticker {
+    position: absolute;
+    right: 0;
+    top: 12px;
+    width: clamp(72px, 14vw, 120px);
+    height: auto;
+    transform: rotate(9deg);
+    pointer-events: none;
+}
+
+.homie-shell.is-love {
+    --ink: #7a0f45;
+    --accent: #ff2f86;
+    --accent-2: #ffd84d;
+    --white: #ffffff;
+    color: #7a0f45;
+    background: #ffe9f3;
+}
+
+.homie-shell.is-love::before {
+    border-top-color: #ff2f86;
+}
+
+.homie-shell.is-love::after {
+    color: #ff2f86;
+    content: "♥  ✦  ♥";
+}
+
+.is-love .homie-grid {
+    background:
+        linear-gradient(rgba(255, 47, 134, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 47, 134, 0.12) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+
+.is-love .homie-logo span {
+    background: #ff2f86;
+    box-shadow: 3px 3px 0 #7a0f45;
+    animation: love-beat 1.3s ease-in-out infinite;
+}
+
+.is-love .homie-invite-heading h1 span {
+    background: #ff2f86;
+    box-shadow: 6px 6px 0 #7a0f45;
+    animation: love-beat 1.3s ease-in-out infinite;
+}
+
+.is-love .homie-invite-heading > small {
+    border-color: #7a0f45;
+}
+
+.is-love .homie-letter {
+    border-color: #7a0f45;
+    background: #fffafc;
+    box-shadow: 10px 10px 0 #ff2f86;
+    animation: love-sway 6s ease-in-out infinite;
+}
+
+.is-love .homie-letter::after {
+    color: #ff2f86;
+    content: "100% thương, 0% bug";
+}
+
+.is-love .homie-tape {
+    background: rgba(255, 143, 200, 0.85);
+}
+
+.is-love .homie-letter strong,
+.is-love .homie-photo figcaption,
+.is-love .homie-doodle {
+    color: #ff2f86;
+}
+
+.is-love .homie-photo,
+.is-love .homie-event-card,
+.is-love .homie-map {
+    border-color: #7a0f45;
+    box-shadow: 6px 6px 0 rgba(255, 47, 134, 0.35);
+}
+
+.is-love .homie-event-card > div {
+    border-color: #f3a9c8;
+}
+
+.is-love .homie-event-card small,
+.is-love .homie-event-card span {
+    color: #b0607f;
+}
+
+.is-love .homie-result-actions a {
+    border-color: #7a0f45;
+    background: #ff2f86;
+    box-shadow: 3px 3px 0 #7a0f45;
+}
+
+.is-love .homie-result-actions a:last-child {
+    color: #7a0f45;
+    background: #ffffff;
+}
+
+.is-love .doodle-clock {
+    animation: love-beat 2.6s ease-in-out infinite;
+}
+
+.is-love .clock-rays {
+    animation: love-spin 40s linear infinite;
+}
+
+.love-effects {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.love-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.love-canvas-back {
+    z-index: 1;
+}
+
+.love-canvas-front {
+    z-index: 6;
+}
+
+.love-stickers,
+.love-flyers {
+    position: absolute;
+    inset: 0;
+}
+
+.love-stickers {
+    z-index: 3;
+}
+
+.love-flyers {
+    z-index: 1;
+    overflow: hidden;
+}
+
+.love-sticker,
+.love-flyer {
+    position: absolute;
+    display: grid;
+    place-items: center;
+}
+
+.love-sticker {
+    filter: drop-shadow(4px 5px 0 rgba(122, 15, 69, 0.25));
+    animation: love-float 5.5s ease-in-out infinite;
+}
+
+.love-sticker svg,
+.love-flyer svg {
+    display: block;
+    width: 100%;
+    grid-area: 1 / 1;
+    overflow: visible;
+    fill: #ff2f86;
+    stroke: #7a0f45;
+    stroke-linejoin: round;
+    stroke-width: 7;
+    paint-order: stroke;
+}
+
+.love-sticker svg {
+    /* Viền trắng ngoài cùng cho giống sticker dán. */
+    filter: drop-shadow(0 0 0 #ffffff) drop-shadow(2px 0 0 #ffffff) drop-shadow(-2px 0 0 #ffffff)
+        drop-shadow(0 2px 0 #ffffff) drop-shadow(0 -2px 0 #ffffff);
+}
+
+.love-sticker.is-sun svg,
+.love-flyer.is-sun svg {
+    fill: #ffd84d;
+}
+
+.love-sticker.is-soft svg,
+.love-flyer.is-soft svg {
+    fill: #ffb3d6;
+}
+
+.love-sticker b {
+    grid-area: 1 / 1;
+    margin-top: -12%;
+    color: #ffffff;
+    font-family: var(--font-doodle);
+    font-size: 17px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.love-sticker.is-sun b,
+.love-sticker.is-soft b {
+    color: #7a0f45;
+}
+
+.love-flyer {
+    left: -80px;
+    opacity: 0.85;
+    animation: love-fly linear infinite;
+}
+
+.love-flyer svg {
+    animation: love-wobble 2.4s ease-in-out infinite;
+}
+
+@keyframes love-float {
+    0%,
+    100% {
+        transform: translateY(0) rotate(var(--love-tilt));
+    }
+
+    50% {
+        transform: translateY(-22px) rotate(calc(var(--love-tilt) * -0.6)) scale(1.06);
+    }
+}
+
+@keyframes love-fly {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(calc(100vw + 160px));
+    }
+}
+
+@keyframes love-wobble {
+    0%,
+    100% {
+        transform: translateY(-16px) rotate(-14deg);
+    }
+
+    50% {
+        transform: translateY(16px) rotate(14deg);
+    }
+}
+
+@keyframes love-beat {
+    0%,
+    30%,
+    60%,
+    100% {
+        scale: 1;
+    }
+
+    15%,
+    45% {
+        scale: 1.06;
+    }
+}
+
+@keyframes love-sway {
+    0%,
+    100% {
+        transform: rotate(-1deg);
+    }
+
+    50% {
+        transform: rotate(0.6deg) translateY(-4px);
+    }
+}
+
+@keyframes love-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 1180px) {
+    /* Màn hình hẹp không còn lề hai bên: sticker lùi ra sau nội dung. */
+    .love-stickers {
+        z-index: 1;
+        opacity: 0.8;
+    }
+
+    .love-sticker {
+        scale: 0.7;
+    }
+}

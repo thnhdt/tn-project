@@ -8,7 +8,7 @@ import {
     reportError,
     saveInviteCode,
 } from "../lib/api";
-import { decodeImageData, decodeQrFile, extractInviteCode } from "../lib/qr";
+import { decodeImageData, decodeQrFile, extractInviteCode, isPublicInvitationQr } from "../lib/qr";
 
 type Status = "idle" | "camera" | "checking";
 
@@ -50,6 +50,10 @@ export function QrGate() {
 
     const handleQrText = useCallback(
         (text: string | null) => {
+            if (text && isPublicInvitationQr(text)) {
+                window.location.assign("/invite");
+                return;
+            }
             const code = text ? extractInviteCode(text) : null;
             if (!code) {
                 setError(text ? invalidQrMessage : "Không tìm thấy mã QR nào.");
@@ -119,7 +123,7 @@ export function QrGate() {
                         context.getImageData(0, 0, canvas.width, canvas.height),
                     );
                     // Bỏ qua QR khác (ví dụ QR chỉ đường trên thiệp) và quét tiếp.
-                    if (text && extractInviteCode(text)) {
+                    if (text && (extractInviteCode(text) || isPublicInvitationQr(text))) {
                         stopCamera();
                         handleQrText(text);
                         return;

@@ -1,5 +1,6 @@
 // Edge Function công khai: giữ GIPHY_API_KEY ở phía Supabase.
 //   GET /giphy/random          → { data: { id, title, altText, previewUrl } }
+//   GET /giphy/trending?offset=0 → next GIF in GIPHY trending order
 //   GET /giphy/<id>/download   → file GIF đính kèm
 
 type GiphyGif = {
@@ -51,7 +52,8 @@ async function fetchGiphyGif(path: string, params: Record<string, string> = {}) 
         throw new Error("GIPHY API không phản hồi thành công.");
     }
 
-    const gif = (await response.json() as { data?: GiphyGif }).data;
+    const data = (await response.json() as { data?: GiphyGif | GiphyGif[] }).data;
+    const gif = Array.isArray(data) ? data[0] : data;
     if (!gif?.id || !gif.images?.original?.url) {
         throw new Error("GIPHY trả về dữ liệu không hợp lệ.");
     }
@@ -72,13 +74,18 @@ function isAllowedGiphyMediaUrl(value: string) {
     }
 }
 
-async function randomGif() {
-    const gif = await fetchGiphyGif("/v1/gifs/random", { rating: "pg13" });
+async function randomGif(tag: string, trendingOffset?: number, search = false) {
+    const path = search ? "/v1/gifs/search" : trendingOffset === undefined ? "/v1/gifs/random" : "/v1/gifs/trending";
+    const gif = await fetchGiphyGif(path, {
+        rating: "pg13",
+        ...(tag ? search ? { q: tag, sort: "relevant" } : { tag } : {}),
+        ...(trendingOffset === undefined ? {} : { limit: "1", offset: String(trendingOffset) }),
+    });
 
     return json({
         data: {
             id: gif.id,
-            title: gif.title || "Random graduation GIF",
+            title: gif.title || "Random reaction GIF",
             altText:
                 gif.alt_text ||
                 gif.title ||
@@ -135,8 +142,26 @@ Deno.serve(async (request) => {
     const [first, second] = segments.slice(segments.indexOf("giphy") + 1);
 
     try {
+        if (first === "search" && second === undefined) {
+            const params = new URL(request.url).searchParams;
+            const tag = (params.get("tag") ?? "").trim();
+            const offset = params.get("offset") ?? "0";
+            if (!tag || tag.length > 80 || !/^\d{1,2}$/.test(offset) || Number(offset) > 49) {
+                return json({ message: "Bộ lọc GIF không hợp lệ." }, 400);
+            }
+            return await randomGif(tag, Number(offset), true);
+        }
+        if (first === "trending" && second === undefined) {
+            const value = new URL(request.url).searchParams.get("offset") ?? "0";
+            if (!/^\d{1,2}$/.test(value) || Number(value) > 49) {
+                return json({ message: "Offset trending không hợp lệ." }, 400);
+            }
+            return await randomGif("", Number(value));
+        }
         if (first === "random" && second === undefined) {
-            return await randomGif();
+            const tag = (new URL(request.url).searchParams.get("tag") ?? "").trim();
+            if (tag.length > 80) return json({ message: "Tag tối đa 80 ký tự." }, 400);
+            return await randomGif(tag);
         }
 
         if (second === "download") {

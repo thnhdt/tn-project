@@ -158,8 +158,8 @@
     font-family: var(--font-doodle);
     font-size: clamp(35px, 7vw, 48px);
     font-weight: 780;
-    letter-spacing: -0.045em;
-    line-height: 1;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
 }
 
 .dev-login-card h1::after {
@@ -409,10 +409,11 @@
 
 .dev-header h1 {
     margin: 8px 0;
+    font-family: var(--font-doodle);
     font-size: clamp(38px, 5vw, 68px);
-    font-weight: 900;
-    letter-spacing: -0.065em;
-    line-height: 0.95;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
 }
 
 .dev-header > div > span {
@@ -600,6 +601,7 @@
 }
 
 .dev-form-panel input,
+.dev-form-panel select,
 .dev-form-panel textarea {
     width: 100%;
     border: 1.5px solid #8aa7d0;
@@ -612,7 +614,8 @@
     transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
-.dev-form-panel input {
+.dev-form-panel input,
+.dev-form-panel select {
     height: 48px;
     padding: 0 14px;
 }
@@ -625,6 +628,7 @@
 }
 
 .dev-form-panel input:focus,
+.dev-form-panel select:focus,
 .dev-form-panel textarea:focus {
     border-color: #0868ff;
     box-shadow: 3px 3px 0 #b8d8ff;

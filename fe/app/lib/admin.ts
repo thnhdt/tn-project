@@ -20,6 +20,7 @@ export type InvitationInput = {
     personalMessage: string;
     /** Để trống thì tự tạo mã ngẫu nhiên. */
     qrCode: string;
+    themeVariant: string;
 };
 
 export type PageVisit = {
@@ -122,6 +123,7 @@ function invitationRow(input: InvitationInput) {
         instagram_handle: input.instagramHandle.trim() || null,
         personal_message: input.personalMessage.trim(),
         qr_code: qrCode || createQrCode(),
+        theme_variant: input.themeVariant,
     };
 }
 

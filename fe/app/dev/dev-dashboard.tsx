@@ -14,7 +14,7 @@ import {
     signOutAdmin,
     updateInvitation,
 } from "../lib/admin";
-import { errorMessage, invitationPhotoUrl } from "../lib/api";
+import { defaultTheme, discordTheme, errorMessage, invitationPhotoUrl, loveTheme } from "../lib/api";
 import { resizePhoto } from "../lib/photo";
 import { GuestQr } from "./guest-qr";
 
@@ -137,6 +137,7 @@ export function DevDashboard() {
     const [instagramHandle, setInstagramHandle] = useState("");
     const [personalMessage, setPersonalMessage] = useState("");
     const [qrCode, setQrCode] = useState("");
+    const [themeVariant, setThemeVariant] = useState(defaultTheme);
     const [editingId, setEditingId] = useState("");
     const [photoFile, setPhotoFile] = useState<File | null>(null);
     const [removePhoto, setRemovePhoto] = useState(false);
@@ -237,6 +238,7 @@ export function DevDashboard() {
         setInstagramHandle("");
         setPersonalMessage("");
         setQrCode("");
+        setThemeVariant(defaultTheme);
     };
 
     const startEditing = (invitation: Invitation) => {
@@ -246,6 +248,7 @@ export function DevDashboard() {
         setInstagramHandle(invitation.instagram_handle ?? "");
         setPersonalMessage(invitation.personal_message);
         setQrCode(invitation.qr_code);
+        setThemeVariant(invitation.theme_variant);
         setError("");
         setSuccess("");
         document.getElementById("guest-name")?.focus();
@@ -263,6 +266,7 @@ export function DevDashboard() {
                 instagramHandle,
                 personalMessage,
                 qrCode,
+                themeVariant,
             };
 
             // Thu nhỏ ảnh trước, để ảnh hỏng không làm dở dang việc lưu khách.
@@ -405,6 +409,10 @@ export function DevDashboard() {
                     <Link href="/">
                         <span>03</span>
                         Xem theme
+                    </Link>
+                    <Link href="/invite">
+                        <span>04</span>
+                        Thiệp chung / QR
                     </Link>
                 </nav>
 
@@ -555,8 +563,23 @@ export function DevDashboard() {
                                 mã cũng mở được thiệp, nên đừng đặt mã quá dễ đoán.
                             </small>
 
-                            <label htmlFor="guest-photo">
+                            <label htmlFor="guest-theme">
                                 <span>05</span>
+                                Giao diện thiệp
+                            </label>
+                            <select
+                                id="guest-theme"
+                                name="themeVariant"
+                                value={[loveTheme, discordTheme].includes(themeVariant) ? themeVariant : defaultTheme}
+                                onChange={(event) => setThemeVariant(event.target.value)}
+                            >
+                                <option value={defaultTheme}>Blue Notebook (mặc định)</option>
+                                <option value={loveTheme}>Hồng ♥ — dành cho người thương</option>
+                                <option value={discordTheme}>Discord — hội bạn thân</option>
+                            </select>
+
+                            <label htmlFor="guest-photo">
+                                <span>06</span>
                                 Ảnh chụp chung (không bắt buộc)
                             </label>
                             <div className="dev-photo-field">
@@ -668,6 +691,10 @@ export function DevDashboard() {
                                             <small>
                                                 {invitation.instagram_handle ?? "—"}
                                                 {invitation.photo_path ? <em>ẢNH ✓</em> : null}
+                                                {invitation.theme_variant === loveTheme ? (
+                                                    <em>HỒNG ♥</em>
+                                                ) : null}
+                                                {invitation.theme_variant === discordTheme ? <em>DISCORD ●</em> : null}
                                                 <em>
                                                     TOKEN: {invitation.token.slice(0, 8)}…
                                                 </em>
@@ -678,6 +705,7 @@ export function DevDashboard() {
                                             <GuestQr
                                                 displayName={invitation.display_name}
                                                 personalMessage={invitation.personal_message}
+                                                themeVariant={invitation.theme_variant}
                                                 qrCode={invitation.qr_code}
                                                 regenerating={regeneratingId === invitation.id}
                                                 onRegenerate={() =>

@@ -7,6 +7,7 @@ import { downloadBlob, inviteCardToPdf, qrDataUrl, renderInviteCard } from "../l
 type GuestQrProps = {
     displayName: string;
     personalMessage: string;
+    themeVariant: string;
     qrCode: string;
     regenerating: boolean;
     onRegenerate: () => void;
@@ -30,6 +31,7 @@ function fileSlug(name: string) {
 export function GuestQr({
     displayName,
     personalMessage,
+    themeVariant,
     qrCode,
     regenerating,
     onRegenerate,
@@ -51,7 +53,10 @@ export function GuestQr({
     const exportCard = async (format: "png" | "pdf") => {
         setExporting(true);
         try {
-            const png = await renderInviteCard({ displayName, personalMessage }, inviteUrl);
+            const png = await renderInviteCard(
+                { displayName, personalMessage, themeVariant },
+                inviteUrl,
+            );
             const fileName = `thiep-moi-${fileSlug(displayName)}.${format}`;
             downloadBlob(format === "pdf" ? await inviteCardToPdf(png) : png, fileName);
         } catch (exportError) {

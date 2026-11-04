@@ -7,12 +7,20 @@ function readPage(fileName) {
     return readFile(new URL(`../dist/client/${fileName}`, import.meta.url), "utf8");
 }
 
+test("exports the public invitation directly without a guest-code gate", async () => {
+    const html = await readPage("invite.html");
+    assert.match(html, /THÂN MỜI BẠN CHUNG VUI/);
+    assert.match(html, /Mời bạn đến chung vui trong ngày tốt nghiệp của Đạt/);
+    assert.match(html, /QR này mở thẳng thiệp mời chung/);
+    assert.doesNotMatch(html, /LOADING_PERSONAL_MESSAGE|KHÔNG PHẢI BẠN\?/);
+});
+
 test("exports the graduation theme lab as static HTML", async () => {
     const html = await readPage("index.html");
     assert.match(html, /Blue Notebook — Lễ Tốt Nghiệp Lê Thành Đạt/i);
     assert.match(html, /LÊ THÀNH/);
     assert.match(html, /Cử nhân Khoa học Máy tính/);
-    assert.match(html, /BLUE_NOTEBOOK/);
+    assert.doesNotMatch(html, /BLUE_NOTEBOOK/);
     assert.match(html, /SAVE THE DATE/);
     assert.match(html, /ĐỊA ĐIỂM/);
     assert.doesNotMatch(html, /THEME_LOCKED/);
@@ -22,7 +30,7 @@ test("exports the graduation theme lab as static HTML", async () => {
     assert.match(html, /BUILD PASSED/);
     assert.match(html, /1 TẤM BẰNG!/);
     assert.match(html, /ĐẾM NGƯỢC/);
-    assert.match(html, /01\.11\.2026/);
+    assert.match(html, /28\.11\.2026/);
     assert.match(html, /NGÀY/);
     assert.match(html, /GIÂY/);
     assert.match(html, /BỐC MỘT CHIẾC/);

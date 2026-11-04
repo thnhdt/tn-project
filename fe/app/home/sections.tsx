@@ -21,11 +21,6 @@ function formatCeremonyDate() {
 export function Toolbar() {
     return (
         <header className="theme-toolbar">
-            <a className="brand-lockup" href="#top" aria-label="Về đầu trang">
-                <span>{graduate.initials}</span>
-                <strong>{toolbar.brand}</strong>
-            </a>
-
             <div className="notebook-mode">
                 <span>{ceremony.title}</span>
                 <strong>

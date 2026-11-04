@@ -9,6 +9,16 @@ export function buildInviteUrl(origin: string, code: string) {
     return `${origin}/homie?code=${code}`;
 }
 
+/** Recognize the public invitation without following arbitrary QR URLs. */
+export function isPublicInvitationQr(text: string) {
+    try {
+        const url = new URL(text.trim());
+        return ["http:", "https:"].includes(url.protocol) && /^\/invite\/?$/.test(url.pathname);
+    } catch {
+        return false;
+    }
+}
+
 /** Lấy mã mời từ nội dung QR (link đầy đủ hoặc mã trần). */
 export function extractInviteCode(text: string) {
     const value = text.trim();
@@ -40,7 +50,7 @@ export function decodeImageData(image: ImageData) {
             break;
         }
 
-        if (extractInviteCode(result.data)) {
+        if (extractInviteCode(result.data) || isPublicInvitationQr(result.data)) {
             return result.data;
         }
 
@@ -118,7 +128,7 @@ async function decodePdfFile(file: File) {
                     .getContext("2d", { willReadFrequently: true })
                     ?.getImageData(0, 0, canvas.width, canvas.height);
                 const text = image ? decodeImageData(image) : null;
-                if (text && extractInviteCode(text)) {
+                if (text && (extractInviteCode(text) || isPublicInvitationQr(text))) {
                     return text;
                 }
 

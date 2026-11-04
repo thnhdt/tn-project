@@ -281,7 +281,7 @@ button {
     position: relative;
     z-index: 30;
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 24px;
     width: min(1400px, calc(100% - 40px));
@@ -293,6 +293,7 @@ button {
 }
 
 .notebook-mode {
+    grid-column: 2;
     justify-self: center;
     text-align: center;
 }
@@ -317,6 +318,8 @@ button {
 }
 
 .toolbar-actions {
+    grid-column: 3;
+    justify-self: end;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -344,14 +347,17 @@ button {
     font-size: 12px;
 }
 
-.brand-lockup span {
-    display: grid;
-    width: 34px;
-    height: 34px;
-    place-items: center;
-    color: var(--white);
-    background: var(--accent);
-    font-weight: 900;
+.opening-fireworks {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.story-section .section-heading h2 {
+    line-height: 1.2;
 }
 
 .theme-switcher {
@@ -494,7 +500,7 @@ button {
     font-size: clamp(72px, 9vw, 138px);
     font-weight: 950;
     letter-spacing: -0.085em;
-    line-height: 0.78;
+    line-height: 1.1;
 }
 
 .hero-copy h1 span {
@@ -522,7 +528,7 @@ button {
 .theme-shell[data-theme="notebook"] .hero-copy h1 {
     font-family: var(--font-doodle);
     font-weight: 760;
-    letter-spacing: -0.065em;
+    letter-spacing: -0.03em;
 }
 
 .theme-shell[data-theme="notebook"] .hero-copy h1::after {
@@ -1018,9 +1024,10 @@ button {
     position: relative;
     margin: 16px 0;
     font-size: clamp(36px, 4.6vw, 60px);
-    font-weight: 950;
-    letter-spacing: -0.07em;
-    line-height: 0.92;
+    font-family: var(--font-doodle);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
 }
 
 .section-heading h2::after,
@@ -1445,9 +1452,10 @@ button {
 .countdown-copy h2 {
     margin: 18px 0 14px;
     font-size: clamp(36px, 4.6vw, 60px);
-    font-weight: 900;
-    letter-spacing: -0.065em;
-    line-height: 0.92;
+    font-family: var(--font-doodle);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
 }
 
 .countdown-copy p {
@@ -1632,8 +1640,8 @@ button {
     font-family: var(--font-doodle);
     font-size: clamp(46px, 6vw, 76px);
     font-weight: 760;
-    letter-spacing: -0.055em;
-    line-height: 0.92;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
 }
 
 .gif-machine-copy h2::after {
@@ -1652,6 +1660,40 @@ button {
     max-width: 480px;
     font-size: 14px;
     line-height: 1.7;
+}
+
+.gif-meme-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.gif-meme-tags button {
+    padding: 8px 11px;
+    border: 1.5px solid var(--ink);
+    border-radius: 18px 14px 17px 12px;
+    color: var(--ink);
+    background: var(--white);
+    font-family: var(--font-be-vietnam);
+    font-size: 12px;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.gif-meme-tags button[aria-pressed="true"] {
+    background: var(--accent-2);
+    box-shadow: 2px 2px 0 var(--ink);
+}
+
+.gif-meme-tags button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.gif-meme-tags button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
 }
 
 .gif-machine-actions {
@@ -1850,17 +1892,19 @@ footer a {
 
 @media (max-width: 900px) {
     .theme-toolbar {
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr;
+        gap: 12px;
     }
 
     .notebook-mode {
         grid-column: 1 / -1;
-        grid-row: 2;
+        grid-row: 1;
     }
 
     .toolbar-actions {
-        grid-column: 2;
-        grid-row: 1;
+        grid-column: 1;
+        grid-row: 2;
+        justify-self: center;
     }
 
     .theme-switcher {
@@ -1961,6 +2005,10 @@ footer a {
 
     .notebook-mode {
         display: none;
+    }
+
+    .toolbar-actions {
+        grid-row: 1;
     }
 
     .toolbar-actions > a {

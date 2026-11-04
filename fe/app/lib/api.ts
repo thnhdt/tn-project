@@ -10,6 +10,11 @@ const inviteCodeKey = "homie_invite_code";
 const visitorIdKey = "graduation_visitor_id";
 const reportedErrors = new Set<string>();
 
+/** Giao diện thiệp riêng: `love` là thiệp hồng dành cho người thương. */
+export const defaultTheme = "desktop";
+export const loveTheme = "love";
+export const discordTheme = "discord";
+
 export type GuestInvitation = {
     display_name: string;
     instagram_handle: string | null;
@@ -132,8 +137,11 @@ export function recordPageVisit(visit: {
     );
 }
 
-export async function getRandomGif(): Promise<RandomGif> {
-    const response = await fetch(`${giphyFunctionUrl}/random`, {
+export async function getRandomGif(tag = "", offset = 0): Promise<RandomGif> {
+    const path = tag
+        ? `/search?tag=${encodeURIComponent(tag)}&offset=${offset}`
+        : `/trending?offset=${offset}`;
+    const response = await fetch(`${giphyFunctionUrl}${path}`, {
         cache: "no-store",
     });
     const payload = (await response.json().catch(() => ({}))) as {
