@@ -30,6 +30,7 @@ export function Toolbar() {
             </div>
 
             <div className="toolbar-actions">
+                <Link href="/tha-anh">{toolbar.photoDropLink}</Link>
                 <Link href="/homie">{toolbar.homieLink}</Link>
                 <MusicButton />
             </div>

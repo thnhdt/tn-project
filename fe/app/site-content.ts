@@ -32,6 +32,7 @@ export const ceremony = {
 export const toolbar = {
     brand: "BLUE_NOTEBOOK",
     homieLink: "MỞ THIỆP RIÊNG ↗",
+    photoDropLink: "THẢ ẢNH DZÔ ĐÂY ↑",
 };
 
 export const hero = {
