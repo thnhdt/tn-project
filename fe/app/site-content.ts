@@ -17,16 +17,35 @@ export const graduate = {
 
 export const ceremony = {
     title: "LỄ TỐT NGHIỆP",
-    /** Mốc đồng hồ đếm ngược, luôn ghi kèm múi giờ +07:00. */
-    startsAt: "2026-11-28T00:00:00+07:00",
-    /** Để `null` khi chưa chốt; trang sẽ hiện "sẽ được cập nhật". */
-    time: null as string | null,
+    /** Mốc đồng hồ đếm ngược (giờ bắt đầu), luôn ghi kèm múi giờ +07:00. */
+    startsAt: "2026-11-28T16:00:00+07:00",
+    /** Khung giờ hiển thị trên thiệp. Để `null` khi chưa chốt. */
+    time: "16h00 – 17h30" as string | null,
     /** Tên địa điểm ngắn gọn, ví dụ "Hội trường A5". */
-    location: null as string | null,
+    location: "Sảnh A5" as string | null,
     /** Địa chỉ đầy đủ, dùng để tìm trên bản đồ và in trong thiệp PDF. */
-    address: null as string | null,
+    address: "Trường Đại học Bách khoa – ĐHQG TP.HCM, 268 Lý Thường Kiệt, TP.HCM" as string | null,
     /** Link Google Maps; để `null` thì tự tìm theo địa chỉ. */
-    mapUrl: null as string | null,
+    mapUrl: "https://maps.app.goo.gl/2NhU8gK859pcNhge7" as string | null,
+    /** Các cổng vào trường, mỗi cổng một bản đồ nhúng trên thiệp. */
+    gates: [
+        {
+            name: "Cổng 1",
+            note: "Cổng chính, đường Lý Thường Kiệt",
+            mapUrl: "https://maps.app.goo.gl/2NhU8gK859pcNhge7",
+            lat: 10.772075,
+            lng: 106.6579018,
+        },
+        {
+            name: "Cổng 3",
+            note: "Cổng sau, đường Tô Hiến Thành",
+            mapUrl: "https://maps.app.goo.gl/RG27xk4PMytdWLKa9",
+            lat: 10.7736185,
+            lng: 106.6612596,
+        },
+    ],
+    /** Sơ đồ khuôn viên trường, nằm trong `public/`. */
+    campusMap: "/so-do-bk.webp",
 };
 
 export const toolbar = {

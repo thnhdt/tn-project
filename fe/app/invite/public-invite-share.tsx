@@ -18,7 +18,7 @@ export function PublicInviteShare() {
         try {
             const png = await renderInviteCard({
                 displayName: "Bạn",
-                personalMessage: "Mời bạn đến chung vui trong ngày tốt nghiệp của Đạt! Có bạn ở đó, khoảnh khắc này sẽ đáng nhớ hơn rất nhiều. Hẹn gặp bạn tại buổi lễ nhé!",
+                personalMessage: "",
                 themeVariant: "desktop",
             }, `${window.location.origin}/invite`);
             downloadBlob(format === "pdf" ? await inviteCardToPdf(png) : png, `thiep-moi-chung.${format}`);

@@ -8,6 +8,7 @@ import {
     ceremonyTime,
     directionsUrl,
 } from "./ceremony";
+import { fallbackCardMessage } from "./invite-lines";
 
 /** Thiệp mời khổ A4 ở 300 dpi. Muốn đổi bố cục thiệp tải về: sửa file này. */
 const card = { width: 2480, height: 3508, margin: 220 };
@@ -167,7 +168,9 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     const sans = fontFamily("--font-be-vietnam");
     const mono = fontFamily("--font-roboto-mono");
     const doodle = fontFamily("--font-doodle");
-    const sample = `${ceremony.title} ${guest.displayName} ${guest.personalMessage}`;
+    // Khách không có lời nhắn riêng thì in lời mời chung.
+    const message = guest.personalMessage.trim() || fallbackCardMessage;
+    const sample = `${ceremony.title} ${guest.displayName} ${message}`;
     await Promise.all([
         document.fonts.load(`400 40px ${sans}`, sample),
         document.fonts.load(`700 40px ${sans}`, sample),
@@ -279,7 +282,7 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     let lines: string[] = [];
     for (; fontSize >= 26; fontSize -= 4) {
         context.font = `400 ${fontSize}px ${sans}`;
-        lines = wrapText(context, guest.personalMessage, letter.width - letter.padding * 2);
+        lines = wrapText(context, message, letter.width - letter.padding * 2);
         if (lines.length * fontSize * 1.5 <= messageHeight) {
             break;
         }

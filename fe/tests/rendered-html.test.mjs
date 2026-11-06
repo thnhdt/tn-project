@@ -10,7 +10,11 @@ function readPage(fileName) {
 test("exports the public invitation directly without a guest-code gate", async () => {
     const html = await readPage("invite.html");
     assert.match(html, /THÂN MỜI BẠN CHUNG VUI/);
-    assert.match(html, /Mời bạn đến chung vui trong ngày tốt nghiệp của Đạt/);
+    assert.match(html, /Ske đã tốt nghiệppp/);
+    assert.match(html, /16h00 – 17h30/);
+    assert.match(html, /Sảnh A5/);
+    assert.match(html, /Cổng 1/);
+    assert.match(html, /Cổng 3/);
     assert.match(html, /QR này mở thẳng thiệp mời chung/);
     assert.doesNotMatch(html, /LOADING_PERSONAL_MESSAGE|KHÔNG PHẢI BẠN\?/);
 });

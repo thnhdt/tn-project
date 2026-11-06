@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { CountdownClock } from "../../home/countdown-clock";
 import {
+    discordTheme,
     errorMessage,
     type GuestInvitation,
     invitationPhotoUrl,
@@ -19,11 +21,12 @@ import {
     ceremonyLocation,
     ceremonyTime,
     directionsUrl,
-    mapEmbedUrl,
 } from "../../lib/ceremony";
+import { inviteLines } from "../../lib/invite-lines";
 import { graduate } from "../../site-content";
 import { LoveEffects } from "./love-effects";
 import { ImportedStickers } from "./imported-stickers";
+import { VenueMaps } from "./venue-maps";
 
 const eventDetails = [
     { label: "NGÀY", value: ceremonyDate, detail: null },
@@ -33,11 +36,16 @@ const eventDetails = [
 
 const wrongCodeMessage = "Trang này chỉ mở được bằng đúng mã QR trên thiệp của bạn.";
 
+type LayoutProps = {
+    invitation: GuestInvitation;
+    publicInvitation: boolean;
+};
+
 export function HomieInvitation({ publicInvitation = false }: { publicInvitation?: boolean }) {
     const [invitation, setInvitation] = useState<GuestInvitation | null>(publicInvitation ? {
         display_name: "Bạn",
         instagram_handle: null,
-        personal_message: "Mời bạn đến chung vui trong ngày tốt nghiệp của Đạt! Có bạn ở đó, khoảnh khắc này sẽ đáng nhớ hơn rất nhiều. Hẹn gặp bạn tại buổi lễ nhé!",
+        personal_message: "",
         theme_variant: "desktop",
         photo_path: null,
     } : null);
@@ -99,63 +107,341 @@ export function HomieInvitation({ publicInvitation = false }: { publicInvitation
         );
     }
 
-    const love = invitation.theme_variant === loveTheme;
-    const discord = invitation.theme_variant === "discord";
+    if (invitation.theme_variant === loveTheme) {
+        return <LoveInvitation invitation={invitation} publicInvitation={publicInvitation} />;
+    }
+
+    if (invitation.theme_variant === discordTheme) {
+        return <DiscordInvitation invitation={invitation} publicInvitation={publicInvitation} />;
+    }
+
+    return <DefaultInvitation invitation={invitation} publicInvitation={publicInvitation} />;
+}
+
+/* ───────────── Dùng chung ───────────── */
+
+function GuestPhoto({ invitation }: { invitation: GuestInvitation }) {
+    if (!invitation.photo_path) return null;
 
     return (
-        <main className={`homie-shell homie-result-shell ${love ? "is-love" : discord ? "is-discord" : ""}`}>
+        <figure className="homie-photo">
+            <div className="homie-tape" aria-hidden="true" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+                src={invitationPhotoUrl(invitation.photo_path)}
+                alt={`${graduate.fullName} và ${invitation.display_name}`}
+            />
+            <figcaption>
+                {graduate.lastName} × {invitation.display_name}
+            </figcaption>
+        </figure>
+    );
+}
+
+function ResultActions({
+    publicInvitation,
+    directionsLabel = "CHỈ ĐƯỜNG ↗",
+}: {
+    publicInvitation: boolean;
+    directionsLabel?: string;
+}) {
+    return (
+        <div className="homie-result-actions">
+            <Link href="/">XEM THIỆP CHÍNH →</Link>
+            {directionsUrl ? (
+                <a href={directionsUrl} target="_blank" rel="noreferrer">
+                    {directionsLabel}
+                </a>
+            ) : null}
+            {!publicInvitation ? (
+                <Link href="/homie" onClick={() => saveInviteCode(null)}>
+                    KHÔNG PHẢI BẠN?
+                </Link>
+            ) : null}
+        </div>
+    );
+}
+
+function EventDetailList() {
+    return (
+        <dl>
+            {eventDetails.map((detail) => (
+                <div key={detail.label}>
+                    <dt>{detail.label}</dt>
+                    <dd>{detail.value}</dd>
+                    {detail.detail ? <span>{detail.detail}</span> : null}
+                </div>
+            ))}
+        </dl>
+    );
+}
+
+/* ───────────── Theme mặc định: cửa sổ máy tính cũ ───────────── */
+
+const confetti = Array.from({ length: 18 }, (_, index) => index);
+
+function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
+    const message = invitation.personal_message.trim();
+
+    return (
+        <main className="homie-shell homie-result-shell is-grad">
             <div className="homie-grid" aria-hidden="true" />
-            {love ? <LoveEffects /> : null}
+            <div className="grad-confetti" aria-hidden="true">
+                {confetti.map((index) => (
+                    <i key={index} style={{ "--i": index } as CSSProperties} />
+                ))}
+            </div>
             <Link className="homie-logo" href="/">
-                <span>LD</span>
-                <strong>{love ? "LOVE_LETTER.exe" : discord ? "# graduation-party" : "HOMIE_INVITE.exe"}</strong>
+                <span>{graduate.initials}</span>
+                <strong>GRADUATION_INVITE.exe</strong>
             </Link>
 
             <section className="homie-invitation">
                 <div className="homie-invite-heading">
-                    {love ? (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img className="love-cat-sticker" src="/stickers/ig-cat.webp" alt="" aria-hidden="true" />
-                    ) : null}
-                    <p>{love ? "LOVE_LETTER DELIVERED ♥" : discord ? "● PRIVATE SERVER / HỘI BẠN THÂN" : publicInvitation ? "THÂN MỜI BẠN CHUNG VUI" : "PERSONAL_MESSAGE DELIVERED ✓"}</p>
+                    <p>{publicInvitation ? "THÂN MỜI BẠN CHUNG VUI ✓" : "INVITATION DELIVERED ✓"}</p>
                     <h1>
                         Hey,
                         <span>{invitation.display_name}!</span>
                     </h1>
-                    {invitation.instagram_handle ? (
-                        <small>{invitation.instagram_handle}</small>
-                    ) : null}
+                    {invitation.instagram_handle ? <small>{invitation.instagram_handle}</small> : null}
                 </div>
 
-                {love ? <ImportedStickers group={0} /> : null}
+                <div className="grad-window">
+                    <div className="homie-window-bar">
+                        <span />
+                        <span />
+                        <span />
+                        <b>graduation_FINAL_v2(1).exe</b>
+                    </div>
+                    <div className="grad-window-body">
+                        <span className="grad-cap" aria-hidden="true">🎓</span>
+                        <p className="grad-kicker">&gt; run graduate.exe --class-of {graduate.classOf}</p>
+                        <h2>{inviteLines.headline}</h2>
+                        <p className="grad-subline">{inviteLines.subline}</p>
+                        <div className="grad-stamp" aria-hidden="true">
+                            <b>OFFICIAL</b>
+                            <span>GRADUATE ✓</span>
+                            <small>CLASS OF {graduate.classOf}</small>
+                        </div>
+                    </div>
+                </div>
 
-                {invitation.photo_path ? (
-                    <figure className="homie-photo">
+                <ul className="grad-jokes">
+                    {inviteLines.jokes.map((joke, index) => (
+                        <li key={joke} style={{ "--i": index } as CSSProperties}>
+                            {joke}
+                        </li>
+                    ))}
+                </ul>
+
+                <GuestPhoto invitation={invitation} />
+
+                {message ? (
+                    <aside className="grad-note">
                         <div className="homie-tape" aria-hidden="true" />
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={invitationPhotoUrl(invitation.photo_path)}
-                            alt={`${graduate.fullName} và ${invitation.display_name}`}
-                        />
-                        <figcaption>
-                            {graduate.lastName} × {invitation.display_name}
-                        </figcaption>
-                    </figure>
+                        <small>ĐẠT NHẮN RIÊNG CHO {invitation.display_name.toLocaleUpperCase("vi")}</small>
+                        <p>{message}</p>
+                    </aside>
                 ) : null}
+
+                <div className="grad-ticket">
+                    <div className="grad-ticket-stub">
+                        <small>VÉ MỜI</small>
+                        <strong>ADMIT ONE</strong>
+                        <span>{invitation.display_name}</span>
+                    </div>
+                    <div className="grad-ticket-main">
+                        <small>{graduate.fullName.toLocaleUpperCase("vi")} • LỄ TỐT NGHIỆP</small>
+                        <EventDetailList />
+                    </div>
+                </div>
+
+                <CountdownClock />
+
+                <VenueMaps />
+
+                <p className="grad-closing">{inviteLines.closing}</p>
+
+                <ResultActions publicInvitation={publicInvitation} />
+            </section>
+
+        </main>
+    );
+}
+
+/* ───────────── Theme Discord: kênh chat #graduation-party ───────────── */
+
+function DiscordMessage({
+    author,
+    avatar,
+    bot = false,
+    time,
+    children,
+}: {
+    author: string;
+    avatar: string;
+    bot?: boolean;
+    time: string;
+    children: ReactNode;
+}) {
+    return (
+        <article className="dc-message">
+            <span className={`dc-avatar${bot ? " is-bot" : ""}`} aria-hidden="true">{avatar}</span>
+            <div className="dc-message-body">
+                <header>
+                    <strong>{author}</strong>
+                    {bot ? <em>BOT</em> : null}
+                    <time>{time}</time>
+                </header>
+                {children}
+            </div>
+        </article>
+    );
+}
+
+function DiscordInvitation({ invitation, publicInvitation }: LayoutProps) {
+    const message = invitation.personal_message.trim();
+    const name = invitation.display_name;
+
+    return (
+        <main className="homie-shell homie-result-shell is-discord">
+            <div className="homie-grid" aria-hidden="true" />
+            <Link className="homie-logo" href="/">
+                <span>{graduate.initials}</span>
+                <strong># graduation-party</strong>
+            </Link>
+
+            <section className="homie-invitation dc-app">
+                <aside className="dc-channels" aria-hidden="true">
+                    <strong>HỘI BẠN THÂN ▾</strong>
+                    <small>KÊNH CHAT</small>
+                    <span># thông-báo</span>
+                    <span className="is-active"># graduation-party</span>
+                    <span># ảnh-kỷ-yếu</span>
+                    <small>KÊNH THOẠI</small>
+                    <span>🔊 {ceremonyLocation}</span>
+                    <span className="dc-voice-user">● {graduate.lastName} đang chờ</span>
+                </aside>
+
+                <div className="dc-chat">
+                    <header className="dc-chat-header">
+                        <strong># graduation-party</strong>
+                        <span>lễ tốt nghiệp của {graduate.lastName} • {ceremonyDate}</span>
+                    </header>
+
+                    <div className="dc-messages">
+                        <p className="dc-day"><span>HÔM NAY</span></p>
+
+                        <DiscordMessage author="Lễ_Bot" avatar="🤖" bot time="hôm nay lúc 07:00">
+                            <p className="dc-big">
+                                <mark>@everyone</mark> 📣 {inviteLines.headline} 🎓
+                            </p>
+                        </DiscordMessage>
+
+                        <DiscordMessage author={graduate.lastName} avatar={graduate.initials} time="hôm nay lúc 07:01">
+                            <p>{inviteLines.subline}</p>
+                            {inviteLines.jokes.map((joke) => (
+                                <p key={joke}>{joke}</p>
+                            ))}
+                        </DiscordMessage>
+
+                        {message ? (
+                            <DiscordMessage author={graduate.lastName} avatar={graduate.initials} time="vừa xong">
+                                <p className="dc-mention">
+                                    <mark>@{name}</mark> {message}
+                                </p>
+                            </DiscordMessage>
+                        ) : null}
+
+                        <GuestPhoto invitation={invitation} />
+
+                        <DiscordMessage author="Lễ_Bot" avatar="🤖" bot time="hôm nay lúc 07:02">
+                            <div className="dc-event">
+                                <small>🎓 SỰ KIỆN SẮP DIỄN RA</small>
+                                <strong>Lễ tốt nghiệp của {graduate.fullName}</strong>
+                                <EventDetailList />
+                                <div className="dc-event-footer">
+                                    <span>⭐ {name} đã bấm Quan tâm</span>
+                                    <b>QUAN TÂM ✓</b>
+                                </div>
+                            </div>
+                            <CountdownClock />
+                        </DiscordMessage>
+
+                        <DiscordMessage author={graduate.lastName} avatar={graduate.initials} time="hôm nay lúc 07:03">
+                            <p>📍 vị trí nè, vào cổng nào cũng được:</p>
+                            <VenueMaps />
+                            <p className="dc-reactions">
+                                <span>🎓 12</span>
+                                <span>😂 8</span>
+                                <span>🔥 5</span>
+                                <span>🌷 3</span>
+                            </p>
+                        </DiscordMessage>
+                    </div>
+
+                    <div className="dc-input" aria-hidden="true">
+                        <span>＋</span>
+                        <p>Nhắn #graduation-party… (đùa thôi, tới thẳng {ceremonyLocation} nha)</p>
+                    </div>
+                </div>
+
+                <aside className="dc-members" aria-hidden="true">
+                    <small>ONLINE — 3</small>
+                    <span><i className="dc-dot" />{graduate.lastName} <em>đang tốt nghiệp</em></span>
+                    <span><i className="dc-dot" />{name} <em>sắp tới</em></span>
+                    <span><i className="dc-dot" />Lễ_Bot <em>BOT</em></span>
+                </aside>
+
+                <div className="dc-footer">
+                    <p className="grad-closing">{inviteLines.closing}</p>
+                    <ResultActions publicInvitation={publicInvitation} directionsLabel="THAM GIA NGOÀI ĐỜI ↗" />
+                </div>
+            </section>
+        </main>
+    );
+}
+
+/* ───────────── Theme hồng: giữ lá thư riêng (sẽ thiết kế lại sau) ───────────── */
+
+function LoveInvitation({ invitation, publicInvitation }: LayoutProps) {
+    return (
+        <main className="homie-shell homie-result-shell is-love">
+            <div className="homie-grid" aria-hidden="true" />
+            <LoveEffects />
+            <Link className="homie-logo" href="/">
+                <span>{graduate.initials}</span>
+                <strong>LOVE_LETTER.exe</strong>
+            </Link>
+
+            <section className="homie-invitation">
+                <div className="homie-invite-heading">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img className="love-cat-sticker" src="/stickers/ig-cat.webp" alt="" aria-hidden="true" />
+                    <p>LOVE_LETTER DELIVERED ♥</p>
+                    <h1>
+                        Hey,
+                        <span>{invitation.display_name}!</span>
+                    </h1>
+                    {invitation.instagram_handle ? <small>{invitation.instagram_handle}</small> : null}
+                </div>
+
+                <ImportedStickers group={0} />
+
+                <GuestPhoto invitation={invitation} />
 
                 <article className="homie-letter">
                     <div className="homie-tape" aria-hidden="true" />
-                    <span>{discord ? "● ĐẠT / TIN NHẮN GHIM" : `TO: ${invitation.display_name.toLocaleUpperCase("vi")}`}</span>
-                    <p>{invitation.personal_message}</p>
-                    <strong>{love ? "— Đạt ♥" : "— Đạt ✦"}</strong>
+                    <span>TO: {invitation.display_name.toLocaleUpperCase("vi")}</span>
+                    <p>{invitation.personal_message.trim() || inviteLines.subline}</p>
+                    <strong>— Đạt ♥</strong>
                 </article>
 
-                {love ? <ImportedStickers group={1} /> : null}
+                <ImportedStickers group={1} />
 
-                {discord ? <div className="discord-event-banner">🎓 SỰ KIỆN SẮP DIỄN RA / GRADUATION EVENT</div> : null}
                 <CountdownClock />
 
-                {love ? <ImportedStickers group={2} /> : null}
+                <ImportedStickers group={2} />
 
                 <div className="homie-event-card">
                     {eventDetails.map((detail) => (
@@ -167,36 +453,13 @@ export function HomieInvitation({ publicInvitation = false }: { publicInvitation
                     ))}
                 </div>
 
-                {mapEmbedUrl ? (
-                    <div className="homie-map">
-                        <iframe
-                            src={mapEmbedUrl}
-                            title="Bản đồ địa điểm tổ chức"
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                        />
-                    </div>
-                ) : null}
+                <VenueMaps />
 
-                {discord ? <p className="discord-reactions"><span aria-hidden="true">❤️ · 😂 · 🔥</span> <span>Hẹn gặp nhau ngoài đời!</span></p> : null}
-
-                <div className="homie-result-actions">
-                    <Link href="/">XEM THIỆP CHÍNH →</Link>
-                    {directionsUrl ? (
-                        <a href={directionsUrl} target="_blank" rel="noreferrer">
-                            {discord ? "THAM GIA NGOÀI ĐỜI ↗" : "CHỈ ĐƯỜNG ↗"}
-                        </a>
-                    ) : null}
-                    {!publicInvitation ? (
-                        <Link href="/homie" onClick={() => saveInviteCode(null)}>
-                            KHÔNG PHẢI BẠN?
-                        </Link>
-                    ) : null}
-                </div>
+                <ResultActions publicInvitation={publicInvitation} />
             </section>
 
             <p className="homie-doodle result-doodle" aria-hidden="true">
-                {love ? "only for you ♥" : discord ? "voice chat → gặp ngoài đời ✦" : "made just for you!"}
+                only for you ♥
             </p>
         </main>
     );

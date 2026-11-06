@@ -6,6 +6,7 @@ import { ceremony, countdown as content } from "../site-content";
 
 const target = new Date(ceremony.startsAt);
 const [year, month, day] = ceremony.startsAt.slice(0, 10).split("-");
+const [hour, minute] = ceremony.startsAt.slice(11, 16).split(":");
 
 function getRemaining() {
     const remaining = Math.max(target.getTime() - Date.now(), 0);
@@ -52,7 +53,7 @@ export function CountdownClock() {
                 </h2>
                 <p>
                     {content.text}{" "}
-                    <time dateTime={`${year}-${month}-${day}`}>{`${day}.${month}.${year}`}</time>
+                    <time dateTime={ceremony.startsAt}>{`${hour}h${minute} • ${day}.${month}.${year}`}</time>
                     .
                 </p>
             </div>
@@ -69,7 +70,7 @@ export function CountdownClock() {
                         className="countdown-grid"
                         role="timer"
                         aria-live="off"
-                        aria-label={`Thời gian còn lại đến ngày ${Number(day)} tháng ${Number(month)} năm ${year}`}
+                        aria-label={`Thời gian còn lại đến ${hour}h${minute} ngày ${Number(day)} tháng ${Number(month)} năm ${year}`}
                     >
                         {units.map((unit) => (
                             <div key={unit.label}>

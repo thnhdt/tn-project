@@ -309,3 +309,25 @@
         scale: 0.7;
     }
 }
+
+/* Bản đồ dùng chung, tô lại màu hồng. */
+.is-love .invite-gate,
+.is-love .invite-campus {
+    border-color: #7a0f45;
+    box-shadow: 6px 6px 0 rgba(255, 47, 134, 0.35);
+}
+
+.is-love .invite-gate-label {
+    border-color: #7a0f45;
+    background: #ff2f86;
+}
+
+.is-love .invite-gate a {
+    border-color: #7a0f45;
+    color: #7a0f45;
+    background: #ffd6e8;
+}
+
+.is-love .invite-campus figcaption {
+    color: #ff2f86;
+}

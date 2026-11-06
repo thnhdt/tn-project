@@ -1,4 +1,4 @@
-/* Discord-inspired private server, with the app's Vietnamese doodle typography. */
+/* Thiệp hội bạn thân: giả một kênh chat #graduation-party (lấy cảm hứng, không dùng logo thật). */
 .homie-shell.is-discord {
     --ink: #f2f3ff;
     --accent: #a6adff;
@@ -12,71 +12,417 @@
     opacity: 0.15;
 }
 
+.is-discord::before,
+.is-discord::after {
+    display: none;
+}
+
 .is-discord .homie-logo span {
     background: #5865f2;
     box-shadow: 3px 3px 0 #b8f5d8;
 }
 
-.is-discord .homie-logo,
-.is-discord .homie-invite-heading > p,
-.is-discord .homie-letter > span,
-.is-discord .homie-event-card small,
-.is-discord .homie-event-card span {
+.is-discord .homie-logo {
     color: #b8bde6;
 }
 
-.is-discord .homie-invite-heading h1 span {
+/* ───── Khung app: kênh | chat | thành viên ───── */
+
+.dc-app {
+    display: grid;
+    width: min(1240px, 100%);
+    grid-template-columns: 200px minmax(0, 1fr) 190px;
+    overflow: hidden;
+    border: 2px solid #5865f2;
+    border-radius: 14px;
+    background: #2b2d45;
+    box-shadow: 10px 10px 0 #11121f;
+}
+
+.dc-channels,
+.dc-members {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 18px 12px;
+    background: #23243a;
+    font-size: 14px;
+}
+
+.dc-channels strong {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #3a3d5c;
+    font-size: 13px;
+}
+
+.dc-channels small,
+.dc-members small {
+    margin: 14px 0 4px;
+    color: #8e93c0;
+    font-family: var(--font-roboto-mono);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.dc-channels span {
+    padding: 6px 8px;
+    border-radius: 6px;
+    color: #9da2cc;
+}
+
+.dc-channels span.is-active {
+    color: #ffffff;
+    background: #3a3d5c;
+}
+
+.dc-channels .dc-voice-user {
+    padding-left: 22px;
+    color: #b8f5d8;
+    font-size: 12px;
+}
+
+.dc-members span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    color: #e3e5ff;
+    overflow-wrap: anywhere;
+}
+
+.dc-members em {
+    color: #8e93c0;
+    font-size: 11px;
+    font-style: normal;
+}
+
+.dc-dot {
+    width: 9px;
+    height: 9px;
+    flex: none;
+    border-radius: 50%;
+    background: #3ba55d;
+    box-shadow: 0 0 0 3px #23243a;
+}
+
+.dc-chat {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    border-right: 1px solid #1d1e30;
+    border-left: 1px solid #1d1e30;
+}
+
+.dc-chat-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #1d1e30;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
+}
+
+.dc-chat-header strong {
+    font-size: 16px;
+}
+
+.dc-chat-header span {
+    color: #9da2cc;
+    font-size: 13px;
+}
+
+.dc-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 18px 20px 26px;
+}
+
+.dc-day {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: #8e93c0;
+    font-family: var(--font-roboto-mono);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.dc-day::before,
+.dc-day::after {
+    height: 1px;
+    flex: 1;
+    background: #3a3d5c;
+    content: "";
+}
+
+/* ───── Tin nhắn ───── */
+
+.dc-message {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 14px;
+}
+
+.dc-avatar {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border-radius: 50%;
     color: #ffffff;
     background: #5865f2;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.dc-avatar.is-bot {
+    background: #3ba55d;
+    font-size: 22px;
+}
+
+.dc-message-body {
+    min-width: 0;
+}
+
+.dc-message-body header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    margin-bottom: 4px;
+}
+
+.dc-message-body header strong {
+    color: #ffffff;
+    font-size: 15px;
+}
+
+.dc-message-body header em {
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: #ffffff;
+    background: #5865f2;
+    font-family: var(--font-roboto-mono);
+    font-size: 9px;
+    font-style: normal;
+    font-weight: 800;
+}
+
+.dc-message-body header time {
+    color: #8e93c0;
+    font-size: 11px;
+}
+
+.dc-message-body > p {
+    margin: 4px 0;
+    color: #e3e5ff;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.dc-message-body > p.dc-big {
+    color: #ffffff;
+    font-family: var(--font-doodle);
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.dc-message-body mark {
+    padding: 0 3px;
+    border-radius: 4px;
+    color: #c9cdff;
+    background: rgba(88, 101, 242, 0.35);
+    font-weight: 700;
+}
+
+.dc-message-body > p.dc-mention {
+    margin-left: -10px;
+    padding: 8px 10px;
+    border-left: 3px solid #f0b232;
+    border-radius: 0 6px 6px 0;
+    background: rgba(240, 178, 50, 0.1);
+    font-family: var(--font-doodle);
+    font-size: clamp(20px, 3vw, 24px);
+}
+
+.dc-message-body .homie-photo,
+.is-discord .dc-messages > .homie-photo {
+    width: min(320px, 100%);
+    margin: 0 0 0 58px;
+    border-color: #7c86ff;
+    border-radius: 10px;
+    background: #23243a;
     box-shadow: 5px 5px 0 #11121f;
 }
 
-.is-discord .homie-invite-heading > small {
-    color: #b8f5d8;
-    border-color: #5865f2;
-    border-radius: 16px;
-    background: #24263b;
-}
-
-.is-discord .homie-letter,
-.is-discord .homie-event-card,
-.is-discord .homie-photo,
-.is-discord .homie-map {
-    border-color: #7c86ff;
-    border-radius: 12px;
-    color: #f2f3ff;
-    background: #292b43;
-    box-shadow: 6px 6px 0 #11121f;
-}
-
-.is-discord .homie-letter {
-    transform: none;
-}
-
-.is-discord .homie-letter p {
-    font-family: var(--font-be-vietnam);
-    font-size: clamp(20px, 3vw, 28px);
-    line-height: 1.8;
-}
-
-.is-discord .homie-letter::after {
-    color: #b8f5d8;
-    content: "📌 ghim lại để còn lên kèo";
-}
-
-.is-discord .homie-letter strong,
-.is-discord .homie-doodle,
 .is-discord .homie-photo figcaption {
     color: #b8f5d8;
 }
 
-.is-discord .homie-event-card > div {
-    border-color: #454963;
+/* Thẻ sự kiện */
+.dc-event {
+    max-width: 640px;
+    margin-top: 6px;
+    padding: 16px 18px;
+    border-left: 4px solid #5865f2;
+    border-radius: 8px;
+    background: #23243a;
+}
+
+.dc-event > small {
+    color: #b8f5d8;
+}
+
+.dc-event > strong {
+    display: block;
+    margin-top: 6px;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.dc-event dt {
+    color: #8e93c0;
+}
+
+.dc-event dd {
+    color: #ffffff;
+}
+
+.dc-event dl span {
+    color: #9da2cc;
+}
+
+.dc-event-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #3a3d5c;
+    color: #9da2cc;
+    font-size: 13px;
+}
+
+.dc-event-footer b {
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #ffffff;
+    background: #3ba55d;
+    font-family: var(--font-roboto-mono);
+    font-size: 11px;
+}
+
+.is-discord .countdown-section {
+    margin-top: 28px;
 }
 
 .is-discord .clock-face {
     color: #23243d;
     background: #f4f3ff;
+}
+
+/* Bản đồ trong tin nhắn */
+.dc-message-body .invite-venue {
+    margin-top: 10px;
+}
+
+.is-discord .invite-venue-title small {
+    color: #11121f;
+    background: #b8f5d8;
+}
+
+.is-discord .invite-gate,
+.is-discord .invite-campus {
+    border-color: #7c86ff;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #23243a;
+    box-shadow: 5px 5px 0 #11121f;
+}
+
+.is-discord .invite-gate-label {
+    border-color: #7c86ff;
+    background: #5865f2;
+}
+
+.is-discord .invite-gate a {
+    border-color: #7c86ff;
+    color: #11121f;
+    background: #b8f5d8;
+}
+
+.is-discord .invite-campus figcaption {
+    color: #b8f5d8;
+}
+
+.is-discord .invite-campus-pin.is-hall {
+    background: #5865f2;
+}
+
+.dc-reactions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px !important;
+}
+
+.dc-reactions span {
+    padding: 3px 10px;
+    border: 1px solid #5865f2;
+    border-radius: 999px;
+    background: rgba(88, 101, 242, 0.18);
+    font-size: 14px;
+}
+
+/* Ô nhập giả */
+.dc-input {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: auto 20px 20px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    color: #8e93c0;
+    background: #383a56;
+}
+
+.dc-input span {
+    display: grid;
+    width: 24px;
+    height: 24px;
+    flex: none;
+    place-items: center;
+    border-radius: 50%;
+    color: #2b2d45;
+    background: #9da2cc;
+    font-weight: 900;
+}
+
+.dc-input p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.dc-footer {
+    grid-column: 1 / -1;
+    padding: 6px 20px 26px;
+    border-top: 1px solid #1d1e30;
+    background: #23243a;
+}
+
+.is-discord .grad-closing {
+    color: #b8f5d8;
+}
+
+.is-discord .homie-result-actions {
+    justify-content: center;
 }
 
 .is-discord .homie-result-actions a {
@@ -91,30 +437,90 @@
     background: #292b43;
 }
 
-.discord-event-banner {
-    margin-top: 36px;
-    padding: 16px 20px;
-    border: 1px solid #7c86ff;
-    border-radius: 10px;
-    color: #b8f5d8;
-    background: #292b43;
-    font-family: var(--font-roboto-mono);
-    font-size: 12px;
-    line-height: 1.7;
+@media (max-width: 1100px) {
+    .dc-app {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dc-channels,
+    .dc-members {
+        display: none;
+    }
 }
 
-.discord-reactions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 16px;
-    border-radius: 12px;
-    background: #292b43;
-    font-size: 15px;
-    line-height: 1.7;
+@media (max-width: 740px) {
+    .dc-messages {
+        padding: 14px 12px 20px;
+    }
+
+    .dc-message {
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    .dc-avatar {
+        width: 34px;
+        height: 34px;
+        font-size: 12px;
+    }
+
+    .dc-message-body .homie-photo,
+    .is-discord .dc-messages > .homie-photo {
+        margin-left: 44px;
+    }
+
+    .dc-input {
+        margin: auto 12px 14px;
+    }
 }
 
-.discord-reactions span {
-    color: #b8f5d8;
-    font-family: var(--font-doodle);
+.dc-event dd {
+    font-size: clamp(20px, 2.4vw, 26px);
+}
+
+/* Đồng hồ nằm trong tin nhắn: xếp dọc cho vừa cột chat. */
+.dc-message-body .countdown-section {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    justify-items: center;
+    padding: 0;
+    text-align: center;
+}
+
+.dc-message-body .countdown-copy h2 {
+    font-size: clamp(30px, 4vw, 44px);
+}
+
+.dc-message-body .countdown-copy p {
+    margin: 0 auto;
+}
+
+.dc-message-body .doodle-clock {
+    width: min(100%, 420px);
+}
+
+.dc-message-body .doodle-clock {
+    margin-top: 28px;
+}
+
+/* Cột chat hẹp: sơ đồ trường nằm trên, hai cổng chia đôi bên dưới. */
+.dc-message-body .invite-venue-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dc-message-body .invite-campus {
+    order: -1;
+    grid-column: 1 / -1;
+}
+
+.dc-message-body .invite-gate.is-left,
+.dc-message-body .invite-gate.is-right {
+    transform: none;
+}
+
+@media (max-width: 600px) {
+    .dc-message-body .invite-venue-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }

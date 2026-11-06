@@ -20,6 +20,9 @@ import { GuestQr } from "./guest-qr";
 
 type AuthStatus = "checking" | "signedOut" | "signedIn";
 
+/** Giới hạn lời nhắn riêng cho thiệp chung (mặc định, Discord): khoảng 1–2 dòng. */
+const shortMessageLimit = 160;
+
 function initials(name: string) {
     return name
         .trim()
@@ -138,6 +141,8 @@ export function DevDashboard() {
     const [personalMessage, setPersonalMessage] = useState("");
     const [qrCode, setQrCode] = useState("");
     const [themeVariant, setThemeVariant] = useState(defaultTheme);
+    // Thiệp chung đã có lời mời sẵn; chỉ theme hồng còn giữ lá thư dài.
+    const messageLimit = themeVariant === loveTheme ? 1200 : shortMessageLimit;
     const [editingId, setEditingId] = useState("");
     const [photoFile, setPhotoFile] = useState<File | null>(null);
     const [removePhoto, setRemovePhoto] = useState(false);
@@ -521,22 +526,28 @@ export function DevDashboard() {
 
                             <label htmlFor="guest-message">
                                 <span>03</span>
-                                Lời mời
+                                Lời nhắn riêng (không bắt buộc)
                             </label>
                             <textarea
                                 id="guest-message"
                                 name="personalMessage"
                                 value={personalMessage}
-                                maxLength={1200}
-                                placeholder="Viết một lời mời riêng dành cho người bạn này..."
-                                rows={8}
-                                required
+                                maxLength={messageLimit}
+                                placeholder={
+                                    themeVariant === loveTheme
+                                        ? "Viết lời nhắn dành riêng cho người thương..."
+                                        : "1–2 dòng thôi, ví dụ: Nhớ tới sớm chụp hình nha!"
+                                }
+                                rows={themeVariant === loveTheme ? 8 : 2}
                                 onChange={(event) =>
                                     setPersonalMessage(event.target.value)
                                 }
                             />
                             <div className="dev-char-count">
-                                {personalMessage.length} / 1.200
+                                {personalMessage.length} / {messageLimit.toLocaleString("vi")}
+                                {themeVariant === loveTheme
+                                    ? ""
+                                    : " — thiệp đã có sẵn lời mời, để trống cũng được"}
                             </div>
 
                             <label htmlFor="guest-qr-code">
@@ -687,7 +698,7 @@ export function DevDashboard() {
                                                     ).padStart(2, "0")}
                                                 </span>
                                             </div>
-                                            <p>{invitation.personal_message}</p>
+                                            <p>{invitation.personal_message || "(chỉ dùng lời mời chung)"}</p>
                                             <small>
                                                 {invitation.instagram_handle ?? "—"}
                                                 {invitation.photo_path ? <em>ẢNH ✓</em> : null}

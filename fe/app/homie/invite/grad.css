@@ -1,0 +1,527 @@
+/* Thiệp chung theme mặc định (cửa sổ máy tính cũ) và khối bản đồ dùng chung cho mọi theme. */
+
+/* ───── Bản đồ: Cổng 1 | sơ đồ trường | Cổng 3 ───── */
+
+.invite-venue {
+    margin-top: 56px;
+}
+
+.invite-venue-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    margin-bottom: 16px;
+}
+
+.invite-venue-title small {
+    padding: 4px 8px;
+    color: #082d72;
+    background: #d9ff51;
+    font-family: var(--font-roboto-mono);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.invite-venue-title strong {
+    font-size: 14px;
+}
+
+.invite-venue-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr) minmax(0, 1fr);
+    gap: 16px;
+    align-items: stretch;
+}
+
+.invite-gate,
+.invite-campus {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    margin: 0;
+    border: 2px solid #082d72;
+    background: #ffffff;
+    box-shadow: 5px 5px 0 rgba(8, 45, 114, 0.18);
+}
+
+.invite-gate.is-left {
+    transform: rotate(-1deg);
+}
+
+.invite-gate.is-right {
+    transform: rotate(1deg);
+}
+
+.invite-gate-label {
+    padding: 10px 12px;
+    border-bottom: 2px solid #082d72;
+    background: #0868ff;
+    color: #ffffff;
+}
+
+.invite-gate-label strong {
+    display: block;
+    font-family: var(--font-doodle);
+    font-size: 24px;
+    line-height: 1.1;
+}
+
+.invite-gate-label span {
+    font-size: 11px;
+    opacity: 0.9;
+}
+
+.invite-gate iframe {
+    display: block;
+    width: 100%;
+    min-height: 220px;
+    flex: 1;
+    border: 0;
+}
+
+.invite-gate a {
+    padding: 10px 12px;
+    border-top: 2px solid #082d72;
+    color: #082d72;
+    background: #d9ff51;
+    font-family: var(--font-roboto-mono);
+    font-size: 10px;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+}
+
+.invite-campus {
+    justify-content: center;
+    padding: 10px;
+}
+
+.invite-campus-frame {
+    position: relative;
+}
+
+.invite-campus-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.invite-campus-pin {
+    position: absolute;
+    padding: 3px 7px;
+    border: 1.5px solid #082d72;
+    color: #082d72;
+    background: #d9ff51;
+    box-shadow: 2px 2px 0 #082d72;
+    font-family: var(--font-roboto-mono);
+    font-size: clamp(8px, 1.2vw, 11px);
+    font-weight: 800;
+    white-space: nowrap;
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+}
+
+.invite-campus-pin::after {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-top-color: #082d72;
+    content: "";
+    transform: translateX(-50%);
+}
+
+/* Toạ độ tính theo phần trăm của ảnh sơ đồ (2000 × 932). */
+.invite-campus-pin.is-hall {
+    top: 39%;
+    left: 44.7%;
+    color: #ffffff;
+    background: #ff2f6d;
+    animation: grad-bounce 1.6s ease-in-out infinite;
+}
+
+.invite-campus-pin.is-gate-1 {
+    top: 42%;
+    left: 17.5%;
+}
+
+.invite-campus-pin.is-gate-3 {
+    top: 55%;
+    left: 89%;
+}
+
+.invite-campus figcaption {
+    margin-top: 8px;
+    color: #0868ff;
+    font-family: var(--font-doodle);
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+}
+
+@keyframes grad-bounce {
+    0%,
+    100% {
+        transform: translate(-50%, -100%);
+    }
+    50% {
+        transform: translate(-50%, calc(-100% - 6px));
+    }
+}
+
+/* ───── Theme mặc định ───── */
+
+.is-grad .homie-invitation {
+    width: min(1160px, 100%);
+}
+
+.grad-confetti {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.grad-confetti i {
+    position: absolute;
+    top: -20px;
+    left: calc(var(--i) * 5.6% + 1%);
+    width: 9px;
+    height: 15px;
+    background: #0868ff;
+    opacity: 0.55;
+    animation: grad-fall calc(9s + var(--i) * 0.45s) linear infinite;
+    animation-delay: calc(var(--i) * -1.3s);
+}
+
+.grad-confetti i:nth-child(3n) {
+    background: #d9ff51;
+    opacity: 0.85;
+}
+
+.grad-confetti i:nth-child(3n + 1) {
+    border-radius: 50%;
+    background: #ff8fcf;
+}
+
+@keyframes grad-fall {
+    from {
+        transform: translateY(0) rotate(0deg);
+    }
+    to {
+        transform: translateY(110vh) rotate(540deg);
+    }
+}
+
+.grad-window {
+    position: relative;
+    border: 3px solid #082d72;
+    background: #ffffff;
+    box-shadow: 12px 12px 0 #082d72;
+    transform: rotate(-0.6deg);
+}
+
+.grad-window-body {
+    position: relative;
+    padding: clamp(32px, 6vw, 64px) clamp(24px, 6vw, 64px) clamp(40px, 6vw, 70px);
+}
+
+.grad-cap {
+    position: absolute;
+    top: -46px;
+    right: 28px;
+    font-size: clamp(56px, 9vw, 92px);
+    transform: rotate(14deg);
+    filter: drop-shadow(4px 4px 0 rgba(8, 45, 114, 0.25));
+}
+
+.grad-kicker {
+    margin: 0 0 14px;
+    color: #0868ff;
+    font-family: var(--font-roboto-mono);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.grad-window-body h2 {
+    margin: 0;
+    font-family: var(--font-doodle);
+    font-size: clamp(44px, 8vw, 88px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.grad-subline {
+    display: inline-block;
+    max-width: 640px;
+    margin: 22px 0 0;
+    padding: 4px 10px 8px;
+    color: #082d72;
+    background: #d9ff51;
+    font-family: var(--font-doodle);
+    font-size: clamp(22px, 3.4vw, 32px);
+    font-weight: 600;
+    line-height: 1.35;
+    transform: rotate(-1deg);
+}
+
+.grad-stamp {
+    position: absolute;
+    right: clamp(14px, 4vw, 40px);
+    bottom: -38px;
+    display: grid;
+    width: 128px;
+    height: 128px;
+    place-content: center;
+    border: 4px double #ff2f6d;
+    border-radius: 50%;
+    color: #ff2f6d;
+    background: rgba(255, 255, 255, 0.9);
+    font-family: var(--font-roboto-mono);
+    text-align: center;
+    transform: rotate(-14deg);
+}
+
+.grad-stamp b {
+    font-size: 15px;
+    letter-spacing: 0.1em;
+}
+
+.grad-stamp span {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.grad-stamp small {
+    margin-top: 2px;
+    font-size: 8px;
+}
+
+.grad-jokes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 26px 22px;
+    margin: 72px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.grad-jokes li {
+    position: relative;
+    width: min(260px, 100%);
+    padding: 18px 18px 20px;
+    border: 2px solid #082d72;
+    background: #fffef8;
+    box-shadow: 5px 5px 0 rgba(8, 45, 114, 0.2);
+    font-family: var(--font-doodle);
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.35;
+    transform: rotate(calc((var(--i) - 2) * 1.2deg));
+}
+
+.grad-jokes li:nth-child(2n) {
+    background: #e5f0ff;
+}
+
+.grad-jokes li:nth-child(3n) {
+    background: #fdffe0;
+}
+
+.grad-jokes li::before {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    width: 64px;
+    height: 20px;
+    background: rgba(217, 255, 81, 0.82);
+    content: "";
+    transform: translateX(-50%) rotate(-3deg);
+}
+
+.is-grad .homie-photo {
+    margin: 56px auto 0;
+}
+
+.grad-note {
+    position: relative;
+    width: min(560px, 100%);
+    margin: 56px auto 0;
+    padding: 26px 26px 22px;
+    border: 2px solid #082d72;
+    background: #fff4a8;
+    box-shadow: 6px 6px 0 rgba(8, 45, 114, 0.2);
+    transform: rotate(1.2deg);
+}
+
+.grad-note small {
+    font-family: var(--font-roboto-mono);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.grad-note p {
+    margin: 10px 0 0;
+    font-family: var(--font-doodle);
+    font-size: clamp(22px, 3.2vw, 28px);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.grad-ticket {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    margin-top: 64px;
+    border: 3px solid #082d72;
+    background: #ffffff;
+    box-shadow: 8px 8px 0 #082d72;
+    transform: rotate(0.4deg);
+}
+
+.grad-ticket-stub {
+    display: grid;
+    align-content: center;
+    gap: 6px;
+    padding: 20px;
+    border-right: 3px dashed #082d72;
+    color: #ffffff;
+    background: #0868ff;
+    text-align: center;
+}
+
+.grad-ticket-stub small {
+    font-family: var(--font-roboto-mono);
+    font-size: 10px;
+}
+
+.grad-ticket-stub strong {
+    font-family: var(--font-roboto-mono);
+    font-size: 18px;
+    letter-spacing: 0.08em;
+}
+
+.grad-ticket-stub span {
+    font-family: var(--font-doodle);
+    font-size: 24px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.grad-ticket-main {
+    padding: 20px 24px;
+}
+
+.grad-ticket-main > small,
+.dc-event > small {
+    font-family: var(--font-roboto-mono);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.grad-ticket dl,
+.dc-event dl {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: 16px 32px;
+    margin: 14px 0 0;
+}
+
+.grad-ticket dt,
+.dc-event dt {
+    color: #6680a7;
+    font-family: var(--font-roboto-mono);
+    font-size: 10px;
+}
+
+.grad-ticket dd,
+.dc-event dd {
+    margin: 4px 0 0;
+    white-space: nowrap;
+    font-family: var(--font-doodle);
+    font-size: clamp(24px, 3.2vw, 32px);
+    font-weight: 700;
+    line-height: 1.15;
+}
+
+.grad-ticket dl > div:last-child dd,
+.dc-event dl > div:last-child dd {
+    white-space: normal;
+}
+
+.grad-ticket dl span,
+.dc-event dl span {
+    display: block;
+    margin-top: 4px;
+    color: #5d77a1;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.grad-closing {
+    margin: 48px 0 0;
+    color: #0868ff;
+    font-family: var(--font-doodle);
+    font-size: clamp(22px, 3.4vw, 30px);
+    font-weight: 700;
+    text-align: center;
+    transform: rotate(-1deg);
+}
+
+@media (max-width: 900px) {
+    .invite-venue-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .invite-campus {
+        order: -1;
+    }
+
+    .invite-gate.is-left,
+    .invite-gate.is-right {
+        transform: none;
+    }
+}
+
+@media (max-width: 740px) {
+    .grad-cap {
+        top: -38px;
+        right: 12px;
+    }
+
+    .grad-stamp {
+        width: 96px;
+        height: 96px;
+        bottom: -48px;
+    }
+
+    .grad-stamp b {
+        font-size: 11px;
+    }
+
+    .grad-stamp span {
+        font-size: 9px;
+    }
+
+    .grad-ticket {
+        grid-template-columns: 1fr;
+    }
+
+    .grad-ticket-stub {
+        border-right: 0;
+        border-bottom: 3px dashed #082d72;
+    }
+
+    .grad-ticket dl,
+    .dc-event dl {
+        grid-template-columns: 1fr;
+    }
+}
+
+.homie-invitation .countdown-copy time {
+    white-space: nowrap;
+}

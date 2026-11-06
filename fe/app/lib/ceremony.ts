@@ -20,3 +20,11 @@ export const directionsUrl =
 export const mapEmbedUrl = mapQuery
     ? `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`
     : null;
+
+/** Bản đồ nhúng theo toạ độ, không cần API key. */
+export function gateEmbedUrl(gate: { lat: number; lng: number }) {
+    return `https://www.google.com/maps?q=${gate.lat},${gate.lng}&z=17&output=embed`;
+}
+
+export const ceremonyGates = ceremony.gates;
+export const campusMapUrl = ceremony.campusMap;

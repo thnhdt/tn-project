@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { HomieInvitation } from "./homie-invitation";
 import "../homie.css";
+import "./grad.css";
 import "./love.css";
 import "./discord.css";
 
