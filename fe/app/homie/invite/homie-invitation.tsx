@@ -25,6 +25,7 @@ import {
 import { inviteLines } from "../../lib/invite-lines";
 import { graduate } from "../../site-content";
 import { LoveEffects } from "./love-effects";
+import { LoveFloaters } from "./love-floaters";
 import { ImportedStickers } from "./imported-stickers";
 import { VenueMaps } from "./venue-maps";
 
@@ -140,20 +141,25 @@ function GuestPhoto({ invitation }: { invitation: GuestInvitation }) {
 
 function ResultActions({
     publicInvitation,
+    mainLabel = "XEM THIỆP CHÍNH →",
     directionsLabel = "CHỈ ĐƯỜNG ↗",
+    showSwitchGuest = true,
 }: {
     publicInvitation: boolean;
+    mainLabel?: string;
     directionsLabel?: string;
+    /** Hiện nút "KHÔNG PHẢI BẠN?" để quét lại mã khác. */
+    showSwitchGuest?: boolean;
 }) {
     return (
         <div className="homie-result-actions">
-            <Link href="/">XEM THIỆP CHÍNH →</Link>
+            <Link href="/">{mainLabel}</Link>
             {directionsUrl ? (
                 <a href={directionsUrl} target="_blank" rel="noreferrer">
                     {directionsLabel}
                 </a>
             ) : null}
-            {!publicInvitation ? (
+            {!publicInvitation && showSwitchGuest ? (
                 <Link href="/homie" onClick={() => saveInviteCode(null)}>
                     KHÔNG PHẢI BẠN?
                 </Link>
@@ -409,6 +415,7 @@ function LoveInvitation({ invitation, publicInvitation }: LayoutProps) {
         <main className="homie-shell homie-result-shell is-love">
             <div className="homie-grid" aria-hidden="true" />
             <LoveEffects />
+            <LoveFloaters />
             <Link className="homie-logo" href="/">
                 <span>{graduate.initials}</span>
                 <strong>LOVE_LETTER.exe</strong>
@@ -455,7 +462,12 @@ function LoveInvitation({ invitation, publicInvitation }: LayoutProps) {
 
                 <VenueMaps />
 
-                <ResultActions publicInvitation={publicInvitation} />
+                <ResultActions
+                    publicInvitation={publicInvitation}
+                    mainLabel="Vk iu xem thiệp chínhhh →"
+                    directionsLabel="Google maps cho google maps của anhhh ↗"
+                    showSwitchGuest={false}
+                />
             </section>
 
             <p className="homie-doodle result-doodle" aria-hidden="true">

@@ -680,6 +680,16 @@ button {
     letter-spacing: -0.06em;
 }
 
+.portrait-caption {
+    position: relative;
+    z-index: 2;
+    margin-top: 2px;
+    font-family: var(--font-doodle);
+    font-size: clamp(16px, 1.6vw, 22px);
+    font-weight: 700;
+    transform: rotate(-2deg);
+}
+
 
 .tape {
     position: absolute;

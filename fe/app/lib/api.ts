@@ -34,7 +34,17 @@ export type RandomGif = {
  * Gọi một hàm RPC công khai bằng publishable key. Các trang của khách dùng
  * fetch trực tiếp để không phải tải supabase-js; dashboard dùng `lib/admin.ts`.
  */
-async function callRpc<T>(
+/** Lỗi từ hàm RPC, kèm thông điệp gốc của database (ví dụ `photo_drop_quota_exceeded`). */
+export class RpcError extends Error {
+    constructor(
+        message: string,
+        readonly reason: string,
+    ) {
+        super(message);
+    }
+}
+
+export async function callRpc<T>(
     name: string,
     args: Record<string, unknown>,
     init: RequestInit = {},
@@ -52,7 +62,8 @@ async function callRpc<T>(
     });
 
     if (!response.ok) {
-        throw new Error("Không thể kết nối máy chủ.");
+        const payload = (await response.json().catch(() => ({}))) as { message?: string };
+        throw new RpcError("Không thể kết nối máy chủ.", payload.message ?? "");
     }
 
     return (await response.json()) as T;

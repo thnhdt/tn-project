@@ -1,10 +1,12 @@
-import { supabaseKey, supabaseUrl } from "./api";
+import { callRpc, RpcError, supabaseKey, supabaseUrl } from "./api";
 
-/** Bucket công khai của trang /tha-anh (xem migration 013_photo_drop.sql). */
+/**
+ * Bucket công khai của trang /tha-anh (xem migration 013_photo_drop.sql).
+ * Chỉ khách có mã QR mới thả được, mỗi khách tối đa 4 ảnh (migration 015).
+ */
 export const photoDropBucket = "photo-drop";
 
 const maxEdge = 1200;
-const maxFiles = 8;
 const maxInputBytes = 25 * 1024 * 1024;
 
 export type DroppedPhoto = {
@@ -103,10 +105,43 @@ export async function compressDroppedPhoto(file: File) {
     }
 }
 
+export type PhotoQuota = {
+    used: number;
+    max: number;
+};
+
+/** Số ảnh khách đã thả. Mã QR sai thì trả về `null`. */
+export async function getPhotoQuota(code: string): Promise<PhotoQuota | null> {
+    const rows = await callRpc<{ used: number; max_photos: number }[]>("photo_drop_quota", {
+        p_code: code,
+    });
+    const row = rows[0];
+    return row ? { used: row.used, max: row.max_photos } : null;
+}
+
+/** Xin database cấp tên file: kiểm tra mã QR và số ảnh còn lại trước khi tải lên. */
+async function reservePhotoName(code: string, extension: string) {
+    try {
+        return await callRpc<string>("photo_drop_reserve", {
+            p_code: code,
+            p_extension: extension,
+        });
+    } catch (error) {
+        const reason = error instanceof RpcError ? error.reason : "";
+        if (reason.includes("photo_drop_quota_exceeded")) {
+            throw new Error("Ní thả đủ 4 ảnh rồi nha!");
+        }
+        if (reason.includes("photo_drop_invalid_code")) {
+            throw new Error("Mã QR không đúng. Quét lại QR trên thiệp nhé.");
+        }
+        throw error;
+    }
+}
+
 /** Nén rồi tải một ảnh lên bucket. Trả về ảnh vừa tải để thả bay ngay. */
-export async function uploadDroppedPhoto(file: File): Promise<DroppedPhoto> {
+export async function uploadDroppedPhoto(file: File, code: string): Promise<DroppedPhoto> {
     const { blob, extension } = await compressDroppedPhoto(file);
-    const name = `${window.crypto.randomUUID()}.${extension}`;
+    const name = await reservePhotoName(code, extension);
     const response = await fetch(
         `${supabaseUrl}/storage/v1/object/${photoDropBucket}/${name}`,
         {
@@ -133,10 +168,11 @@ export async function uploadDroppedPhoto(file: File): Promise<DroppedPhoto> {
     return { name, url: photoDropUrl(name) };
 }
 
-/** Lấy các file ảnh từ lần kéo-thả hoặc chọn file, tối đa 8 ảnh mỗi lần. */
-export function pickImageFiles(list: FileList | null) {
+/** Lấy các file ảnh từ lần kéo-thả hoặc chọn file, không quá số ảnh khách còn được thả. */
+export function pickImageFiles(list: FileList | null, maxFiles: number) {
     const files = Array.from(list ?? []).filter(
         (file) => file.type.startsWith("image/") || /\.(heic|heif)$/i.test(file.name),
     );
-    return { files: files.slice(0, maxFiles), skipped: Math.max(0, files.length - maxFiles) };
+    const limit = Math.max(0, maxFiles);
+    return { files: files.slice(0, limit), skipped: Math.max(0, files.length - limit) };
 }

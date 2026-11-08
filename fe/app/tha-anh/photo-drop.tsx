@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { errorMessage, reportError } from "../lib/api";
+import { errorMessage, readInviteCode, reportError } from "../lib/api";
 import {
+    getPhotoQuota,
     listDroppedPhotos,
     pickImageFiles,
     uploadDroppedPhoto,
     type DroppedPhoto,
+    type PhotoQuota,
 } from "../lib/photo-drop";
 
 type Balloon = {
@@ -24,6 +26,15 @@ type Balloon = {
 
 type Status = { tone: "info" | "ok" | "error"; text: string } | null;
 
+/**
+ * Quyền thả ảnh của trình duyệt này: `checking` khi đang hỏi máy chủ,
+ * `guest` khi chưa quét QR (hoặc mã sai), `member` khi đã có mã QR hợp lệ.
+ */
+type Access =
+    | { kind: "checking" }
+    | { kind: "guest" }
+    | { kind: "member"; code: string; quota: PhotoQuota };
+
 const refreshEveryMs = 45_000;
 
 function random(min: number, max: number) {
@@ -36,6 +47,7 @@ export function PhotoDrop() {
     const [dragging, setDragging] = useState(false);
     const [uploading, setUploading] = useState(0);
     const [status, setStatus] = useState<Status>(null);
+    const [access, setAccess] = useState<Access>({ kind: "checking" });
     const poolRef = useRef<DroppedPhoto[]>([]);
     const nextKeyRef = useRef(0);
     const dragDepthRef = useRef(0);
@@ -69,6 +81,36 @@ export function PhotoDrop() {
             ];
         });
     }, []);
+
+    // Chỉ khách đã quét QR (mã lưu trên máy) mới thả ảnh được.
+    useEffect(() => {
+        let cancelled = false;
+        const checkAccess = async () => {
+            const code = readInviteCode();
+            if (!code) {
+                setAccess({ kind: "guest" });
+                return;
+            }
+            try {
+                const quota = await getPhotoQuota(code);
+                if (!cancelled) {
+                    setAccess(quota ? { kind: "member", code, quota } : { kind: "guest" });
+                }
+            } catch (error) {
+                reportError("photo-drop:quota", error);
+                if (!cancelled) {
+                    // Không hỏi được máy chủ: vẫn cho thử, máy chủ sẽ chặn nếu không hợp lệ.
+                    setAccess({ kind: "member", code, quota: { used: 0, max: 4 } });
+                }
+            }
+        };
+        void checkAccess();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
+    const remaining = access.kind === "member" ? Math.max(0, access.quota.max - access.quota.used) : 0;
 
     const refresh = useCallback(async () => {
         try {
@@ -108,7 +150,20 @@ export function PhotoDrop() {
 
     const handleFiles = useCallback(
         async (list: FileList | null, at?: { x: number; y: number }) => {
-            const { files, skipped } = pickImageFiles(list);
+            if (access.kind !== "member") {
+                setStatus({
+                    tone: "error",
+                    text: "Chỉ mấy ní có QR trên thiệp mới thả ảnh được nha. Quét QR trước đã!",
+                });
+                return;
+            }
+            if (remaining === 0) {
+                setStatus({ tone: "error", text: "Ní thả đủ 4 ảnh rồi nha!" });
+                return;
+            }
+
+            const { code } = access;
+            const { files, skipped } = pickImageFiles(list, remaining);
             if (files.length === 0) {
                 setStatus({ tone: "error", text: "Không thấy tấm ảnh nào trong đó hết á." });
                 return;
@@ -122,8 +177,13 @@ export function PhotoDrop() {
             await Promise.all(
                 files.map(async (file, index) => {
                     try {
-                        const photo = await uploadDroppedPhoto(file);
+                        const photo = await uploadDroppedPhoto(file, code);
                         sent += 1;
+                        setAccess((current) =>
+                            current.kind === "member"
+                                ? { ...current, quota: { ...current.quota, used: current.quota.used + 1 } }
+                                : current,
+                        );
                         poolRef.current = [photo, ...poolRef.current];
                         setPhotoCount((count) => (count ?? 0) + 1);
                         const spot = at ? { x: at.x + (index - files.length / 2) * 40, y: at.y } : undefined;
@@ -140,12 +200,12 @@ export function PhotoDrop() {
             if (sent === 0) {
                 setStatus({ tone: "error", text: lastError || "Chưa gửi được ảnh nào." });
             } else {
-                const extra = skipped > 0 ? ` (mỗi lần tối đa 8 ảnh, bỏ qua ${skipped})` : "";
+                const extra = skipped > 0 ? ` (mỗi người tối đa 4 ảnh, bỏ qua ${skipped})` : "";
                 const failed = sent < files.length ? `, ${files.length - sent} ảnh lỗi` : "";
                 setStatus({ tone: "ok", text: `Bay rồi! ${sent} ảnh đã lên trời${failed}${extra}.` });
             }
         },
-        [launch],
+        [access, launch, remaining],
     );
 
     // Kéo-thả ở bất kỳ đâu trên trang.
@@ -271,14 +331,26 @@ export function PhotoDrop() {
                     cho mọi người cùng xem. Bấm vào ảnh đang bay để làm nó nảy một cái.
                 </p>
 
-                <button
-                    type="button"
-                    className="drop-pick"
-                    onClick={() => inputRef.current?.click()}
-                    disabled={uploading > 0}
-                >
-                    {uploading > 0 ? `ĐANG THẢ ${uploading} ẢNH…` : "CHỌN ẢNH ĐỂ THẢ ↑"}
-                </button>
+                {access.kind === "guest" ? (
+                    <Link href="/homie" className="drop-pick">
+                        QUÉT QR ĐỂ THẢ ẢNH →
+                    </Link>
+                ) : (
+                    <button
+                        type="button"
+                        className="drop-pick"
+                        onClick={() => inputRef.current?.click()}
+                        disabled={access.kind === "checking" || uploading > 0 || remaining === 0}
+                    >
+                        {access.kind === "checking"
+                            ? "ĐANG KIỂM TRA QR…"
+                            : uploading > 0
+                              ? `ĐANG THẢ ${uploading} ẢNH…`
+                              : remaining === 0
+                                ? "ĐÃ THẢ ĐỦ 4 ẢNH ✓"
+                                : "CHỌN ẢNH ĐỂ THẢ ↑"}
+                    </button>
+                )}
                 <input
                     ref={inputRef}
                     type="file"
@@ -291,8 +363,16 @@ export function PhotoDrop() {
                     }}
                 />
 
+                <p className="drop-quota">
+                    {access.kind === "guest"
+                        ? "Ai cũng xem được ảnh, nhưng chỉ mấy ní có QR trên thiệp mới thả ảnh được."
+                        : access.kind === "member"
+                          ? `Ní còn thả được ${remaining}/${access.quota.max} ảnh.`
+                          : ""}
+                </p>
+
                 <p className={`drop-status${status ? ` is-${status.tone}` : ""}`} role="status">
-                    {status?.text ?? "Mỗi lần tối đa 8 ảnh. Ảnh được nén nhẹ trước khi gửi."}
+                    {status?.text ?? ""}
                 </p>
                 <p className="drop-note">
                     Ảnh thả vào là công khai trên trang này, ai mở cũng thấy. Đừng thả ảnh riêng tư nha.

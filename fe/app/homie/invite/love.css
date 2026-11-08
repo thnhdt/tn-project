@@ -120,9 +120,10 @@
     box-shadow: 3px 3px 0 #7a0f45;
 }
 
+/* Thiệp hồng không có nút "KHÔNG PHẢI BẠN?", nên nút cuối vẫn giữ màu hồng. */
 .is-love .homie-result-actions a:last-child {
-    color: #7a0f45;
-    background: #ffffff;
+    color: #ffffff;
+    background: #ff2f86;
 }
 
 .is-love .doodle-clock {
@@ -296,6 +297,25 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Sticker động bay vòng vòng khắp màn hình, không chặn thao tác bấm. */
+.love-floaters {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.love-floaters img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 90px;
+    height: auto;
+    filter: drop-shadow(2px 4px 3px rgba(122, 15, 69, 0.15));
+    will-change: transform;
 }
 
 @media (max-width: 1180px) {

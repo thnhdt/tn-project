@@ -1,10 +1,11 @@
 import type { CSSProperties } from "react";
-import { loveWebStickers } from "../../lib/love-web-stickers";
+import { loveStickerRows } from "../../lib/love-web-stickers";
 
+/** Một hàng sticker: hàng 0 là sticker động, hàng 1 và 2 là sticker tĩnh. */
 export function ImportedStickers({ group }: { group: number }) {
     return (
         <div className="love-imported-stickers" aria-hidden="true">
-            {loveWebStickers.filter((_, index) => index % 3 === group).map((src, index) => (
+            {(loveStickerRows[group] ?? []).map((src, index) => (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                     key={src}

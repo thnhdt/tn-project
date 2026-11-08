@@ -188,14 +188,14 @@ export function QrGate() {
                         PRIVATE
                         <small>JUST 4 U</small>
                     </div>
-                    <p className="homie-kicker">HEY HOMIE!</p>
+                    <p className="homie-kicker">mấy ní ơi!</p>
                     <h1>
-                        Thiệp của bạn
-                        <span>đang ở đây.</span>
+                        Thiệp của mấy ní
+                        <span>ở đâyyy!!!</span>
                     </h1>
                     <p className="homie-description">
-                        Quét mã QR trên thiệp Đạt gửi bạn, hoặc tải lên ảnh / file PDF
-                        có mã QR đó để mở trang dành riêng cho bạn.
+                        Quét con mã QR trên thiệp mà Ske gửi cho mấy ní, hoặc tải lên ảnh / file PDF
+                        có mã QR đó để mở trang thiệp riêng của ní nha!!!
                     </p>
 
                     <div className={`homie-camera ${status === "camera" ? "is-open" : ""}`}>
@@ -229,12 +229,6 @@ export function QrGate() {
                             {error}
                         </p>
                     ) : null}
-
-                    <div className="homie-helper">
-                        <span>SECURE</span>
-                        <code>1 QR = 1 homie</code>
-                        <p>File được đọc ngay trên máy bạn, không tải lên server.</p>
-                    </div>
                 </div>
             </section>
 

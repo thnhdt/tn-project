@@ -189,6 +189,12 @@
     transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
+/* Khách chưa quét QR: nút là đường dẫn sang trang quét QR. */
+a.drop-pick {
+    display: inline-block;
+    text-decoration: none;
+}
+
 .drop-pick:hover:not(:disabled) {
     transform: translate(-2px, -2px);
     box-shadow: 7px 7px 0 #082d72;
@@ -201,7 +207,19 @@
 
 .drop-pick:disabled {
     background: #7ebeff;
-    cursor: progress;
+    cursor: not-allowed;
+}
+
+.drop-quota {
+    margin: 14px 0 0;
+    color: #082d72;
+    font-family: var(--font-roboto-mono);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.drop-quota:empty {
+    display: none;
 }
 
 .drop-status {
@@ -209,6 +227,12 @@
     margin: 16px 0 6px;
     font-size: 14px;
     font-weight: 600;
+}
+
+/* Chưa có thông báo thì không chừa khoảng trống. */
+.drop-status:empty {
+    min-height: 0;
+    margin: 10px 0 0;
 }
 
 .drop-status.is-ok {

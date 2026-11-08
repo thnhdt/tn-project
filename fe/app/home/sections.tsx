@@ -105,6 +105,7 @@ export function Hero() {
                             height={865}
                         />
                         <strong>{hero.photoTitle}</strong>
+                        <small className="portrait-caption">{hero.photoCaption}</small>
                     </div>
                 </div>
 

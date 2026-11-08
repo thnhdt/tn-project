@@ -58,6 +58,7 @@ export const hero = {
     eyebrow: `BUILD PASSED • CLASS OF ${graduate.classOf}`,
     scribble: "finally shipped!",
     photoTitle: "ẢNH CỦA ĐẠT",
+    photoCaption: "(literally me)",
     windowTitle: "graduation_final_FINAL.exe",
 };
 

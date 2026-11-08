@@ -58,7 +58,7 @@ test("exports the protected guest dashboard gate", async () => {
 
 test("exports the QR homie gate without any login form", async () => {
     const html = await readPage("homie.html");
-    assert.match(html, /Thiệp của bạn/);
+    assert.match(html, /Thiệp của mấy ní/);
     assert.match(html, /QUÉT BẰNG CAMERA/);
     assert.match(html, /TẢI ẢNH \/ PDF CÓ QR/);
     assert.match(html, /accept="image\/\*,application\/pdf,\.pdf"/);
