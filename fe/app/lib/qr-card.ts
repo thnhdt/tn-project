@@ -213,8 +213,8 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
         const hearts: [number, number, number, number, string][] = [
             [300, 420, 120, -0.3, colors.blue],
             [2190, 400, 150, 0.25, colors.blue],
-            [2060, 560, 80, -0.2, colors.acid],
-            [420, 600, 70, 0.3, colors.white],
+            [2210, 610, 80, -0.2, colors.acid],
+            [290, 640, 70, 0.3, colors.white],
             [520, 900, 110, -0.25, colors.acid],
             [1830, 800, 60, -0.4, colors.white],
         ];
@@ -237,11 +237,16 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     context.font = `700 170px ${doodle}`;
     context.fillText(ceremony.title, centerX, 470, contentWidth);
     context.fillStyle = colors.blue;
-    context.font = `700 58px ${sans}`;
-    context.fillText(`${graduate.fullName} • ${graduate.degree}`, centerX, 580, contentWidth);
-    context.fillStyle = colors.muted;
-    context.font = `400 44px ${sans}`;
-    context.fillText(graduate.university.join(" – "), centerX, 656, contentWidth);
+    if (love) {
+        context.font = `700 64px ${doodle}`;
+        context.fillText("Chiếc thiệp iu nhỏ gửi lời iu to đến tình iu của anhhh", centerX, 620, contentWidth);
+    } else {
+        context.font = `700 58px ${sans}`;
+        context.fillText(`${graduate.fullName} • ${graduate.degree}`, centerX, 580, contentWidth);
+        context.fillStyle = colors.muted;
+        context.font = `400 44px ${sans}`;
+        context.fillText(graduate.university.join(" – "), centerX, 656, contentWidth);
+    }
 
     context.strokeStyle = colors.ink;
     context.lineWidth = 5;
@@ -412,14 +417,25 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     const copyWidth = card.width - card.margin - copyX - (directionsUrl ? 400 : 0);
     context.textAlign = "left";
     context.fillStyle = colors.blue;
-    context.font = `700 92px ${doodle}`;
-    context.fillText("quét link này nhaaa", copyX, 2540, card.width - card.margin - copyX);
+    if (love) {
+        context.font = `700 84px ${doodle}`;
+        context.fillText("iuu oiii iuuu", copyX, 2450, card.width - card.margin - copyX);
+        context.fillText("quét QR này nhaaaa", copyX, 2545, card.width - card.margin - copyX);
+    } else {
+        context.font = `700 92px ${doodle}`;
+        context.fillText("quét link này nhaaa", copyX, 2540, card.width - card.margin - copyX);
+    }
     context.fillStyle = colors.ink;
     context.font = `700 58px ${doodle}`;
-    context.fillText("(không có vi rút đâu!)", copyX + 20, 2632, card.width - card.margin - copyX);
+    context.fillText(
+        love ? "(hem có vi rút đâuuuuu!)" : "(không có vi rút đâu!)",
+        copyX + 20,
+        2632,
+        card.width - card.margin - copyX,
+    );
 
     context.font = `800 60px ${sans}`;
-    context.fillText("truy cập web", copyX, 2960, copyWidth);
+    context.fillText(love ? "hay iu vô web:" : "truy cập web", copyX, 2960, copyWidth);
     context.font = `700 76px ${mono}`;
     const hostWidth = Math.min(context.measureText(host).width, copyWidth);
     context.fillStyle = colors.acid;
@@ -428,7 +444,9 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     context.fillText(host, copyX, 3064, copyWidth);
     context.fillStyle = colors.blue;
     context.font = `700 80px ${doodle}`;
-    context.fillText("để vàooo", copyX, 3176, copyWidth);
+    if (!love) {
+        context.fillText("để vàooo", copyX, 3176, copyWidth);
+    }
     context.fillStyle = colors.muted;
     context.font = `400 34px ${sans}`;
     wrapText(context, `Hoặc tải file này lên ${host}/homie.`, copyWidth).forEach((line, index) => {
