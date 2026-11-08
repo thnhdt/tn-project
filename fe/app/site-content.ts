@@ -18,9 +18,9 @@ export const graduate = {
 export const ceremony = {
     title: "LỄ TỐT NGHIỆP",
     /** Mốc đồng hồ đếm ngược (giờ bắt đầu), luôn ghi kèm múi giờ +07:00. */
-    startsAt: "2026-11-28T16:00:00+07:00",
+    startsAt: "2026-11-28T15:30:00+07:00",
     /** Khung giờ hiển thị trên thiệp. Để `null` khi chưa chốt. */
-    time: "16h00 – 17h30" as string | null,
+    time: "15h30 – 17h30" as string | null,
     /** Tên địa điểm ngắn gọn, ví dụ "Hội trường A5". */
     location: "Sảnh A5" as string | null,
     /** Địa chỉ đầy đủ, dùng để tìm trên bản đồ và in trong thiệp PDF. */
@@ -58,7 +58,6 @@ export const hero = {
     eyebrow: `BUILD PASSED • CLASS OF ${graduate.classOf}`,
     scribble: "finally shipped!",
     photoTitle: "ẢNH CỦA ĐẠT",
-    photoHint: "drop your best shot here",
     windowTitle: "graduation_final_FINAL.exe",
 };
 
@@ -88,29 +87,6 @@ export const story = {
     ],
 };
 
-export const memories = {
-    kicker: "04 / MEMORY CACHE",
-    title: ["ẢNH Ở ĐÂY.", "BUG Ở LẠI."],
-    text: "Khung mẫu cho gallery — ảnh thật sẽ được tối ưu và thay vào sau.",
-    items: [
-        {
-            mark: "↗",
-            title: "first commit",
-            caption: "Ngày đầu còn tưởng deadline là một khái niệm trừu tượng.",
-        },
-        {
-            mark: "✦",
-            title: "debug era",
-            caption: "99 little bugs in the code, take one down… 127 bugs.",
-        },
-        {
-            mark: "!!",
-            title: "final build",
-            caption: "Sau tất cả, build đã xanh và mình cũng sắp mặc áo tốt nghiệp.",
-        },
-    ],
-};
-
 export const invite = {
     kicker: "01 / SAVE THE DATE",
     sideDoodle: "circle this date!",
@@ -125,7 +101,7 @@ export const countdown = {
 };
 
 export const gifMachine = {
-    kicker: "05 / RANDOM JOY MACHINE",
+    kicker: "04 / RANDOM JOY MACHINE",
     title: ["BỐC MỘT CHIẾC", "GIF TỐT NGHIỆP"],
     text: "Bốc mọi chủ đề hoặc chọn tag meme quen thuộc bên dưới. Hợp mood thì tải về, chưa hợp thì bốc tiếp!",
     /** Tự bốc một GIF khi mở trang. */

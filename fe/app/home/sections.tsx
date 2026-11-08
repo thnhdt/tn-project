@@ -7,10 +7,10 @@ import {
     hero,
     invite,
     journey,
-    memories,
     story,
     toolbar,
 } from "../site-content";
+import { VenueMaps } from "../homie/invite/venue-maps";
 import { MusicButton } from "./music-button";
 
 function formatCeremonyDate() {
@@ -97,8 +97,14 @@ export function Hero() {
                             <br />
                             {"}"}
                         </div>
+                        <img
+                            className="portrait-sticker"
+                            src="/stickers/dat-graduation.webp"
+                            alt="Sticker Đạt mặc đồ tốt nghiệp Bách Khoa"
+                            width={720}
+                            height={865}
+                        />
                         <strong>{hero.photoTitle}</strong>
-                        <small>{hero.photoHint}</small>
                     </div>
                 </div>
 
@@ -188,44 +194,6 @@ export function Story() {
     );
 }
 
-export function Memories() {
-    return (
-        <section className="memory-section">
-            <div className="memory-intro">
-                <span>{memories.kicker}</span>
-                <h2>
-                    {memories.title[0]}
-                    <br />
-                    {memories.title[1]}
-                </h2>
-                <p>{memories.text}</p>
-            </div>
-
-            <div className="memory-grid">
-                {memories.items.map((memory, index) => {
-                    const number = String(index + 1).padStart(2, "0");
-
-                    return (
-                        <article className="memory-card" key={memory.title}>
-                            <span className="memory-sketch-mark" aria-hidden="true">
-                                {memory.mark}
-                            </span>
-                            <div className="memory-photo">
-                                <span>{number}</span>
-                                <b>PHOTO_{number}.JPG</b>
-                            </div>
-                            <div className="memory-copy">
-                                <small>{memory.title}</small>
-                                <p>{memory.caption}</p>
-                            </div>
-                        </article>
-                    );
-                })}
-            </div>
-        </section>
-    );
-}
-
 export function EventInfo() {
     const details = [
         { label: "NGÀY", value: formatCeremonyDate() },
@@ -251,15 +219,6 @@ export function EventInfo() {
                         </div>
                     ))}
                 </dl>
-                {ceremony.mapUrl ? (
-                    <a className="event-map-link" href={ceremony.mapUrl} target="_blank" rel="noreferrer">
-                        MỞ GOOGLE MAPS ↗
-                    </a>
-                ) : (
-                    <button type="button" disabled>
-                        GOOGLE MAPS — SOON
-                    </button>
-                )}
             </div>
 
             <div className="invite-note">
@@ -267,6 +226,8 @@ export function EventInfo() {
                 <p>{invite.text}</p>
                 <strong>{graduate.signature}</strong>
             </div>
+
+            <VenueMaps />
         </section>
     );
 }

@@ -641,18 +641,17 @@ button {
     background: var(--sky);
 }
 
-.portrait-placeholder::before {
+.portrait-sticker {
     position: absolute;
-    top: 20%;
+    z-index: 1;
+    top: 6%;
     left: 50%;
-    width: 200px;
-    height: 240px;
-    border: 3px solid var(--ink);
-    border-radius: 48% 48% 28% 28%;
-    background: var(--accent);
-    content: "";
-    transform: translateX(-50%);
-    opacity: 0.28;
+    width: auto;
+    height: 74%;
+    max-width: 88%;
+    object-fit: contain;
+    transform: translateX(-50%) rotate(-3deg);
+    filter: drop-shadow(0 6px 0 rgba(16, 30, 92, 0.18));
 }
 
 .portrait-code {
@@ -681,12 +680,6 @@ button {
     letter-spacing: -0.06em;
 }
 
-.portrait-placeholder small {
-    position: relative;
-    z-index: 2;
-    margin-top: 5px;
-    font-family: var(--font-roboto-mono);
-}
 
 .tape {
     position: absolute;
@@ -1359,20 +1352,9 @@ button {
     font-weight: 800;
 }
 
-.event-paper button,
-.event-map-link {
-    display: block;
-    width: 100%;
-    text-align: center;
-    text-decoration: none;
-    padding: 14px;
-    border: 2px solid var(--ink);
-    color: var(--ink);
-    background: var(--accent-2);
-    font-family: var(--font-roboto-mono);
-    font-size: 11px;
-    font-weight: 900;
-    opacity: 1;
+.event-section > .invite-venue {
+    grid-column: 1 / -1;
+    margin-top: 24px;
 }
 
 .invite-note {
@@ -2055,9 +2037,8 @@ footer a {
         min-height: 360px;
     }
 
-    .portrait-placeholder::before {
-        width: 150px;
-        height: 190px;
+    .portrait-sticker {
+        height: 70%;
     }
 
     .portrait-code {
@@ -2271,5 +2252,194 @@ footer a {
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+/* Khối bản đồ dùng chung cho trang chủ và mọi theme thiệp. */
+
+/* ───── Bản đồ: Cổng 1 | sơ đồ trường | Cổng 3 ───── */
+
+.invite-venue {
+    margin-top: 56px;
+}
+
+.invite-venue-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    margin-bottom: 16px;
+}
+
+.invite-venue-title small {
+    padding: 4px 8px;
+    color: #082d72;
+    background: #d9ff51;
+    font-family: var(--font-roboto-mono);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.invite-venue-title strong {
+    font-size: 14px;
+}
+
+.invite-venue-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr) minmax(0, 1fr);
+    gap: 16px;
+    align-items: stretch;
+}
+
+.invite-gate,
+.invite-campus {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    margin: 0;
+    border: 2px solid #082d72;
+    background: #ffffff;
+    box-shadow: 5px 5px 0 rgba(8, 45, 114, 0.18);
+}
+
+.invite-gate.is-left {
+    transform: rotate(-1deg);
+}
+
+.invite-gate.is-right {
+    transform: rotate(1deg);
+}
+
+.invite-gate-label {
+    padding: 10px 12px;
+    border-bottom: 2px solid #082d72;
+    background: #0868ff;
+    color: #ffffff;
+}
+
+.invite-gate-label strong {
+    display: block;
+    font-family: var(--font-doodle);
+    font-size: 24px;
+    line-height: 1.1;
+}
+
+.invite-gate-label span {
+    font-size: 11px;
+    opacity: 0.9;
+}
+
+.invite-gate iframe {
+    display: block;
+    width: 100%;
+    min-height: 220px;
+    flex: 1;
+    border: 0;
+}
+
+.invite-gate a {
+    padding: 10px 12px;
+    border-top: 2px solid #082d72;
+    color: #082d72;
+    background: #d9ff51;
+    font-family: var(--font-roboto-mono);
+    font-size: 10px;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+}
+
+.invite-campus {
+    justify-content: center;
+    padding: 10px;
+}
+
+.invite-campus-frame {
+    position: relative;
+}
+
+.invite-campus-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.invite-campus-pin {
+    position: absolute;
+    padding: 3px 7px;
+    border: 1.5px solid #082d72;
+    color: #082d72;
+    background: #d9ff51;
+    box-shadow: 2px 2px 0 #082d72;
+    font-family: var(--font-roboto-mono);
+    font-size: clamp(8px, 1.2vw, 11px);
+    font-weight: 800;
+    white-space: nowrap;
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+}
+
+.invite-campus-pin::after {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-top-color: #082d72;
+    content: "";
+    transform: translateX(-50%);
+}
+
+/* Toạ độ tính theo phần trăm của ảnh sơ đồ (2000 × 932). */
+.invite-campus-pin.is-hall {
+    top: 39%;
+    left: 44.7%;
+    color: #ffffff;
+    background: #ff2f6d;
+    animation: grad-bounce 1.6s ease-in-out infinite;
+}
+
+.invite-campus-pin.is-gate-1 {
+    top: 42%;
+    left: 17.5%;
+}
+
+.invite-campus-pin.is-gate-3 {
+    top: 55%;
+    left: 89%;
+}
+
+.invite-campus figcaption {
+    margin-top: 8px;
+    color: #0868ff;
+    font-family: var(--font-doodle);
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+}
+
+@keyframes grad-bounce {
+    0%,
+    100% {
+        transform: translate(-50%, -100%);
+    }
+    50% {
+        transform: translate(-50%, calc(-100% - 6px));
+    }
+}
+
+@media (max-width: 900px) {
+    .invite-venue-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .invite-campus {
+        order: -1;
+    }
+
+    .invite-gate.is-left,
+    .invite-gate.is-right {
+        transform: none;
     }
 }
