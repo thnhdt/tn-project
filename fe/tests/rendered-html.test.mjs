@@ -11,7 +11,7 @@ test("exports the public invitation directly without a guest-code gate", async (
     const html = await readPage("invite.html");
     assert.match(html, /THÂN MỜI BẠN CHUNG VUI/);
     assert.match(html, /Ske đã tốt nghiệppp/);
-    assert.match(html, /15h30 – 17h30/);
+    assert.match(html, /9h30 – 12h/);
     assert.match(html, /Sảnh A5/);
     assert.match(html, /Cổng 1/);
     assert.match(html, /Cổng 3/);

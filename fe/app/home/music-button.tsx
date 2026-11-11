@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 /** Bài nhạc của nút "mở nhạc", nằm trong `public/music/`. */
-const musicSrc = "/music/Rick_Astley_-_Never_Gonna_Give_You_Up_Official_Video_4K_Remaster.mp3";
+export const musicSrc = "/music/Rick_Astley_-_Never_Gonna_Give_You_Up_Official_Video_4K_Remaster.mp3";
 
 export function MusicButton() {
     const [playing, setPlaying] = useState(false);

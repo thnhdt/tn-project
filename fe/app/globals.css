@@ -637,17 +637,17 @@ button {
     flex-direction: column;
     align-items: center;
     justify-content: end;
-    padding: 28px;
+    padding: 28px 28px 16px;
     background: var(--sky);
 }
 
 .portrait-sticker {
     position: absolute;
     z-index: 1;
-    top: 6%;
+    top: 4%;
     left: 50%;
     width: auto;
-    height: 74%;
+    height: 62%;
     max-width: 88%;
     object-fit: contain;
     transform: translateX(-50%) rotate(-3deg);
@@ -754,10 +754,11 @@ button {
     transform: rotate(8deg);
 }
 
+/* Mũi tên đứng dưới bên trái sticker 404, chỉ vào nó mà không đè lên. */
 .cursor-sticker {
     position: absolute;
-    right: 10%;
-    bottom: 2%;
+    right: 150px;
+    bottom: -72px;
     z-index: 6;
     color: var(--accent);
     font-size: 75px;
@@ -2048,7 +2049,7 @@ footer a {
     }
 
     .portrait-sticker {
-        height: 70%;
+        height: 58%;
     }
 
     .portrait-code {
@@ -2060,9 +2061,23 @@ footer a {
         font-size: 36px;
     }
 
+    /* Màn hình nhỏ: sticker 404 nằm dưới mép khung để không che chữ trong ảnh. */
     .sticker-degree {
         right: -2px;
-        bottom: 4px;
+        bottom: -34px;
+    }
+
+    .cursor-sticker {
+        right: 150px;
+        bottom: -70px;
+        font-size: 52px;
+    }
+
+    /* Băng keo dán lên mép sticker 404 thay vì đè lên chữ. */
+    .tape-two {
+        right: 14px;
+        bottom: 34px;
+        width: 90px;
     }
 
     .sticker-bk {

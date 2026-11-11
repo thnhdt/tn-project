@@ -240,16 +240,6 @@
     font-weight: 700;
 }
 
-.dc-message-body > p.dc-mention {
-    margin-left: -10px;
-    padding: 8px 10px;
-    border-left: 3px solid #f0b232;
-    border-radius: 0 6px 6px 0;
-    background: rgba(240, 178, 50, 0.1);
-    font-family: var(--font-doodle);
-    font-size: clamp(20px, 3vw, 24px);
-}
-
 .dc-message-body .homie-photo,
 .is-discord .dc-messages > .homie-photo {
     width: min(320px, 100%);

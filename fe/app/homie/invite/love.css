@@ -83,7 +83,9 @@
     animation: love-sway 6s ease-in-out infinite;
 }
 
+/* Thấp hơn bản gốc để không dính vào bóng hồng 10px của lá thư. */
 .is-love .homie-letter::after {
+    bottom: -48px;
     color: #ff2f86;
     content: "100% thương, 0% bug";
 }
@@ -350,4 +352,111 @@
 
 .is-love .invite-campus figcaption {
     color: #ff2f86;
+}
+
+/* Máy đĩa than phát nhạc, nằm cố định ở góc dưới bên phải. */
+.love-record {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font: inherit;
+}
+
+.love-record svg {
+    width: 132px;
+    height: auto;
+    filter: drop-shadow(4px 4px 0 #7a0f45);
+    transition: transform 0.2s;
+}
+
+.love-record:hover svg {
+    transform: translateY(-3px) rotate(-2deg);
+}
+
+.love-record:focus-visible {
+    outline: 3px solid #ff2f86;
+    outline-offset: 4px;
+    border-radius: 12px;
+}
+
+.love-record-base {
+    fill: #ffc2dc;
+    stroke: #7a0f45;
+    stroke-width: 3;
+}
+
+.love-record-disc {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: love-record-spin 3s linear infinite;
+    animation-play-state: paused;
+}
+
+.love-record.is-playing .love-record-disc {
+    animation-play-state: running;
+}
+
+/* Kim đĩa xoay quanh trục ở góc trên bên phải, hạ xuống mặt đĩa khi phát. */
+.love-record-arm {
+    transform-box: view-box;
+    transform-origin: 150px 20px;
+    transition: transform 0.5s ease;
+}
+
+.love-record.is-playing .love-record-arm {
+    transform: rotate(24deg);
+}
+
+.love-record-label {
+    padding: 3px 12px;
+    border: 2px solid #7a0f45;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #7a0f45;
+    font-family: "Roboto Mono", monospace;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 2px 2px 0 #7a0f45;
+}
+
+.love-record.is-playing .love-record-label {
+    background: #ff2f86;
+    color: #ffffff;
+}
+
+@keyframes love-record-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 640px) {
+    .love-record {
+        right: 12px;
+        bottom: 12px;
+    }
+
+    .love-record svg {
+        width: 78px;
+    }
+
+    .love-record-label {
+        font-size: 11px;
+        padding: 2px 9px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .love-record-disc {
+        animation: none;
+    }
 }

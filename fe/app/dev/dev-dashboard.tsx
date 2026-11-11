@@ -20,8 +20,8 @@ import { GuestQr } from "./guest-qr";
 
 type AuthStatus = "checking" | "signedOut" | "signedIn";
 
-/** Giới hạn lời nhắn riêng cho thiệp chung (mặc định, Discord): khoảng 1–2 dòng. */
-const shortMessageLimit = 160;
+/** Giới hạn lời nhắn riêng của thiệp hồng (theme duy nhất có lời nhắn riêng). */
+const loveMessageLimit = 1200;
 
 function initials(name: string) {
     return name
@@ -142,7 +142,9 @@ export function DevDashboard() {
     const [qrCode, setQrCode] = useState("");
     const [themeVariant, setThemeVariant] = useState(defaultTheme);
     // Thiệp chung đã có lời mời sẵn; chỉ theme hồng còn giữ lá thư dài.
-    const messageLimit = themeVariant === loveTheme ? 1200 : shortMessageLimit;
+    const isLove = themeVariant === loveTheme;
+    // Theme khác thiệp hồng không có ô lời nhắn nên các ô sau lùi lên một số.
+    const fieldNumber = (number: number) => String(isLove ? number : number - 1).padStart(2, "0");
     const [editingId, setEditingId] = useState("");
     const [photoFile, setPhotoFile] = useState<File | null>(null);
     const [removePhoto, setRemovePhoto] = useState(false);
@@ -524,34 +526,32 @@ export function DevDashboard() {
                                 Hệ thống phân biệt chính xác chữ hoa và chữ thường.
                             </small>
 
-                            <label htmlFor="guest-message">
-                                <span>03</span>
-                                Lời nhắn riêng (không bắt buộc)
-                            </label>
-                            <textarea
-                                id="guest-message"
-                                name="personalMessage"
-                                value={personalMessage}
-                                maxLength={messageLimit}
-                                placeholder={
-                                    themeVariant === loveTheme
-                                        ? "Viết lời nhắn dành riêng cho người thương..."
-                                        : "1–2 dòng thôi, ví dụ: Nhớ tới sớm chụp hình nha!"
-                                }
-                                rows={themeVariant === loveTheme ? 8 : 2}
-                                onChange={(event) =>
-                                    setPersonalMessage(event.target.value)
-                                }
-                            />
-                            <div className="dev-char-count">
-                                {personalMessage.length} / {messageLimit.toLocaleString("vi")}
-                                {themeVariant === loveTheme
-                                    ? ""
-                                    : " — thiệp đã có sẵn lời mời, để trống cũng được"}
-                            </div>
+                            {/* Chỉ thiệp hồng có lời nhắn riêng, theme khác dùng lời mời chung. */}
+                            {isLove ? (
+                                <>
+                                    <label htmlFor="guest-message">
+                                        <span>03</span>
+                                        Lời nhắn riêng (không bắt buộc)
+                                    </label>
+                                    <textarea
+                                        id="guest-message"
+                                        name="personalMessage"
+                                        value={personalMessage}
+                                        maxLength={loveMessageLimit}
+                                        placeholder="Viết lời nhắn dành riêng cho người thương..."
+                                        rows={8}
+                                        onChange={(event) =>
+                                            setPersonalMessage(event.target.value)
+                                        }
+                                    />
+                                    <div className="dev-char-count">
+                                        {personalMessage.length} / {loveMessageLimit.toLocaleString("vi")}
+                                    </div>
+                                </>
+                            ) : null}
 
                             <label htmlFor="guest-qr-code">
-                                <span>04</span>
+                                <span>{fieldNumber(4)}</span>
                                 Mã QR (không bắt buộc)
                             </label>
                             <input
@@ -575,7 +575,7 @@ export function DevDashboard() {
                             </small>
 
                             <label htmlFor="guest-theme">
-                                <span>05</span>
+                                <span>{fieldNumber(5)}</span>
                                 Giao diện thiệp
                             </label>
                             <select
@@ -590,7 +590,7 @@ export function DevDashboard() {
                             </select>
 
                             <label htmlFor="guest-photo">
-                                <span>06</span>
+                                <span>{fieldNumber(6)}</span>
                                 Ảnh chụp chung (không bắt buộc)
                             </label>
                             <div className="dev-photo-field">
@@ -698,7 +698,11 @@ export function DevDashboard() {
                                                     ).padStart(2, "0")}
                                                 </span>
                                             </div>
-                                            <p>{invitation.personal_message || "(chỉ dùng lời mời chung)"}</p>
+                                            <p>
+                                                {invitation.theme_variant === loveTheme && invitation.personal_message
+                                                    ? invitation.personal_message
+                                                    : "(chỉ dùng lời mời chung)"}
+                                            </p>
                                             <small>
                                                 {invitation.instagram_handle ?? "—"}
                                                 {invitation.photo_path ? <em>ẢNH ✓</em> : null}

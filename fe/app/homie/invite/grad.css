@@ -176,31 +176,6 @@
     margin: 56px auto 0;
 }
 
-.grad-note {
-    position: relative;
-    width: min(560px, 100%);
-    margin: 56px auto 0;
-    padding: 26px 26px 22px;
-    border: 2px solid #082d72;
-    background: #fff4a8;
-    box-shadow: 6px 6px 0 rgba(8, 45, 114, 0.2);
-    transform: rotate(1.2deg);
-}
-
-.grad-note small {
-    font-family: var(--font-roboto-mono);
-    font-size: 10px;
-    font-weight: 800;
-}
-
-.grad-note p {
-    margin: 10px 0 0;
-    font-family: var(--font-doodle);
-    font-size: clamp(22px, 3.2vw, 28px);
-    font-weight: 600;
-    line-height: 1.4;
-}
-
 .grad-ticket {
     display: grid;
     grid-template-columns: 180px 1fr;

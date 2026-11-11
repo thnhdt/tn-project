@@ -18,9 +18,9 @@ export const graduate = {
 export const ceremony = {
     title: "LỄ TỐT NGHIỆP",
     /** Mốc đồng hồ đếm ngược (giờ bắt đầu), luôn ghi kèm múi giờ +07:00. */
-    startsAt: "2026-11-28T15:30:00+07:00",
+    startsAt: "2026-11-28T09:30:00+07:00",
     /** Khung giờ hiển thị trên thiệp. Để `null` khi chưa chốt. */
-    time: "15h30 – 17h30" as string | null,
+    time: "9h30 – 12h" as string | null,
     /** Tên địa điểm ngắn gọn, ví dụ "Hội trường A5". */
     location: "Sảnh A5" as string | null,
     /** Địa chỉ đầy đủ, dùng để tìm trên bản đồ và in trong thiệp PDF. */

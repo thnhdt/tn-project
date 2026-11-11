@@ -117,7 +117,7 @@ export function Hero() {
                     <b>fixed ✓</b>
                 </div>
                 <div className="sticker sticker-bk">{graduate.badge}</div>
-                <div className="cursor-sticker" aria-hidden="true">↖</div>
+                <div className="cursor-sticker" aria-hidden="true">↗</div>
             </div>
 
             <a className="scroll-ticket" href="#event">

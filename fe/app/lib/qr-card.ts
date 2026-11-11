@@ -168,8 +168,8 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     const sans = fontFamily("--font-be-vietnam");
     const mono = fontFamily("--font-roboto-mono");
     const doodle = fontFamily("--font-doodle");
-    // Khách không có lời nhắn riêng thì in lời mời chung.
-    const message = guest.personalMessage.trim() || fallbackCardMessage;
+    // Chỉ thiệp hồng in lời nhắn riêng; theme khác (hoặc chưa viết) in lời mời chung.
+    const message = (love && guest.personalMessage.trim()) || fallbackCardMessage;
     const sample = `${ceremony.title} ${guest.displayName} ${message}`;
     await Promise.all([
         document.fonts.load(`400 40px ${sans}`, sample),
@@ -239,7 +239,7 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     context.fillStyle = colors.blue;
     if (love) {
         context.font = `700 64px ${doodle}`;
-        context.fillText("Chiếc thiệp iu nhỏ gửi lời iu to đến tình iu của anhhh", centerX, 620, contentWidth);
+        context.fillText("Chiếc thiệp nhỏ gửi lời iu tooo của anhhh", centerX, 620, contentWidth);
     } else {
         context.font = `700 58px ${sans}`;
         context.fillText(`${graduate.fullName} • ${graduate.degree}`, centerX, 580, contentWidth);
@@ -260,7 +260,7 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     // Tên khách.
     context.fillStyle = colors.blue;
     context.font = `700 76px ${doodle}`;
-    context.fillText(love ? "Thương mời ♥" : discord ? "Hội bạn ơi, lên kèo!" : "Thân mời", centerX, 860);
+    context.fillText(love ? "Thương mời ♥" : discord ? "Mấy ae discord, lên kèo!" : "Thân mời", centerX, 860);
     context.font = `700 150px ${doodle}`;
     const nameWidth = Math.min(context.measureText(guest.displayName).width, contentWidth);
     context.fillStyle = colors.acid;
@@ -275,7 +275,8 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     context.fillStyle = colors.muted;
     context.font = `700 34px ${mono}`;
     context.fillText(
-        discord ? `ĐẠT → @${guest.displayName.toLocaleUpperCase("vi")}` : `TO: ${guest.displayName.toLocaleUpperCase("vi")}`,
+        discord ? `ĐẠT → @${guest.displayName.toLocaleUpperCase("vi")}` :
+            love ? `Gửi: ${guest.displayName.toLocaleUpperCase("vi")}` : `TO: ${guest.displayName.toLocaleUpperCase("vi")}`,
         letter.x + letter.padding,
         letter.y + 100,
         letter.width - letter.padding * 2,

@@ -26,6 +26,7 @@ import { inviteLines } from "../../lib/invite-lines";
 import { graduate } from "../../site-content";
 import { LoveEffects } from "./love-effects";
 import { LoveFloaters } from "./love-floaters";
+import { LoveRecordPlayer } from "./love-record-player";
 import { ImportedStickers } from "./imported-stickers";
 import { VenueMaps } from "./venue-maps";
 
@@ -187,8 +188,6 @@ function EventDetailList() {
 const confetti = Array.from({ length: 18 }, (_, index) => index);
 
 function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
-    const message = invitation.personal_message.trim();
-
     return (
         <main className="homie-shell homie-result-shell is-grad">
             <div className="homie-grid" aria-hidden="true" />
@@ -241,14 +240,6 @@ function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
                 </ul>
 
                 <GuestPhoto invitation={invitation} />
-
-                {message ? (
-                    <aside className="grad-note">
-                        <div className="homie-tape" aria-hidden="true" />
-                        <small>ĐẠT NHẮN RIÊNG CHO {invitation.display_name.toLocaleUpperCase("vi")}</small>
-                        <p>{message}</p>
-                    </aside>
-                ) : null}
 
                 <div className="grad-ticket">
                     <div className="grad-ticket-stub">
@@ -306,7 +297,6 @@ function DiscordMessage({
 }
 
 function DiscordInvitation({ invitation, publicInvitation }: LayoutProps) {
-    const message = invitation.personal_message.trim();
     const name = invitation.display_name;
 
     return (
@@ -350,14 +340,6 @@ function DiscordInvitation({ invitation, publicInvitation }: LayoutProps) {
                                 <p key={joke}>{joke}</p>
                             ))}
                         </DiscordMessage>
-
-                        {message ? (
-                            <DiscordMessage author={graduate.lastName} avatar={graduate.initials} time="vừa xong">
-                                <p className="dc-mention">
-                                    <mark>@{name}</mark> {message}
-                                </p>
-                            </DiscordMessage>
-                        ) : null}
 
                         <GuestPhoto invitation={invitation} />
 
@@ -416,6 +398,7 @@ function LoveInvitation({ invitation, publicInvitation }: LayoutProps) {
             <div className="homie-grid" aria-hidden="true" />
             <LoveEffects />
             <LoveFloaters />
+            <LoveRecordPlayer />
             <Link className="homie-logo" href="/">
                 <span>{graduate.initials}</span>
                 <strong>LOVE_LETTER.exe</strong>
@@ -427,8 +410,8 @@ function LoveInvitation({ invitation, publicInvitation }: LayoutProps) {
                     <img className="love-cat-sticker" src="/stickers/ig-cat.webp" alt="" aria-hidden="true" />
                     <p>LOVE_LETTER DELIVERED ♥</p>
                     <h1>
-                        Hey,
-                        <span>{invitation.display_name}!</span>
+                        Gửi em bé của anhhh,
+                        <span>{invitation.display_name}!!!</span>
                     </h1>
                     {invitation.instagram_handle ? <small>{invitation.instagram_handle}</small> : null}
                 </div>
@@ -441,7 +424,7 @@ function LoveInvitation({ invitation, publicInvitation }: LayoutProps) {
                     <div className="homie-tape" aria-hidden="true" />
                     <span>TO: {invitation.display_name.toLocaleUpperCase("vi")}</span>
                     <p>{invitation.personal_message.trim() || inviteLines.subline}</p>
-                    <strong>— Đạt ♥</strong>
+                    <strong>— Người iu ngố xít của emmm - Skehihi ♥</strong>
                 </article>
 
                 <ImportedStickers group={1} />
