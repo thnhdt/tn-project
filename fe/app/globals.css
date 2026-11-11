@@ -584,7 +584,7 @@ button {
 
 .hero-collage {
     position: relative;
-    min-height: 590px;
+    min-height: 640px;
 }
 
 .window-card {
@@ -636,28 +636,28 @@ button {
     min-height: 465px;
     flex-direction: column;
     align-items: center;
-    justify-content: end;
     padding: 28px 28px 16px;
     background: var(--sky);
 }
 
+/* Sticker nằm giữa khối code (trên) và tiêu đề (dưới), co giãn theo chỗ trống để không đè lên ai. */
 .portrait-sticker {
-    position: absolute;
+    position: relative;
     z-index: 1;
-    top: 4%;
-    left: 50%;
-    width: auto;
-    height: 62%;
+    flex: 1 1 0;
+    width: 100%;
     max-width: 88%;
+    min-height: 0;
+    margin: 10px 0 6px;
     object-fit: contain;
-    transform: translateX(-50%) rotate(-3deg);
+    transform: rotate(-3deg);
     filter: drop-shadow(0 6px 0 rgba(16, 30, 92, 0.18));
 }
 
 .portrait-code {
-    position: absolute;
-    top: 38px;
-    left: 28px;
+    align-self: flex-start;
+    flex: none;
+    margin-top: 10px;
     padding: 12px;
     border: 1.5px solid var(--ink);
     color: #d9ff51;
@@ -675,7 +675,7 @@ button {
 .portrait-placeholder strong {
     position: relative;
     z-index: 2;
-    font-size: clamp(30px, 4vw, 58px);
+    font-size: clamp(30px, 3.6vw, 50px);
     font-weight: 950;
     letter-spacing: -0.06em;
 }
@@ -2037,7 +2037,7 @@ footer a {
     }
 
     .hero-collage {
-        min-height: 460px;
+        min-height: 540px;
     }
 
     .window-card {
@@ -2045,16 +2045,14 @@ footer a {
     }
 
     .portrait-placeholder {
-        min-height: 360px;
-    }
-
-    .portrait-sticker {
-        height: 58%;
+        min-height: 440px;
     }
 
     .portrait-code {
-        top: 20px;
-        left: 12px;
+        margin-top: 0;
+        margin-left: -14px;
+        padding: 9px;
+        font-size: 10px;
     }
 
     .portrait-placeholder strong {

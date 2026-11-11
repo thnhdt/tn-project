@@ -356,9 +356,8 @@ function DiscordInvitation({ invitation, publicInvitation }: LayoutProps) {
                         </DiscordMessage>
 
                         <DiscordMessage author={discordHost.name} avatar={discordHost.avatar} time="hôm nay lúc 07:01">
-                            <p>{inviteLines.subline}</p>
-                            {inviteLines.jokes.map((joke) => (
-                                <p key={joke}>{joke}</p>
+                            {inviteLines.discordTheme.messages.map((line) => (
+                                <p key={line}>{line}</p>
                             ))}
                         </DiscordMessage>
 

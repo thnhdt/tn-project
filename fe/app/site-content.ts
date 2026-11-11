@@ -51,7 +51,8 @@ export const ceremony = {
 export const toolbar = {
     brand: "BLUE_NOTEBOOK",
     homieLink: "MỞ THIỆP RIÊNG ↗",
-    photoDropLink: "THẢ ẢNH DZÔ ĐÂY ↑",
+    /** Dấu cách cuối là \u00a0 để mũi tên không rớt xuống dòng riêng trên điện thoại. */
+    photoDropLink: "THƯ VIỆN ẢNH BAY BAY\u00a0↑",
 };
 
 export const hero = {

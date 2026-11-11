@@ -320,6 +320,12 @@
     margin-top: 28px;
 }
 
+/* Nhãn TICK TOCK và ngày giờ có nền xanh mint: chữ phải tối mới đọc được. */
+.is-discord .countdown-copy span,
+.is-discord .countdown-copy time {
+    color: #11121f;
+}
+
 .is-discord .clock-face {
     color: #23243d;
     background: #f4f3ff;
@@ -497,8 +503,9 @@
     width: min(100%, 420px);
 }
 
+/* Chừa chỗ cho các tia quanh đồng hồ để không cắt qua dòng ngày giờ phía trên. */
 .dc-message-body .doodle-clock {
-    margin-top: 28px;
+    margin-top: 64px;
 }
 
 /* Cột chat hẹp: sơ đồ trường nằm trên, hai cổng chia đôi bên dưới. */

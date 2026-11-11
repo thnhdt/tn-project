@@ -20,6 +20,14 @@ export const inviteLines = {
         jokes: ["Nhiệm vụ chính: HOÀN THÀNH ✓. Phần thưởng: có bạn tới chung vui"],
         closing: "Rất mong gặp bạn ở sảnh A5 đó nha!!!",
     },
+    /** Riêng thiệp Discord: tin nhắn dài của Skehjhj, mỗi câu là một dòng. */
+    discordTheme: {
+        messages: [
+            "Lâu lắm rồi anh em mình không ngồi lại với nhau để bàn lại cách sống, có lẽ đồng tiền quá mạnh khiến anh em mình không thể lại gần nhau !",
+            "Anh em thử luộc con gà lên, không cần chặt, để nó nguội, xong ngồi xé. Mấy anh em ngồi xé, các anh em ăn sẽ cảm thấy ngon và thú vị như thế nào.",
+            "Nói chung là bữa đó tới nái nha anh em, cần thiết á",
+        ],
+    },
     /** Câu chốt cuối thiệp. */
     closing: "Hẹn gặp ở Sảnh A5 nha, tới trễ là lọt khỏi khung hình đó!",
 } as const;
