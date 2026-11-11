@@ -184,6 +184,13 @@
     font-size: 22px;
 }
 
+/* Ảnh sticker cao hơn rộng: phóng to và canh phần mặt vào giữa vòng tròn. */
+.dc-avatar.is-photo {
+    object-fit: cover;
+    object-position: 50% 8%;
+    background: #ffd6e8;
+}
+
 .dc-message-body {
     min-width: 0;
 }

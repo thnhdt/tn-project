@@ -122,7 +122,13 @@ export function HomieInvitation({ publicInvitation = false }: { publicInvitation
 
 /* ───────────── Dùng chung ───────────── */
 
-function GuestPhoto({ invitation }: { invitation: GuestInvitation }) {
+function GuestPhoto({
+    invitation,
+    hostName = graduate.lastName,
+}: {
+    invitation: GuestInvitation;
+    hostName?: string;
+}) {
     if (!invitation.photo_path) return null;
 
     return (
@@ -134,7 +140,7 @@ function GuestPhoto({ invitation }: { invitation: GuestInvitation }) {
                 alt={`${graduate.fullName} và ${invitation.display_name}`}
             />
             <figcaption>
-                {graduate.lastName} × {invitation.display_name}
+                {hostName} × {invitation.display_name}
             </figcaption>
         </figure>
     );
@@ -268,6 +274,9 @@ function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
 
 /* ───────────── Theme Discord: kênh chat #graduation-party ───────────── */
 
+/** Tên của Đạt trên Discord. */
+const discordHost = { name: "Skehjhj", avatar: "/stickers/dat-graduation.webp" };
+
 function DiscordMessage({
     author,
     avatar,
@@ -283,7 +292,13 @@ function DiscordMessage({
 }) {
     return (
         <article className="dc-message">
-            <span className={`dc-avatar${bot ? " is-bot" : ""}`} aria-hidden="true">{avatar}</span>
+            {avatar.startsWith("/") ? (
+                // Avatar là ảnh (ảnh tốt nghiệp ở trang chủ), còn lại là chữ / emoji.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img className="dc-avatar is-photo" src={avatar} alt="" aria-hidden="true" />
+            ) : (
+                <span className={`dc-avatar${bot ? " is-bot" : ""}`} aria-hidden="true">{avatar}</span>
+            )}
             <div className="dc-message-body">
                 <header>
                     <strong>{author}</strong>
@@ -316,13 +331,13 @@ function DiscordInvitation({ invitation, publicInvitation }: LayoutProps) {
                     <span># ảnh-kỷ-yếu</span>
                     <small>KÊNH THOẠI</small>
                     <span>🔊 {ceremonyLocation}</span>
-                    <span className="dc-voice-user">● {graduate.lastName} đang chờ</span>
+                    <span className="dc-voice-user">● {discordHost.name} đang chờ</span>
                 </aside>
 
                 <div className="dc-chat">
                     <header className="dc-chat-header">
                         <strong># graduation-party</strong>
-                        <span>lễ tốt nghiệp của {graduate.lastName} • {ceremonyDate}</span>
+                        <span>lễ tốt nghiệp của {discordHost.name} • {ceremonyDate}</span>
                     </header>
 
                     <div className="dc-messages">
@@ -334,14 +349,20 @@ function DiscordInvitation({ invitation, publicInvitation }: LayoutProps) {
                             </p>
                         </DiscordMessage>
 
-                        <DiscordMessage author={graduate.lastName} avatar={graduate.initials} time="hôm nay lúc 07:01">
+                        <DiscordMessage author={discordHost.name} avatar={discordHost.avatar} time="hôm nay lúc 07:00">
+                            <p className="dc-big">
+                                <mark>@{name}</mark> ní nhớ tới chung vui với tui nha, thiếu ní là buồn á 🥹
+                            </p>
+                        </DiscordMessage>
+
+                        <DiscordMessage author={discordHost.name} avatar={discordHost.avatar} time="hôm nay lúc 07:01">
                             <p>{inviteLines.subline}</p>
                             {inviteLines.jokes.map((joke) => (
                                 <p key={joke}>{joke}</p>
                             ))}
                         </DiscordMessage>
 
-                        <GuestPhoto invitation={invitation} />
+                        <GuestPhoto invitation={invitation} hostName={discordHost.name} />
 
                         <DiscordMessage author="Lễ_Bot" avatar="🤖" bot time="hôm nay lúc 07:02">
                             <div className="dc-event">
@@ -356,7 +377,7 @@ function DiscordInvitation({ invitation, publicInvitation }: LayoutProps) {
                             <CountdownClock />
                         </DiscordMessage>
 
-                        <DiscordMessage author={graduate.lastName} avatar={graduate.initials} time="hôm nay lúc 07:03">
+                        <DiscordMessage author={discordHost.name} avatar={discordHost.avatar} time="hôm nay lúc 07:03">
                             <p>📍 vị trí nè, vào cổng nào cũng được:</p>
                             <VenueMaps />
                             <p className="dc-reactions">
@@ -376,7 +397,7 @@ function DiscordInvitation({ invitation, publicInvitation }: LayoutProps) {
 
                 <aside className="dc-members" aria-hidden="true">
                     <small>ONLINE — 3</small>
-                    <span><i className="dc-dot" />{graduate.lastName} <em>đang tốt nghiệp</em></span>
+                    <span><i className="dc-dot" />{discordHost.name} <em>đang tốt nghiệp</em></span>
                     <span><i className="dc-dot" />{name} <em>sắp tới</em></span>
                     <span><i className="dc-dot" />Lễ_Bot <em>BOT</em></span>
                 </aside>
