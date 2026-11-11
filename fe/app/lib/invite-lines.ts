@@ -13,6 +13,13 @@ export const inviteLines = {
         "Sau bao năm bị deadline dí, cuối cùng cũng được trường thả ra rồi",
         "Nhiệm vụ chính: HOÀN THÀNH ✓. Phần thưởng: có bạn tới chung vui",
     ],
+    /** Riêng thiệp mặc định (Blue Notebook): lời chào, câu phụ và note ngắn gọn hơn. */
+    defaultTheme: {
+        greeting: "Hellooo",
+        subline: "Đến chụp với tui mấy tấm hình thiệccc đẹp nhaaaa",
+        jokes: ["Nhiệm vụ chính: HOÀN THÀNH ✓. Phần thưởng: có bạn tới chung vui"],
+        closing: "Rất mong gặp bạn ở sảnh A5 đó nha!!!",
+    },
     /** Câu chốt cuối thiệp. */
     closing: "Hẹn gặp ở Sảnh A5 nha, tới trễ là lọt khỏi khung hình đó!",
 } as const;

@@ -211,8 +211,8 @@ function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
                 <div className="homie-invite-heading">
                     <p>{publicInvitation ? "THÂN MỜI BẠN CHUNG VUI ✓" : "INVITATION DELIVERED ✓"}</p>
                     <h1>
-                        Hey,
-                        <span>{invitation.display_name}!</span>
+                        {inviteLines.defaultTheme.greeting}
+                        <span>{invitation.display_name}</span>
                     </h1>
                     {invitation.instagram_handle ? <small>{invitation.instagram_handle}</small> : null}
                 </div>
@@ -228,7 +228,7 @@ function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
                         <span className="grad-cap" aria-hidden="true">🎓</span>
                         <p className="grad-kicker">&gt; run graduate.exe --class-of {graduate.classOf}</p>
                         <h2>{inviteLines.headline}</h2>
-                        <p className="grad-subline">{inviteLines.subline}</p>
+                        <p className="grad-subline">{inviteLines.defaultTheme.subline}</p>
                         <div className="grad-stamp" aria-hidden="true">
                             <b>OFFICIAL</b>
                             <span>GRADUATE ✓</span>
@@ -238,7 +238,7 @@ function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
                 </div>
 
                 <ul className="grad-jokes">
-                    {inviteLines.jokes.map((joke, index) => (
+                    {inviteLines.defaultTheme.jokes.map((joke, index) => (
                         <li key={joke} style={{ "--i": index } as CSSProperties}>
                             {joke}
                         </li>
@@ -250,7 +250,7 @@ function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
                 <div className="grad-ticket">
                     <div className="grad-ticket-stub">
                         <small>VÉ MỜI</small>
-                        <strong>ADMIT ONE</strong>
+                        <strong>KHÁCH QUÝ</strong>
                         <span>{invitation.display_name}</span>
                     </div>
                     <div className="grad-ticket-main">
@@ -263,7 +263,7 @@ function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
 
                 <VenueMaps />
 
-                <p className="grad-closing">{inviteLines.closing}</p>
+                <p className="grad-closing">{inviteLines.defaultTheme.closing}</p>
 
                 <ResultActions publicInvitation={publicInvitation} />
             </section>
