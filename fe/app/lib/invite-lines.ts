@@ -32,5 +32,5 @@ export const inviteLines = {
     closing: "Hẹn gặp ở Sảnh A5 nha, tới trễ là lọt khỏi khung hình đó!",
 } as const;
 
-/** Lời mời in trên thiệp PDF khi khách không có lời nhắn riêng. */
+/** Lời in trong lá thư của thiệp hồng PDF khi chưa viết lời nhắn riêng. */
 export const fallbackCardMessage = `${inviteLines.headline} ${inviteLines.subline}. ${inviteLines.jokes[0]}`;

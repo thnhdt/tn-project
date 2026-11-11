@@ -8,7 +8,7 @@ import {
     ceremonyTime,
     directionsUrl,
 } from "./ceremony";
-import { fallbackCardMessage } from "./invite-lines";
+import { fallbackCardMessage, inviteLines } from "./invite-lines";
 
 /** Thiệp mời khổ A4 ở 300 dpi. Muốn đổi bố cục thiệp tải về: sửa file này. */
 const card = { width: 2480, height: 3508, margin: 220 };
@@ -160,6 +160,290 @@ function drawHeart(
     context.restore();
 }
 
+type Fonts = { sans: string; mono: string; doodle: string };
+type Area = { x: number; y: number; width: number; height: number };
+
+/** Ảnh tốt nghiệp của Đạt (cùng sticker ở trang chủ), dùng làm avatar trên thiệp Discord. */
+const hostAvatarSrc = "/stickers/dat-graduation.webp";
+
+/** Chữ có nền highlight phía sau (nửa dưới dòng chữ), giống bút dạ quang trên web. */
+function fillHighlighted(
+    context: CanvasRenderingContext2D,
+    text: string,
+    x: number,
+    y: number,
+    fontSize: number,
+    highlight: string,
+    maxWidth?: number,
+) {
+    const width = Math.min(context.measureText(text).width, maxWidth ?? Infinity);
+    const left = context.textAlign === "center" ? x - width / 2 : x;
+    const color = context.fillStyle;
+    context.fillStyle = highlight;
+    context.fillRect(left - 14, y - fontSize * 0.45, width + 28, fontSize * 0.6);
+    context.fillStyle = color;
+    context.fillText(text, x, y, maxWidth);
+}
+
+/** Thiệp mặc định: cửa sổ "graduation.exe" giống trang thiệp trên web. */
+function drawGradWindow(context: CanvasRenderingContext2D, area: Area, fonts: Fonts) {
+    const { x, y, width, height } = area;
+    const padding = 70;
+    drawBox(context, x, y, width, height);
+
+    // Thanh tiêu đề cửa sổ.
+    const bar = 86;
+    context.fillStyle = colors.blue;
+    context.fillRect(x, y, width, bar);
+    context.strokeStyle = colors.ink;
+    context.lineWidth = 8;
+    context.strokeRect(x, y, width, bar);
+    for (let index = 0; index < 3; index += 1) {
+        context.beginPath();
+        context.arc(x + 56 + index * 50, y + bar / 2, 15, 0, Math.PI * 2);
+        context.fillStyle = colors.white;
+        context.fill();
+        context.lineWidth = 5;
+        context.stroke();
+    }
+    context.textAlign = "left";
+    context.fillStyle = colors.white;
+    context.font = `700 34px ${fonts.mono}`;
+    context.fillText("graduation_FINAL_v2(1).exe", x + 230, y + 56);
+
+    // Dấu mộc "OFFICIAL GRADUATE" ở góc phải.
+    const stamp = { x: x + width - 250, y: y + 330, radius: 165 };
+    const stampColor = "#ff2f6d";
+    context.save();
+    context.translate(stamp.x, stamp.y);
+    context.rotate(0.2);
+    context.strokeStyle = stampColor;
+    context.lineWidth = 9;
+    context.beginPath();
+    context.arc(0, 0, stamp.radius, 0, Math.PI * 2);
+    context.stroke();
+    context.lineWidth = 4;
+    context.beginPath();
+    context.arc(0, 0, stamp.radius - 22, 0, Math.PI * 2);
+    context.stroke();
+    context.textAlign = "center";
+    context.fillStyle = stampColor;
+    context.font = `800 50px ${fonts.mono}`;
+    context.fillText("OFFICIAL", 0, -24);
+    context.font = `800 40px ${fonts.mono}`;
+    context.fillText("GRADUATE ✓", 0, 34);
+    context.font = `700 26px ${fonts.mono}`;
+    context.fillText(`CLASS OF ${graduate.classOf}`, 0, 84);
+    context.restore();
+
+    // Lời mời: dòng lệnh, tiêu đề lớn và câu phụ tô highlight.
+    const textWidth = width - padding * 2 - stamp.radius * 2 - 60;
+    context.textAlign = "left";
+    context.fillStyle = colors.muted;
+    context.font = `700 36px ${fonts.mono}`;
+    context.fillText(`> run graduate.exe --class-of ${graduate.classOf}`, x + padding, y + 175, textWidth);
+
+    context.fillStyle = colors.ink;
+    context.font = `700 128px ${fonts.doodle}`;
+    context.fillText(inviteLines.headline, x + padding, y + 320, textWidth);
+
+    context.font = `700 54px ${fonts.sans}`;
+    wrapText(context, inviteLines.defaultTheme.subline, textWidth).slice(0, 2).forEach((line, index) => {
+        fillHighlighted(context, line, x + padding, y + 420 + index * 76, 54, colors.acid, textWidth);
+    });
+
+    // Tờ note "Nhiệm vụ chính" dán nghiêng, có miếng băng keo phía trên.
+    const note = { x: x + padding + 10, y: y + 550, width: 1300, height: 160 };
+    context.save();
+    context.translate(note.x + note.width / 2, note.y + note.height / 2);
+    context.rotate(-0.02);
+    drawBox(context, -note.width / 2, -note.height / 2, note.width, note.height, "#fdffe0");
+    context.fillStyle = "rgba(217, 255, 81, 0.85)";
+    context.fillRect(-90, -note.height / 2 - 24, 180, 46);
+    context.textAlign = "center";
+    context.fillStyle = colors.ink;
+    context.font = `700 46px ${fonts.doodle}`;
+    // Mỗi câu một dòng: "Nhiệm vụ chính: …" / "Phần thưởng: …".
+    const noteText = inviteLines.defaultTheme.jokes[0].replace(/\.\s+/g, ".\n");
+    wrapText(context, noteText, note.width - 80).slice(0, 2).forEach((line, index, all) => {
+        context.fillText(line, 0, 16 + (index - (all.length - 1) / 2) * 56, note.width - 80);
+    });
+    context.restore();
+
+    // Câu chốt ở góc dưới bên phải.
+    context.textAlign = "right";
+    context.fillStyle = colors.blue;
+    context.font = `700 52px ${fonts.doodle}`;
+    context.fillText(inviteLines.defaultTheme.closing, x + width - padding, y + height - 40, width - padding * 2);
+}
+
+/** Một dòng chữ bắt đầu bằng tag "@ai đó", tag được tô nền tím như Discord. */
+function fillMentionLine(
+    context: CanvasRenderingContext2D,
+    line: string,
+    mention: string,
+    x: number,
+    y: number,
+    fontSize: number,
+    color: string,
+) {
+    if (mention && line.startsWith(mention)) {
+        const width = context.measureText(mention).width;
+        context.fillStyle = "rgba(88, 101, 242, 0.45)";
+        context.fillRect(x - 6, y - fontSize * 0.85, width + 12, fontSize * 1.1);
+        context.fillStyle = "#c9cdff";
+        context.fillText(mention, x, y);
+        context.fillStyle = color;
+        context.fillText(line.slice(mention.length), x + width, y);
+        return;
+    }
+    context.fillStyle = color;
+    context.fillText(line, x, y);
+}
+
+/** Thiệp Discord: khung chat #graduation-party với các tin nhắn giống trang thiệp trên web. */
+async function drawDiscordChat(
+    context: CanvasRenderingContext2D,
+    area: Area,
+    fonts: Fonts,
+    guestName: string,
+) {
+    const { x, y, width, height } = area;
+    const dark = { bg: "#2b2d45", header: "#23243a", line: "#3a3d5c", text: "#e3e5ff", muted: "#8e93c0" };
+    drawBox(context, x, y, width, height, dark.bg);
+
+    // Thanh tên kênh.
+    const bar = 84;
+    context.fillStyle = dark.header;
+    context.fillRect(x + 4, y + 4, width - 8, bar - 4);
+    context.strokeStyle = dark.line;
+    context.lineWidth = 3;
+    context.beginPath();
+    context.moveTo(x + 4, y + bar);
+    context.lineTo(x + width - 4, y + bar);
+    context.stroke();
+    context.textAlign = "left";
+    context.fillStyle = "#ffffff";
+    context.font = `800 44px ${fonts.sans}`;
+    context.fillText("# graduation-party", x + 50, y + 58);
+    const topicX = x + 50 + context.measureText("# graduation-party").width + 36;
+    context.fillStyle = dark.muted;
+    context.font = `400 32px ${fonts.sans}`;
+    context.fillText(`lễ tốt nghiệp của Skehjhj • ${ceremonyDate}`, topicX, y + 56, x + width - 50 - topicX);
+
+    const avatar = await loadImage(hostAvatarSrc);
+    const messages = [
+        {
+            author: "Lễ_Bot",
+            bot: true,
+            time: "hôm nay lúc 07:00",
+            mention: "@everyone",
+            big: true,
+            paragraphs: [`@everyone ${inviteLines.headline}`],
+        },
+        {
+            author: "Skehjhj",
+            bot: false,
+            time: "hôm nay lúc 07:00",
+            mention: `@${guestName}`,
+            big: true,
+            paragraphs: [`@${guestName} ní nhớ tới chung vui với tui nha, thiếu ní là buồn á`],
+        },
+        {
+            author: "Skehjhj",
+            bot: false,
+            time: "hôm nay lúc 07:01",
+            mention: "",
+            big: false,
+            paragraphs: inviteLines.discordTheme.messages,
+        },
+    ];
+
+    const left = x + 60;
+    const avatarSize = 96;
+    const textX = left + avatarSize + 36;
+    const textWidth = x + width - 60 - textX;
+    const top = y + bar + 34;
+    const bottom = y + height - 30;
+
+    // Thu nhỏ cỡ chữ tới khi cả đoạn chat vừa khung.
+    let size = 44;
+    let layout: { lines: string[]; font: string; size: number }[] = [];
+    for (; size >= 28; size -= 2) {
+        layout = messages.map((message) => {
+            const lineSize = message.big ? Math.round(size * 1.35) : size;
+            const font = message.big ? `700 ${lineSize}px ${fonts.doodle}` : `400 ${lineSize}px ${fonts.sans}`;
+            context.font = font;
+            const lines = message.paragraphs.flatMap((paragraph) => wrapText(context, paragraph, textWidth));
+            return { lines, font, size: lineSize };
+        });
+        const total = layout.reduce((sum, item) => sum + 50 + item.lines.length * item.size * 1.4 + 26, 0);
+        if (top + total <= bottom) {
+            break;
+        }
+    }
+
+    let cursor = top;
+    messages.forEach((message, index) => {
+        const { lines, font, size: lineSize } = layout[index];
+
+        // Avatar tròn: bot là chữ BOT nền xanh lá, Skehjhj là ảnh tốt nghiệp.
+        context.save();
+        context.beginPath();
+        context.arc(left + avatarSize / 2, cursor + avatarSize / 2, avatarSize / 2, 0, Math.PI * 2);
+        context.closePath();
+        if (message.bot) {
+            context.fillStyle = "#3ba55d";
+            context.fill();
+            context.fillStyle = "#ffffff";
+            context.textAlign = "center";
+            context.font = `800 28px ${fonts.mono}`;
+            context.fillText("BOT", left + avatarSize / 2, cursor + avatarSize / 2 + 10);
+        } else {
+            context.fillStyle = "#ffd6e8";
+            context.fill();
+            context.clip();
+            // Cắt phần mặt + mũ ở nửa trên ảnh cho vừa vòng tròn.
+            const crop = avatar.naturalWidth;
+            context.drawImage(avatar, 0, avatar.naturalHeight * 0.02, crop, crop, left, cursor, avatarSize, avatarSize);
+        }
+        context.restore();
+
+        context.textAlign = "left";
+        context.fillStyle = "#ffffff";
+        context.font = `800 38px ${fonts.sans}`;
+        context.fillText(message.author, textX, cursor + 36);
+        let metaX = textX + context.measureText(message.author).width + 18;
+        if (message.bot) {
+            context.fillStyle = colors.blue;
+            context.fillRect(metaX, cursor + 6, 76, 38);
+            context.fillStyle = "#ffffff";
+            context.font = `800 24px ${fonts.mono}`;
+            context.fillText("BOT", metaX + 14, cursor + 34);
+            metaX += 94;
+        }
+        context.fillStyle = dark.muted;
+        context.font = `400 28px ${fonts.sans}`;
+        context.fillText(message.time, metaX, cursor + 34);
+
+        cursor += 50;
+        context.font = font;
+        lines.forEach((line) => {
+            cursor += lineSize * 1.4;
+            fillMentionLine(
+                context,
+                line,
+                message.mention,
+                textX,
+                cursor - lineSize * 0.3,
+                lineSize,
+                message.big ? "#ffffff" : dark.text,
+            );
+        });
+        cursor += 26;
+    });
+}
+
 /** Vẽ thiệp mời A4 của một khách (lời mời, thời gian, địa điểm, QR), trả về PNG. */
 export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     const love = guest.themeVariant === "love";
@@ -168,9 +452,11 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     const sans = fontFamily("--font-be-vietnam");
     const mono = fontFamily("--font-roboto-mono");
     const doodle = fontFamily("--font-doodle");
-    // Chỉ thiệp hồng in lời nhắn riêng; theme khác (hoặc chưa viết) in lời mời chung.
-    const message = (love && guest.personalMessage.trim()) || fallbackCardMessage;
-    const sample = `${ceremony.title} ${guest.displayName} ${message}`;
+    // Chỉ thiệp hồng có lá thư (lời nhắn riêng, chưa viết thì in lời mời chung).
+    const message = guest.personalMessage.trim() || fallbackCardMessage;
+    const sample = love
+        ? `${ceremony.title} ${guest.displayName} ${message}`
+        : `${ceremony.title} ${guest.displayName} ${inviteLines.headline} ${inviteLines.defaultTheme.subline} ${inviteLines.discordTheme.messages.join(" ")}`;
     await Promise.all([
         document.fonts.load(`400 40px ${sans}`, sample),
         document.fonts.load(`700 40px ${sans}`, sample),
@@ -260,51 +546,68 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     // Tên khách.
     context.fillStyle = colors.blue;
     context.font = `700 76px ${doodle}`;
-    context.fillText(love ? "Thương mời ♥" : discord ? "Mấy ae discord, lên kèo!" : "Thân mời", centerX, 860);
+    // Thiệp thường và Discord đẩy tên lên một chút để khung bên dưới cao hơn.
+    const nameY = love ? 1010 : 965;
+    context.fillText(
+        love ? "Thương mời ♥" : discord ? "Mấy ae discord, lên kèo!" : inviteLines.defaultTheme.greeting,
+        centerX,
+        nameY - 150,
+    );
     context.font = `700 150px ${doodle}`;
     const nameWidth = Math.min(context.measureText(guest.displayName).width, contentWidth);
     context.fillStyle = colors.acid;
-    context.fillRect(centerX - nameWidth / 2 - 30, 960, nameWidth + 60, 70);
+    context.fillRect(centerX - nameWidth / 2 - 30, nameY - 50, nameWidth + 60, 70);
     context.fillStyle = colors.ink;
-    context.fillText(guest.displayName, centerX, 1010, contentWidth);
+    context.fillText(guest.displayName, centerX, nameY, contentWidth);
 
-    // Lá thư riêng: tự giảm cỡ chữ cho tới khi lời mời vừa khung.
-    const letter = { x: card.margin, y: 1120, width: contentWidth, height: 720, padding: 70 };
-    drawBox(context, letter.x, letter.y, letter.width, letter.height);
-    context.textAlign = "left";
-    context.fillStyle = colors.muted;
-    context.font = `700 34px ${mono}`;
-    context.fillText(
-        discord ? `ĐẠT → @${guest.displayName.toLocaleUpperCase("vi")}` :
-            love ? `Gửi: ${guest.displayName.toLocaleUpperCase("vi")}` : `TO: ${guest.displayName.toLocaleUpperCase("vi")}`,
-        letter.x + letter.padding,
-        letter.y + 100,
-        letter.width - letter.padding * 2,
-    );
-
-    const messageTop = letter.y + 150;
-    const messageHeight = letter.height - 150 - 130;
-    let fontSize = 76;
-    let lines: string[] = [];
-    for (; fontSize >= 26; fontSize -= 4) {
-        context.font = `400 ${fontSize}px ${sans}`;
-        lines = wrapText(context, message, letter.width - letter.padding * 2);
-        if (lines.length * fontSize * 1.5 <= messageHeight) {
-            break;
+    // Thiệp thường và Discord vẽ lại đúng kiểu trang web; thiệp hồng giữ lá thư riêng.
+    const fonts = { sans, mono, doodle };
+    if (!love) {
+        const area = { x: card.margin, y: 1040, width: contentWidth, height: 830 };
+        if (discord) {
+            await drawDiscordChat(context, area, fonts, guest.displayName);
+        } else {
+            drawGradWindow(context, area, fonts);
         }
+    } else {
+        // Lá thư riêng: tự giảm cỡ chữ cho tới khi lời mời vừa khung.
+        const letter = { x: card.margin, y: 1120, width: contentWidth, height: 720, padding: 70 };
+        drawBox(context, letter.x, letter.y, letter.width, letter.height);
+        context.textAlign = "left";
+        context.fillStyle = colors.muted;
+        context.font = `700 34px ${mono}`;
+        context.fillText(
+            discord ? `ĐẠT → @${guest.displayName.toLocaleUpperCase("vi")}` :
+                love ? `Gửi: ${guest.displayName.toLocaleUpperCase("vi")}` : `TO: ${guest.displayName.toLocaleUpperCase("vi")}`,
+            letter.x + letter.padding,
+            letter.y + 100,
+            letter.width - letter.padding * 2,
+        );
+
+        const messageTop = letter.y + 150;
+        const messageHeight = letter.height - 150 - 130;
+        let fontSize = 76;
+        let lines: string[] = [];
+        for (; fontSize >= 26; fontSize -= 4) {
+            context.font = `400 ${fontSize}px ${sans}`;
+            lines = wrapText(context, message, letter.width - letter.padding * 2);
+            if (lines.length * fontSize * 1.5 <= messageHeight) {
+                break;
+            }
+        }
+        context.fillStyle = colors.ink;
+        lines.forEach((line, index) => {
+            context.fillText(line, letter.x + letter.padding, messageTop + fontSize * (1 + index * 1.5));
+        });
+        context.textAlign = "right";
+        context.fillStyle = colors.blue;
+        context.font = `700 64px ${doodle}`;
+        context.fillText(
+            graduate.signature,
+            letter.x + letter.width - letter.padding,
+            letter.y + letter.height - 60,
+        );
     }
-    context.fillStyle = colors.ink;
-    lines.forEach((line, index) => {
-        context.fillText(line, letter.x + letter.padding, messageTop + fontSize * (1 + index * 1.5));
-    });
-    context.textAlign = "right";
-    context.fillStyle = colors.blue;
-    context.font = `700 64px ${doodle}`;
-    context.fillText(
-        graduate.signature,
-        letter.x + letter.width - letter.padding,
-        letter.y + letter.height - 60,
-    );
 
     // Ngày, giờ, địa điểm.
     const info = { y: 1930, height: 330, gap: 40 };
