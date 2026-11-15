@@ -1,35 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { musicToggleAttribute, useAutoplayMusic } from "../lib/use-autoplay-music";
 
-/** Bài nhạc của nút "mở nhạc", nằm trong `public/music/`. */
+/** Bài nhạc của trang chính và các thiệp (trừ thiệp hồng), nằm trong `public/music/`. */
 export const musicSrc = "/music/Rick_Astley_-_Never_Gonna_Give_You_Up_Official_Video_4K_Remaster.mp3";
 
+/** Nút nhạc trên thanh công cụ trang chính: tự bật khi mở trang, bấm để tắt / bật lại. */
 export function MusicButton() {
-    const [playing, setPlaying] = useState(false);
-    const audioRef = useRef<HTMLAudioElement>(null);
-
-    useEffect(() => {
-        const audio = audioRef.current;
-        return () => audio?.pause();
-    }, []);
-
-    const toggleMusic = async () => {
-        const audio = audioRef.current;
-        if (!audio) return;
-
-        if (!audio.paused) {
-            audio.pause();
-            return;
-        }
-
-        try {
-            await audio.play();
-        } catch {
-            // Trình duyệt chặn phát nhạc hoặc file lỗi: giữ nguyên trạng thái tắt.
-            setPlaying(false);
-        }
-    };
+    const { audioProps, playing, toggle } = useAutoplayMusic();
 
     return (
         <>
@@ -39,7 +17,8 @@ export function MusicButton() {
                 aria-pressed={playing}
                 aria-label={playing ? "Tắt nhạc" : "Mở nhạc"}
                 data-testid="music-toggle"
-                onClick={toggleMusic}
+                {...{ [musicToggleAttribute]: "" }}
+                onClick={() => void toggle()}
             >
                 <span className="music-bars" aria-hidden="true">
                     <i />
@@ -48,15 +27,7 @@ export function MusicButton() {
                 </span>
                 {playing ? "đang mở" : "mở nhạc"}
             </button>
-            {/* File nhạc khá nặng nên chỉ tải khi bấm mở. */}
-            <audio
-                ref={audioRef}
-                src={musicSrc}
-                preload="none"
-                loop
-                onPlay={() => setPlaying(true)}
-                onPause={() => setPlaying(false)}
-            />
+            <audio {...audioProps} src={musicSrc} />
         </>
     );
 }

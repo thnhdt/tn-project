@@ -22,7 +22,7 @@ test("exports the public invitation directly without a guest-code gate", async (
 
 test("exports the graduation theme lab as static HTML", async () => {
     const html = await readPage("index.html");
-    assert.match(html, /Blue Notebook — Lễ Tốt Nghiệp Lê Thành Đạt/i);
+    assert.match(html, /<title>Lễ Tốt Nghiệp Lê Thành Đạt<\/title>/i);
     assert.match(html, /LÊ THÀNH/);
     assert.match(html, /Cử nhân Khoa học Máy tính/);
     assert.doesNotMatch(html, /BLUE_NOTEBOOK/);
