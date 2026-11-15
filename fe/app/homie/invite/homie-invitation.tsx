@@ -26,6 +26,7 @@ import { inviteLines } from "../../lib/invite-lines";
 import { graduate } from "../../site-content";
 import { LoveEffects } from "./love-effects";
 import { LoveFloaters } from "./love-floaters";
+import { InviteMusic } from "./invite-music";
 import { LoveRecordPlayer } from "./love-record-player";
 import { ImportedStickers } from "./imported-stickers";
 import { VenueMaps } from "./venue-maps";
@@ -147,16 +148,11 @@ function GuestPhoto({
 }
 
 function ResultActions({
-    publicInvitation,
     mainLabel = "XEM THIỆP CHÍNH →",
     directionsLabel = "CHỈ ĐƯỜNG ↗",
-    showSwitchGuest = true,
 }: {
-    publicInvitation: boolean;
     mainLabel?: string;
     directionsLabel?: string;
-    /** Hiện nút "KHÔNG PHẢI BẠN?" để quét lại mã khác. */
-    showSwitchGuest?: boolean;
 }) {
     return (
         <div className="homie-result-actions">
@@ -165,11 +161,6 @@ function ResultActions({
                 <a href={directionsUrl} target="_blank" rel="noreferrer">
                     {directionsLabel}
                 </a>
-            ) : null}
-            {!publicInvitation && showSwitchGuest ? (
-                <Link href="/homie" onClick={() => saveInviteCode(null)}>
-                    KHÔNG PHẢI BẠN?
-                </Link>
             ) : null}
         </div>
     );
@@ -202,6 +193,7 @@ function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
                     <i key={index} style={{ "--i": index } as CSSProperties} />
                 ))}
             </div>
+            <InviteMusic />
             <Link className="homie-logo" href="/">
                 <span>{graduate.initials}</span>
                 <strong>GRADUATION_INVITE.exe</strong>
@@ -210,10 +202,13 @@ function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
             <section className="homie-invitation">
                 <div className="homie-invite-heading">
                     <p>{publicInvitation ? "THÂN MỜI BẠN CHUNG VUI ✓" : "INVITATION DELIVERED ✓"}</p>
-                    <h1>
-                        {inviteLines.defaultTheme.greeting}
-                        <span>{invitation.display_name}</span>
-                    </h1>
+                    {/* Thiệp chung (/invite) không chào tên, chỉ thiệp riêng mới có "Hellooo {tên}". */}
+                    {publicInvitation ? null : (
+                        <h1>
+                            {inviteLines.defaultTheme.greeting}
+                            <span>{invitation.display_name}</span>
+                        </h1>
+                    )}
                     {invitation.instagram_handle ? <small>{invitation.instagram_handle}</small> : null}
                 </div>
 
@@ -265,7 +260,7 @@ function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
 
                 <p className="grad-closing">{inviteLines.defaultTheme.closing}</p>
 
-                <ResultActions publicInvitation={publicInvitation} />
+                <ResultActions />
             </section>
 
         </main>
@@ -311,12 +306,13 @@ function DiscordMessage({
     );
 }
 
-function DiscordInvitation({ invitation, publicInvitation }: LayoutProps) {
+function DiscordInvitation({ invitation }: LayoutProps) {
     const name = invitation.display_name;
 
     return (
         <main className="homie-shell homie-result-shell is-discord">
             <div className="homie-grid" aria-hidden="true" />
+            <InviteMusic />
             <Link className="homie-logo" href="/">
                 <span>{graduate.initials}</span>
                 <strong># graduation-party</strong>
@@ -396,14 +392,14 @@ function DiscordInvitation({ invitation, publicInvitation }: LayoutProps) {
 
                 <aside className="dc-members" aria-hidden="true">
                     <small>ONLINE — 3</small>
-                    <span><i className="dc-dot" />{discordHost.name} <em>đang tốt nghiệp</em></span>
-                    <span><i className="dc-dot" />{name} <em>sắp tới</em></span>
-                    <span><i className="dc-dot" />Lễ_Bot <em>BOT</em></span>
+                    <span><i className="dc-dot" /><b>{discordHost.name}</b><em>đang tốt nghiệp</em></span>
+                    <span><i className="dc-dot" /><b>{name}</b><em>sắp tới</em></span>
+                    <span><i className="dc-dot" /><b>Lễ_Bot</b><em>BOT</em></span>
                 </aside>
 
                 <div className="dc-footer">
                     <p className="grad-closing">{inviteLines.closing}</p>
-                    <ResultActions publicInvitation={publicInvitation} directionsLabel="THAM GIA NGOÀI ĐỜI ↗" />
+                    <ResultActions directionsLabel="THAM GIA NGOÀI ĐỜI ↗" />
                 </div>
             </section>
         </main>
@@ -412,7 +408,7 @@ function DiscordInvitation({ invitation, publicInvitation }: LayoutProps) {
 
 /* ───────────── Theme hồng: giữ lá thư riêng (sẽ thiết kế lại sau) ───────────── */
 
-function LoveInvitation({ invitation, publicInvitation }: LayoutProps) {
+function LoveInvitation({ invitation }: LayoutProps) {
     return (
         <main className="homie-shell homie-result-shell is-love">
             <div className="homie-grid" aria-hidden="true" />
@@ -466,10 +462,8 @@ function LoveInvitation({ invitation, publicInvitation }: LayoutProps) {
                 <VenueMaps />
 
                 <ResultActions
-                    publicInvitation={publicInvitation}
                     mainLabel="Vk iu xem thiệp chínhhh →"
                     directionsLabel="Google maps cho google maps của anhhh ↗"
-                    showSwitchGuest={false}
                 />
             </section>
 

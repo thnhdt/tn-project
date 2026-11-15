@@ -48,6 +48,8 @@ type CardGuest = {
     displayName: string;
     personalMessage: string;
     themeVariant?: string;
+    /** Thiệp mời chung: bỏ phần chào "Hellooo {tên}", khung lời mời dời lên giữa. */
+    hideName?: boolean;
 };
 
 export function qrDataUrl(text: string, width = 320) {
@@ -548,22 +550,26 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
     context.font = `700 76px ${doodle}`;
     // Thiệp thường và Discord đẩy tên lên một chút để khung bên dưới cao hơn.
     const nameY = love ? 1010 : 965;
-    context.fillText(
-        love ? "Thương mời ♥" : discord ? "Mấy ae discord, lên kèo!" : inviteLines.defaultTheme.greeting,
-        centerX,
-        nameY - 150,
-    );
-    context.font = `700 150px ${doodle}`;
-    const nameWidth = Math.min(context.measureText(guest.displayName).width, contentWidth);
-    context.fillStyle = colors.acid;
-    context.fillRect(centerX - nameWidth / 2 - 30, nameY - 50, nameWidth + 60, 70);
-    context.fillStyle = colors.ink;
-    context.fillText(guest.displayName, centerX, nameY, contentWidth);
+    const showName = love || !guest.hideName;
+    if (showName) {
+        context.fillText(
+            love ? "Thương mời ♥" : discord ? "Mấy ae discord, lên kèo!" : inviteLines.defaultTheme.greeting,
+            centerX,
+            nameY - 150,
+        );
+        context.font = `700 150px ${doodle}`;
+        const nameWidth = Math.min(context.measureText(guest.displayName).width, contentWidth);
+        context.fillStyle = colors.acid;
+        context.fillRect(centerX - nameWidth / 2 - 30, nameY - 50, nameWidth + 60, 70);
+        context.fillStyle = colors.ink;
+        context.fillText(guest.displayName, centerX, nameY, contentWidth);
+    }
 
     // Thiệp thường và Discord vẽ lại đúng kiểu trang web; thiệp hồng giữ lá thư riêng.
     const fonts = { sans, mono, doodle };
     if (!love) {
-        const area = { x: card.margin, y: 1040, width: contentWidth, height: 830 };
+        // Không có tên thì canh khung vào giữa khoảng trống dưới đường kẻ.
+        const area = { x: card.margin, y: showName ? 1040 : 905, width: contentWidth, height: 830 };
         if (discord) {
             await drawDiscordChat(context, area, fonts, guest.displayName);
         } else {

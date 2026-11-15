@@ -176,6 +176,34 @@
     line-height: 1.6;
 }
 
+/* Phần thả ảnh, chỉ hiện cho khách đã quét QR trên thiệp. */
+.drop-member {
+    margin-top: 6px;
+    padding: 18px 16px 16px;
+    border: 2px dashed #135de0;
+    background: rgba(19, 93, 224, 0.06);
+}
+
+.drop-member-badge {
+    display: inline-block;
+    margin: 0 0 10px;
+    padding: 4px 10px;
+    border: 2px solid #082d72;
+    background: #d9ff51;
+    color: #082d72;
+    font-family: var(--font-roboto-mono);
+    font-size: 11px;
+    font-weight: 800;
+    transform: rotate(-2deg);
+}
+
+.drop-member-text {
+    margin: 0 auto 16px;
+    max-width: 44ch;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
 .drop-pick {
     padding: 14px 20px;
     border: 2px solid #082d72;
@@ -187,12 +215,6 @@
     font-size: 14px;
     font-weight: 800;
     transition: transform 120ms ease, box-shadow 120ms ease;
-}
-
-/* Khách chưa quét QR: nút là đường dẫn sang trang quét QR. */
-a.drop-pick {
-    display: inline-block;
-    text-decoration: none;
 }
 
 .drop-pick:hover:not(:disabled) {

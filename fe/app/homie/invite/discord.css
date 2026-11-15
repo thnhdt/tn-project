@@ -82,19 +82,29 @@
     font-size: 12px;
 }
 
+/* Mỗi thành viên: chấm xanh, tên trên một dòng, trạng thái nhỏ ngay bên dưới như Discord. */
 .dc-members span {
-    display: flex;
+    display: grid;
+    grid-template-columns: 9px minmax(0, 1fr);
     align-items: center;
-    gap: 8px;
+    column-gap: 10px;
     padding: 6px 4px;
     color: #e3e5ff;
-    overflow-wrap: anywhere;
+}
+
+.dc-members b {
+    overflow: hidden;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .dc-members em {
+    grid-column: 2;
     color: #8e93c0;
     font-size: 11px;
     font-style: normal;
+    line-height: 1.3;
 }
 
 .dc-dot {

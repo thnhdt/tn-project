@@ -15,7 +15,8 @@ test("exports the public invitation directly without a guest-code gate", async (
     assert.match(html, /Sảnh A5/);
     assert.match(html, /Cổng 1/);
     assert.match(html, /Cổng 3/);
-    assert.match(html, /QR này mở thẳng thiệp mời chung/);
+    assert.match(html, /THIỆP PDF/);
+    assert.doesNotMatch(html, /QR này mở thẳng thiệp mời chung|Hellooo/);
     assert.doesNotMatch(html, /LOADING_PERSONAL_MESSAGE|KHÔNG PHẢI BẠN\?/);
 });
 

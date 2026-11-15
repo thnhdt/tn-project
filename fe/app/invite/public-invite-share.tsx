@@ -1,16 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { downloadBlob, inviteCardToPdf, qrDataUrl, renderInviteCard } from "../lib/qr-card";
+import { useState } from "react";
+import { downloadBlob, inviteCardToPdf, renderInviteCard } from "../lib/qr-card";
 
+/** Cuối trang thiệp chung: tải thiệp PNG / PDF (QR in trên thiệp mở lại trang này). */
 export function PublicInviteShare() {
-    const [qr, setQr] = useState("");
     const [error, setError] = useState("");
     const [busy, setBusy] = useState(false);
-
-    useEffect(() => {
-        void qrDataUrl(`${window.location.origin}/invite`, 240).then(setQr).catch(() => setError("Chưa tạo được QR, vui lòng tải lại trang."));
-    }, []);
 
     async function exportCard(format: "png" | "pdf") {
         setBusy(true);
@@ -20,6 +16,7 @@ export function PublicInviteShare() {
                 displayName: "Bạn",
                 personalMessage: "",
                 themeVariant: "desktop",
+                hideName: true,
             }, `${window.location.origin}/invite`);
             downloadBlob(format === "pdf" ? await inviteCardToPdf(png) : png, `thiep-moi-chung.${format}`);
         } catch {
@@ -30,15 +27,9 @@ export function PublicInviteShare() {
     }
 
     return (
-        <section className="public-invite-share" aria-label="Chia sẻ thiệp mời chung">
+        <section className="public-invite-share" aria-label="Tải thiệp mời chung">
             <h2>Hẹn gặp bạn tại buổi lễ!</h2>
-            <p>QR này mở thẳng thiệp mời chung, không cần đăng nhập hay mã riêng.</p>
-            {qr ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={qr} width={180} height={180} alt="QR mở thiệp mời chung" />
-            ) : null}
             <div className="homie-result-actions">
-                {qr ? <a href={qr} download="qr-thiep-moi-chung.png">TẢI QR ↓</a> : null}
                 <button disabled={busy} onClick={() => void exportCard("png")}>THIỆP PNG ↓</button>
                 <button disabled={busy} onClick={() => void exportCard("pdf")}>THIỆP PDF ↓</button>
             </div>

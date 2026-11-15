@@ -151,10 +151,6 @@ export function PhotoDrop() {
     const handleFiles = useCallback(
         async (list: FileList | null, at?: { x: number; y: number }) => {
             if (access.kind !== "member") {
-                setStatus({
-                    tone: "error",
-                    text: "Chỉ mấy ní có QR trên thiệp mới thả ảnh được nha. Quét QR trước đã!",
-                });
                 return;
             }
             if (remaining === 0) {
@@ -213,8 +209,11 @@ export function PhotoDrop() {
         const hasFiles = (event: DragEvent) =>
             Array.from(event.dataTransfer?.types ?? []).includes("Files");
 
+        // Chỉ khách có QR mới thả ảnh được: người khác kéo file vào thì không hiện lớp phủ.
+        const canDrop = access.kind === "member";
+
         const onEnter = (event: DragEvent) => {
-            if (!hasFiles(event)) {
+            if (!hasFiles(event) || !canDrop) {
                 return;
             }
             event.preventDefault();
@@ -236,9 +235,13 @@ export function PhotoDrop() {
             if (!hasFiles(event)) {
                 return;
             }
+            // Luôn chặn để trình duyệt không mở file ra thay cho trang.
             event.preventDefault();
             dragDepthRef.current = 0;
             setDragging(false);
+            if (!canDrop) {
+                return;
+            }
             void handleFiles(event.dataTransfer?.files ?? null, {
                 x: event.clientX,
                 y: event.clientY,
@@ -255,7 +258,7 @@ export function PhotoDrop() {
             window.removeEventListener("dragleave", onLeave);
             window.removeEventListener("drop", onDrop);
         };
-    }, [handleFiles]);
+    }, [access.kind, handleFiles]);
 
     const removeBalloon = (key: number) =>
         setBalloons((current) => current.filter((balloon) => balloon.key !== key));
@@ -322,61 +325,60 @@ export function PhotoDrop() {
             </header>
 
             <section className="drop-card">
-                <p className="drop-eyebrow">PHOTO_DROP.exe</p>
+                {/* Phần chung: ai mở trang cũng thấy, không nhắc gì tới QR hay việc thả ảnh. */}
+                <p className="drop-eyebrow">PHOTO_GALLERY.exe</p>
                 <h1>
-                    Thả con ảnh của bạn <span>dzô đây</span>
+                    Thư viện ảnh <span>bay bay</span>
                 </h1>
                 <p className="drop-lead">
-                    Kéo ảnh thả vào bất kỳ đâu trên trang, hoặc bấm nút bên dưới. Ảnh sẽ bay lên
-                    cho mọi người cùng xem. Bấm vào ảnh đang bay để làm nó nảy một cái.
+                    Ảnh từ lễ tốt nghiệp bay lên ở đây cho mọi người cùng xem. Bấm vào ảnh đang bay
+                    để làm nó nảy một cái.
                 </p>
 
-                {access.kind === "guest" ? (
-                    <Link href="/homie" className="drop-pick">
-                        QUÉT QR ĐỂ THẢ ẢNH →
-                    </Link>
-                ) : (
-                    <button
-                        type="button"
-                        className="drop-pick"
-                        onClick={() => inputRef.current?.click()}
-                        disabled={access.kind === "checking" || uploading > 0 || remaining === 0}
-                    >
-                        {access.kind === "checking"
-                            ? "ĐANG KIỂM TRA QR…"
-                            : uploading > 0
-                              ? `ĐANG THẢ ${uploading} ẢNH…`
-                              : remaining === 0
-                                ? "ĐÃ THẢ ĐỦ 4 ẢNH ✓"
-                                : "CHỌN ẢNH ĐỂ THẢ ↑"}
-                    </button>
-                )}
-                <input
-                    ref={inputRef}
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    hidden
-                    onChange={(event) => {
-                        void handleFiles(event.target.files);
-                        event.target.value = "";
-                    }}
-                />
+                {/* Chỉ khách đã quét QR trên thiệp mới thấy phần thả ảnh. */}
+                {access.kind === "member" ? (
+                    <div className="drop-member">
+                        <p className="drop-member-badge">✓ NÍ CÓ THIỆP NÈ</p>
+                        <p className="drop-member-text">
+                            Ní thả được tối đa {access.quota.max} ảnh: kéo ảnh thả vào bất kỳ đâu trên
+                            trang, hoặc bấm nút bên dưới.
+                        </p>
+                        <button
+                            type="button"
+                            className="drop-pick"
+                            onClick={() => inputRef.current?.click()}
+                            disabled={uploading > 0 || remaining === 0}
+                        >
+                            {uploading > 0
+                                ? `ĐANG THẢ ${uploading} ẢNH…`
+                                : remaining === 0
+                                  ? `ĐÃ THẢ ĐỦ ${access.quota.max} ẢNH ✓`
+                                  : "CHỌN ẢNH ĐỂ THẢ ↑"}
+                        </button>
+                        <input
+                            ref={inputRef}
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            hidden
+                            onChange={(event) => {
+                                void handleFiles(event.target.files);
+                                event.target.value = "";
+                            }}
+                        />
 
-                <p className="drop-quota">
-                    {access.kind === "guest"
-                        ? "Ai cũng xem được ảnh, nhưng chỉ mấy ní có QR trên thiệp mới thả ảnh được."
-                        : access.kind === "member"
-                          ? `Ní còn thả được ${remaining}/${access.quota.max} ảnh.`
-                          : ""}
-                </p>
-
-                <p className={`drop-status${status ? ` is-${status.tone}` : ""}`} role="status">
-                    {status?.text ?? ""}
-                </p>
-                <p className="drop-note">
-                    Ảnh thả vào là công khai trên trang này, ai mở cũng thấy. Đừng thả ảnh riêng tư nha.
-                </p>
+                        <p className="drop-quota">
+                            Ní còn thả được {remaining}/{access.quota.max} ảnh.
+                        </p>
+                        <p className={`drop-status${status ? ` is-${status.tone}` : ""}`} role="status">
+                            {status?.text ?? ""}
+                        </p>
+                        <p className="drop-note">
+                            Ảnh thả vào là công khai trên trang này, ai mở cũng thấy. Đừng thả ảnh riêng
+                            tư nha.
+                        </p>
+                    </div>
+                ) : null}
             </section>
 
             <div className="drop-overlay" aria-hidden="true">

@@ -1,34 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { musicSrc } from "../../home/music-button";
+import { musicToggleAttribute, useAutoplayMusic } from "../../lib/use-autoplay-music";
 
-/** Máy đĩa than ở góc dưới thiệp hồng: bấm để phát / tạm dừng nhạc. */
+/** Nhạc riêng của thiệp hồng, nằm trong `public/music/`. */
+const loveMusicSrc = "/music/jvke-golden-hour.mp3";
+
+/** Máy đĩa than ở góc dưới thiệp hồng: tự bật "golden hour" khi mở thiệp, bấm để tắt / bật lại. */
 export function LoveRecordPlayer() {
-    const [playing, setPlaying] = useState(false);
-    const audioRef = useRef<HTMLAudioElement>(null);
-
-    useEffect(() => {
-        const audio = audioRef.current;
-        return () => audio?.pause();
-    }, []);
-
-    const toggle = async () => {
-        const audio = audioRef.current;
-        if (!audio) return;
-
-        if (!audio.paused) {
-            audio.pause();
-            return;
-        }
-
-        try {
-            await audio.play();
-        } catch {
-            // Trình duyệt chặn phát nhạc hoặc file lỗi: giữ nguyên trạng thái tắt.
-            setPlaying(false);
-        }
-    };
+    const { audioProps, playing, toggle } = useAutoplayMusic();
 
     return (
         <>
@@ -38,7 +17,8 @@ export function LoveRecordPlayer() {
                 aria-pressed={playing}
                 aria-label={playing ? "Tắt nhạc" : "Mở nhạc"}
                 data-testid="love-record"
-                onClick={toggle}
+                {...{ [musicToggleAttribute]: "" }}
+                onClick={() => void toggle()}
             >
                 <svg viewBox="0 0 180 130" aria-hidden="true">
                     <rect x="6" y="6" width="168" height="118" rx="12" className="love-record-base" />
@@ -62,15 +42,7 @@ export function LoveRecordPlayer() {
                 </svg>
                 <span className="love-record-label">{playing ? "đang mở ♪" : "mở nhạc"}</span>
             </button>
-            {/* File nhạc khá nặng nên chỉ tải khi bấm mở. */}
-            <audio
-                ref={audioRef}
-                src={musicSrc}
-                preload="none"
-                loop
-                onPlay={() => setPlaying(true)}
-                onPause={() => setPlaying(false)}
-            />
+            <audio {...audioProps} src={loveMusicSrc} />
         </>
     );
 }
