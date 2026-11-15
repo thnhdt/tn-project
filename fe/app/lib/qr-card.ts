@@ -608,8 +608,9 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
         context.textAlign = "right";
         context.fillStyle = colors.blue;
         context.font = `700 64px ${doodle}`;
+        // Chữ ký riêng của thiệp hồng.
         context.fillText(
-            graduate.signature,
+            "— Ske ngố xít của em ✦",
             letter.x + letter.width - letter.padding,
             letter.y + letter.height - 60,
         );
