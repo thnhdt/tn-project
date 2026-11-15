@@ -1459,7 +1459,9 @@ button {
     line-height: 1.7;
 }
 
+/* Ngày giờ luôn nằm trọn một dòng, không bị ngắt giữa giờ và ngày. */
 .countdown-copy time {
+    white-space: nowrap;
     padding: 2px 5px;
     background: var(--accent-2);
     font-family: var(--font-roboto-mono);
@@ -1879,8 +1881,17 @@ footer b {
     font-size: 16px;
 }
 
-footer a {
+footer a,
+footer .back-to-top {
     color: var(--white);
+}
+
+footer .back-to-top {
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 @media (max-width: 900px) {

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Fragment } from "react";
+import { BackToTop } from "./back-to-top";
 import {
     ceremony,
     footer,
@@ -225,7 +226,7 @@ export function EventInfo() {
             <div className="invite-note">
                 <span>{invite.to}</span>
                 <p>{invite.text}</p>
-                <strong>{graduate.signature}</strong>
+                <strong>{"Lão Tử"}</strong>
             </div>
 
             <VenueMaps />
@@ -243,7 +244,7 @@ export function Footer() {
             <p>
                 {graduate.fullName.toLocaleUpperCase("vi")} © {graduate.classOf}
             </p>
-            <a href="#top">BACK_TO_TOP ↑</a>
+            <BackToTop />
         </footer>
     );
 }
