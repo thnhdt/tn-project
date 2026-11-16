@@ -28,6 +28,8 @@ export type RandomGif = {
     title: string;
     altText: string;
     previewUrl: string;
+    /** Link file GIF trên media.giphy.com, để tải về mà không tốn lượt gọi GIPHY API. */
+    downloadUrl?: string;
 };
 
 /**
@@ -148,23 +150,70 @@ export function recordPageVisit(visit: {
     );
 }
 
-export async function getRandomGif(tag = "", offset = 0): Promise<RandomGif> {
-    const path = tag
-        ? `/search?tag=${encodeURIComponent(tag)}&offset=${offset}`
-        : `/trending?offset=${offset}`;
-    const response = await fetch(`${giphyFunctionUrl}${path}`, {
-        cache: "no-store",
-    });
+const gifPoolKeyPrefix = "giphy_pool_v1:";
+/** Danh sách GIF lưu trên máy 6 tiếng: mở lại trang hay bấm bốc không tốn lượt gọi GIPHY. */
+const gifPoolMaxAgeMs = 6 * 60 * 60 * 1000;
+
+function readCachedGifPool(tag: string): RandomGif[] | null {
+    try {
+        const raw = window.localStorage.getItem(gifPoolKeyPrefix + tag);
+        if (!raw) {
+            return null;
+        }
+        const cached = JSON.parse(raw) as { savedAt?: number; gifs?: RandomGif[] };
+        if (
+            typeof cached.savedAt !== "number" ||
+            Date.now() - cached.savedAt > gifPoolMaxAgeMs ||
+            !Array.isArray(cached.gifs) ||
+            cached.gifs.length === 0
+        ) {
+            return null;
+        }
+        return cached.gifs;
+    } catch {
+        return null;
+    }
+}
+
+function saveCachedGifPool(tag: string, gifs: RandomGif[]) {
+    try {
+        window.localStorage.setItem(
+            gifPoolKeyPrefix + tag,
+            JSON.stringify({ savedAt: Date.now(), gifs }),
+        );
+    } catch {
+        // Hết chỗ hoặc bị chặn localStorage: lần sau tải lại danh sách là được.
+    }
+}
+
+/**
+ * Danh sách GIF của một chủ đề (tag rỗng = trending). Ưu tiên bản lưu trên máy,
+ * hết hạn mới hỏi Edge Function (bản thân function cũng cache, ít khi gọi GIPHY).
+ */
+export async function getGifPool(tag = ""): Promise<RandomGif[]> {
+    const cached = readCachedGifPool(tag);
+    if (cached) {
+        return cached;
+    }
+
+    const response = await fetch(`${giphyFunctionUrl}/list?tag=${encodeURIComponent(tag)}`);
     const payload = (await response.json().catch(() => ({}))) as {
-        data?: RandomGif;
+        data?: RandomGif[];
         message?: string;
     };
 
-    if (!response.ok || !payload.data) {
+    if (!response.ok || !Array.isArray(payload.data) || payload.data.length === 0) {
         throw new Error(payload.message ?? "Chưa thể tạo GIF ngẫu nhiên.");
     }
 
+    saveCachedGifPool(tag, payload.data);
     return payload.data;
+}
+
+/** Link tải GIF qua Edge Function (kèm sẵn link media để function khỏi phải hỏi GIPHY). */
+export function gifDownloadUrl(gif: RandomGif) {
+    const source = gif.downloadUrl ? `?src=${encodeURIComponent(gif.downloadUrl)}` : "";
+    return `${giphyFunctionUrl}/${gif.id}/download${source}`;
 }
 
 /** Mã QR đã xác thực được nhớ trên máy khách để mở lại thiệp mà không cần quét lại. */

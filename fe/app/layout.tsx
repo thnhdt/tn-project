@@ -44,7 +44,7 @@ const scrollToTopOnLoad = `(function () {
     try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
     var touched = false;
     function markTouched() { touched = true; }
-    ["touchstart", "wheel", "keydown"].forEach(function (name) {
+    ["touchstart", "pointerdown", "wheel", "keydown"].forEach(function (name) {
         window.addEventListener(name, markTouched, { once: true, passive: true });
     });
     function toTop() {
@@ -53,7 +53,22 @@ const scrollToTopOnLoad = `(function () {
         try { window.scrollTo({ top: 0, left: 0, behavior: "instant" }); } catch (e) { window.scrollTo(0, 0); }
     }
     window.addEventListener("pageshow", toTop);
-    window.addEventListener("load", function () { toTop(); setTimeout(toTop, 50); });
+    // WebView trên iPhone có thể dời trang muộn, sau hiệu ứng nảy của kéo-để-tải-lại:
+    // trong 2 giây đầu, hễ trang tự bị cuộn mà khách chưa chạm thì đưa về đầu.
+    var guardUntil = 0;
+    function onEarlyScroll() {
+        if (Date.now() > guardUntil) {
+            window.removeEventListener("scroll", onEarlyScroll);
+            return;
+        }
+        if (window.scrollY !== 0) toTop();
+    }
+    window.addEventListener("load", function () {
+        guardUntil = Date.now() + 2000;
+        window.addEventListener("scroll", onEarlyScroll, { passive: true });
+        toTop();
+        [50, 300, 700, 1200].forEach(function (delay) { setTimeout(toTop, delay); });
+    });
 })();`;
 
 export default function RootLayout({

@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
     errorMessage,
-    getRandomGif,
-    giphyFunctionUrl,
+    getGifPool,
+    gifDownloadUrl,
     type RandomGif,
     reportError,
 } from "../lib/api";
@@ -22,22 +22,41 @@ const memeTags = [
     { label: "Ăn mừng 🎉", tag: "celebration" },
 ];
 
+/** Xáo trộn để mỗi lần mở trang thấy GIF khác nhau dù dùng chung danh sách đã lưu. */
+function shuffle<T>(items: T[]) {
+    const copy = [...items];
+    for (let index = copy.length - 1; index > 0; index -= 1) {
+        const other = Math.floor(Math.random() * (index + 1));
+        [copy[index], copy[other]] = [copy[other], copy[index]];
+    }
+    return copy;
+}
+
 export function GifMachine() {
     const [gif, setGif] = useState<RandomGif | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [selectedTag, setSelectedTag] = useState("");
+    /** Danh sách GIF đã xáo trộn của từng chủ đề, và vị trí đang bốc tới. */
+    const pools = useRef<Record<string, RandomGif[]>>({});
     const offsets = useRef<Record<string, number>>({});
 
+    // Bốc lần lượt trong danh sách đã tải: chỉ lần đầu của mỗi chủ đề mới cần mạng.
     const generateGif = useCallback(async (tag = "") => {
-        setLoading(true);
         setError("");
 
         try {
+            let pool = pools.current[tag];
+            if (!pool) {
+                setLoading(true);
+                pool = shuffle(await getGifPool(tag));
+                pools.current[tag] = pool;
+                offsets.current[tag] = 0;
+            }
+
             const offset = offsets.current[tag] ?? 0;
-            const nextGif = await getRandomGif(tag, offset);
-            setGif(nextGif);
-            offsets.current[tag] = (offset + 1) % 50;
+            setGif(pool[offset % pool.length]);
+            offsets.current[tag] = offset + 1;
         } catch (generateError) {
             reportError("gif", generateError);
             setError(errorMessage(generateError));
@@ -88,7 +107,7 @@ export function GifMachine() {
                         {loading ? "ĐANG BỐC GIF..." : "BỐC GIF NGẪU NHIÊN ✦"}
                     </button>
                     {gif ? (
-                        <a href={`${giphyFunctionUrl}/${gif.id}/download`}>
+                        <a href={gifDownloadUrl(gif)}>
                             TẢI GIF VỀ ↓
                         </a>
                     ) : null}

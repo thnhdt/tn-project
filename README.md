@@ -174,7 +174,7 @@ npm run db:admin
 cd be
 npx supabase login
 npx supabase link --project-ref <project-ref>
-npx supabase secrets set GIPHY_API_KEY=... TELE_BOT_TOKEN=... CHAT_ID=... \
+npx supabase secrets set GIPHY_API_KEYS=key1,key2 TELE_BOT_TOKEN=... CHAT_ID=... \
     TELEGRAM_WEBHOOK_SECRET=... SITE_URL=https://domain-cua-ban
 npx supabase functions deploy giphy
 npx supabase functions deploy telegram-bot
