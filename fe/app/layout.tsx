@@ -36,6 +36,26 @@ export const metadata: Metadata = {
     },
 };
 
+/**
+ * Chạy trước khi React tải: tắt tự khôi phục vị trí cuộn, mở trang luôn ở đầu
+ * (trừ link có # hoặc khi khách đã tự cuộn trước lúc trang tải xong).
+ */
+const scrollToTopOnLoad = `(function () {
+    try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+    var touched = false;
+    function markTouched() { touched = true; }
+    ["touchstart", "wheel", "keydown"].forEach(function (name) {
+        window.addEventListener(name, markTouched, { once: true, passive: true });
+    });
+    function toTop() {
+        // Khách đã tự cuộn/chạm trước khi trang tải xong thì giữ nguyên chỗ họ đang xem.
+        if (location.hash || touched) return;
+        try { window.scrollTo({ top: 0, left: 0, behavior: "instant" }); } catch (e) { window.scrollTo(0, 0); }
+    }
+    window.addEventListener("pageshow", toTop);
+    window.addEventListener("load", function () { toTop(); setTimeout(toTop, 50); });
+})();`;
+
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -46,6 +66,9 @@ export default function RootLayout({
             <body
                 className={`${beVietnamPro.variable} ${robotoMono.variable} ${shantellSans.variable}`}
             >
+                {/* Không cho trình duyệt tự khôi phục vị trí cuộn khi tải lại: app Google trên iPhone
+                    kéo-để-tải-lại xong thì trả về vị trí lệch, header bị kẹt sau thanh địa chỉ. */}
+                <script dangerouslySetInnerHTML={{ __html: scrollToTopOnLoad }} />
                 <PageVisitTracker />
                 {children}
             </body>
