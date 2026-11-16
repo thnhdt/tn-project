@@ -11,8 +11,9 @@
 // gọi mỗi giờ bị chặn ở `upstreamPerHourPerKey` × số key. Gọi không được thì trả danh sách cũ.
 //
 // Key: đặt nhiều key cách nhau dấu phẩy trong secret GIPHY_API_KEYS (vẫn đọc
-// GIPHY_API_KEY cũ). Mỗi lần gọi chọn ngẫu nhiên một key; key nào bị GIPHY trả
-// 429 thì nghỉ 1 giờ và thử ngay key khác.
+// GIPHY_API_KEY cũ, nên có thể luân phiên cả key cũ lẫn key mới). Mỗi lần gọi chọn
+// ngẫu nhiên một key; key nào bị GIPHY trả 429 (hết lượt) hoặc 401/403 (sai, bị
+// thu hồi) thì nghỉ 1 giờ và thử ngay key khác.
 
 import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2";
 
@@ -47,7 +48,7 @@ const maxGifBytes = 15 * 1024 * 1024;
 const freshForMs = 12 * 60 * 60 * 1000;
 /** Mỗi key beta được 100 lần/giờ; chừa 40 lần mỗi key cho dev và các lần tải GIF thiếu link. */
 const upstreamPerHourPerKey = 60;
-/** Key bị GIPHY trả 429 thì cho nghỉ 1 giờ. */
+/** Key bị GIPHY trả 429/401/403 thì cho nghỉ 1 giờ. */
 const keyCooldownMs = 60 * 60 * 1000;
 const poolSize = 50;
 
@@ -164,10 +165,10 @@ async function callGiphy(path: string, params: Record<string, string> = {}) {
             headers: { Accept: "application/json" },
             signal: AbortSignal.timeout(8_000),
         });
-        if (response.status === 429) {
-            // Key này hết lượt: cho nghỉ rồi thử ngay key tiếp theo.
+        if (response.status === 429 || response.status === 401 || response.status === 403) {
+            // Key này hết lượt (429) hoặc sai / bị thu hồi (401, 403): cho nghỉ rồi thử ngay key khác.
             coolingKeys.set(apiKey, Date.now() + keyCooldownMs);
-            console.error(`Key GIPHY …${apiKey.slice(-4)} bị giới hạn, đổi key khác.`);
+            console.error(`Key GIPHY …${apiKey.slice(-4)} trả ${response.status}, đổi key khác.`);
             continue;
         }
         if (!response.ok) {
