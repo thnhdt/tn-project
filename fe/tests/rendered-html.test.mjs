@@ -107,3 +107,13 @@ test("every configured font explicitly supports Vietnamese", async () => {
         );
     }
 });
+
+test("the inline scroll script in every page is valid JavaScript", async () => {
+    const html = await readPage("index.html");
+    const match = html.match(/<script>(\(function \(\) \{[\s\S]*?\}\)\(\);)<\/script>/);
+    assert.ok(match, "inline scroll script is missing");
+    // Script nằm trong template string: lỡ dùng `\b`, `\/`... sẽ hỏng cú pháp mà build không báo.
+    assert.doesNotThrow(() => new Function(match[1]));
+    assert.match(match[1], /scrollRestoration/);
+    assert.match(match[1], /in-google-app-ios/);
+});

@@ -42,6 +42,12 @@ export const metadata: Metadata = {
  */
 const scrollToTopOnLoad = `(function () {
     try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+    // App Google trên iPhone (UA có "GSA/"): kéo-để-tải-lại làm khung trang chui dưới thanh
+    // địa chỉ. Gắn class để CSS tắt kéo-để-tải-lại riêng trong app này.
+    var ua = navigator.userAgent || "";
+    if (ua.indexOf("GSA/") !== -1 && /iPhone|iPad|iPod/.test(ua)) {
+        document.documentElement.classList.add("in-google-app-ios");
+    }
     var touched = false;
     function markTouched() { touched = true; }
     ["touchstart", "pointerdown", "wheel", "keydown"].forEach(function (name) {
@@ -77,7 +83,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="vi">
+        // suppressHydrationWarning: script đầu trang có thể gắn class cho <html> trước khi React chạy.
+        <html lang="vi" suppressHydrationWarning>
             <body
                 className={`${beVietnamPro.variable} ${robotoMono.variable} ${shantellSans.variable}`}
             >

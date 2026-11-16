@@ -22,6 +22,13 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Chỉ trong app Google trên iPhone: tắt nảy/kéo-để-tải-lại ở đầu trang, vì thao tác
+   đó làm khung trang chui xuống dưới thanh địa chỉ (lỗi của app). Trình duyệt khác không đổi. */
+html.in-google-app-ios,
+html.in-google-app-ios body {
+    overscroll-behavior-y: none;
+}
+
 body {
     margin: 0;
     background: #dbeeff;
