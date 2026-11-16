@@ -516,6 +516,8 @@
 /* Chừa chỗ cho các tia quanh đồng hồ để không cắt qua dòng ngày giờ phía trên. */
 .dc-message-body .doodle-clock {
     margin-top: 64px;
+    /* Tia dưới đồng hồ không đè lên tên người gửi tin nhắn kế tiếp. */
+    margin-bottom: 48px;
 }
 
 /* Cột chat hẹp: sơ đồ trường nằm trên, hai cổng chia đôi bên dưới. */

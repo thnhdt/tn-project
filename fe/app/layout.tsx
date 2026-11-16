@@ -29,9 +29,10 @@ export const metadata: Metadata = {
     title: "Lễ Tốt Nghiệp — Lê Thành Đạt",
     description:
         "Theme preview cho trang mời tốt nghiệp của Lê Thành Đạt, Cử nhân Khoa học Máy tính.",
+    // Favicon: phần đầu (mũ, mặt) của sticker tốt nghiệp ở trang chủ.
     icons: {
-        icon: "/favicon.svg",
-        shortcut: "/favicon.svg",
+        icon: { url: "/favicon.png", type: "image/png", sizes: "192x192" },
+        shortcut: "/favicon.png",
     },
 };
 

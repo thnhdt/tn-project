@@ -440,6 +440,11 @@
 }
 
 @media (max-width: 640px) {
+    /* Máy đĩa than cao hơn nút nhạc thường nên chừa nhiều chỗ hơn ở cuối thiệp. */
+    .homie-result-shell.is-love {
+        padding-bottom: 140px;
+    }
+
     .love-record {
         right: 12px;
         bottom: 12px;

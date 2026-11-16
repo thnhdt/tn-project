@@ -337,10 +337,15 @@
     transform: rotate(7deg);
 }
 
+/* Dòng chữ nhỏ cuối trang: bỏ khung xanh đậm của footer trang chủ (globals.css). */
 .homie-shell > footer {
     position: absolute;
     right: 24px;
     bottom: 18px;
+    display: block;
+    padding: 0;
+    border: 0;
+    background: none;
     color: #496a95;
     font-family: var(--font-roboto-mono);
     font-size: 8px;
@@ -425,6 +430,9 @@
     font-size: clamp(24px, 4vw, 38px);
     font-weight: 520;
     line-height: 1.55;
+    /* Giữ đúng chỗ xuống dòng, dòng trống và dấu cách như lúc viết lời nhắn. */
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
 
 .homie-letter strong {
@@ -594,6 +602,11 @@
     .homie-shell {
         align-items: start;
         padding: 100px 14px 50px;
+    }
+
+    /* Chừa chỗ cuối thiệp để nút nhạc nổi không đè lên các nút cuối trang. */
+    .homie-result-shell {
+        padding-bottom: 110px;
     }
 
     .homie-logo {

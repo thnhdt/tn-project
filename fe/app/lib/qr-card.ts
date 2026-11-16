@@ -90,6 +90,51 @@ function wrapText(context: CanvasRenderingContext2D, text: string, maxWidth: num
     return lines;
 }
 
+/**
+ * Như `wrapText` nhưng giữ nguyên dấu cách (thụt đầu dòng, nhiều dấu cách liền nhau) và
+ * dòng trống: dùng cho lá thư thiệp hồng để PDF xuống hàng giống hệt lúc viết.
+ */
+function wrapTextKeepSpaces(context: CanvasRenderingContext2D, text: string, maxWidth: number) {
+    const lines: string[] = [];
+
+    for (const paragraph of text.replace(/\t/g, "    ").split("\n")) {
+        let line = "";
+        for (const token of paragraph.split(/( +)/).filter(Boolean)) {
+            const isSpace = token.trim() === "";
+            const candidate = line + token;
+            if (context.measureText(candidate).width <= maxWidth) {
+                line = candidate;
+                continue;
+            }
+            if (isSpace) {
+                // Dấu cách ở cuối dòng bị ngắt thì bỏ, như trình duyệt.
+                lines.push(line);
+                line = "";
+                continue;
+            }
+            if (line.trim()) {
+                lines.push(line.trimEnd());
+                line = "";
+            }
+            // Từ quá dài so với một dòng: cắt theo từng ký tự.
+            let rest = token;
+            while (context.measureText(line + rest).width > maxWidth && rest.length > 1) {
+                let cut = rest.length - 1;
+                while (cut > 1 && context.measureText(line + rest.slice(0, cut)).width > maxWidth) {
+                    cut -= 1;
+                }
+                lines.push(line + rest.slice(0, cut));
+                line = "";
+                rest = rest.slice(cut);
+            }
+            line += rest;
+        }
+        lines.push(line);
+    }
+
+    return lines;
+}
+
 /** Hộp trắng viền đậm có bóng lệch, kiểu sticker của Blue Notebook. */
 function drawBox(
     context: CanvasRenderingContext2D,
@@ -596,7 +641,7 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
         let lines: string[] = [];
         for (; fontSize >= 26; fontSize -= 4) {
             context.font = `400 ${fontSize}px ${sans}`;
-            lines = wrapText(context, message, letter.width - letter.padding * 2);
+            lines = wrapTextKeepSpaces(context, message, letter.width - letter.padding * 2);
             if (lines.length * fontSize * 1.5 <= messageHeight) {
                 break;
             }
