@@ -174,6 +174,9 @@ export function QrGate() {
                 <span>LD</span>
                 <strong>HOMIE_CHECK.exe</strong>
             </Link>
+            <Link className="homie-home-link" href="/">
+                ← VỀ TRANG CHÍNH
+            </Link>
 
             <section className="homie-lookup-card">
                 <div className="homie-window-bar">

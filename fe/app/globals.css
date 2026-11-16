@@ -356,10 +356,6 @@ button {
     pointer-events: none;
 }
 
-.story-section .section-heading h2 {
-    line-height: 1.2;
-}
-
 .theme-switcher {
     display: flex;
     justify-content: center;
@@ -690,7 +686,6 @@ button {
     transform: rotate(-2deg);
 }
 
-
 .tape {
     position: absolute;
     z-index: 4;
@@ -797,16 +792,6 @@ button {
     transform: rotate(12deg);
 }
 
-
-
-
-
-
-
-
-
-
-
 .hero-spark-lines {
     position: absolute;
     top: 13%;
@@ -871,11 +856,6 @@ button {
     border-radius: 50%;
     background: var(--white);
 }
-
-
-
-
-
 
 .sketchnote-map {
     position: relative;
@@ -986,35 +966,6 @@ button {
     font-size: 7px;
 }
 
-.story-section {
-    position: relative;
-    display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    gap: clamp(40px, 7vw, 110px);
-    width: min(1180px, calc(100% - 40px));
-    margin: 0 auto;
-    padding: 72px 0;
-}
-
-.theme-shell[data-theme="notebook"] .story-section::after {
-    position: absolute;
-    right: -18px;
-    bottom: 46px;
-    width: 120px;
-    height: 72px;
-    padding: 15px 10px;
-    border: 2px solid var(--ink);
-    border-radius: 52% 48% 55% 45% / 45% 52% 48% 55%;
-    background: var(--accent-2);
-    content: "note to self: cứ làm rồi sẽ xong!";
-    font-family: var(--font-doodle);
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 1.2;
-    transform: rotate(8deg);
-}
-
-.section-heading > span,
 .memory-intro > span,
 .event-paper > small {
     font-family: var(--font-roboto-mono);
@@ -1022,7 +973,6 @@ button {
     font-weight: 800;
 }
 
-.section-heading h2,
 .memory-intro h2,
 .event-paper h2 {
     position: relative;
@@ -1034,7 +984,6 @@ button {
     line-height: 1.2;
 }
 
-.section-heading h2::after,
 .memory-intro h2::after,
 .event-paper h2::after {
     position: absolute;
@@ -1048,7 +997,6 @@ button {
     transform: rotate(-1.5deg);
 }
 
-.section-heading h2::before,
 .memory-intro h2::before,
 .event-paper h2::before {
     position: absolute;
@@ -1062,102 +1010,11 @@ button {
     transform: rotate(1deg);
 }
 
-.section-heading p,
 .memory-intro p {
     max-width: 520px;
     font-size: 16px;
     line-height: 1.7;
 }
-
-.sketch-equation {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 7px;
-    margin-top: 32px;
-    font-family: var(--font-doodle);
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.sketch-equation span {
-    padding: 4px 7px;
-    border: 1.5px solid var(--ink);
-    border-radius: 48% 52% 46% 54%;
-    background: var(--white);
-    transform: rotate(-2deg);
-}
-
-.sketch-equation span:nth-of-type(even) {
-    background: var(--accent-2);
-    transform: rotate(2deg);
-}
-
-.sketch-equation b {
-    color: var(--accent);
-    font-size: 18px;
-}
-
-.sketch-equation strong {
-    padding: 5px 8px;
-    color: var(--white);
-    background: var(--accent);
-    box-shadow: 2px 2px 0 var(--ink);
-    transform: rotate(-2deg);
-}
-
-.terminal-card {
-    position: relative;
-    align-self: start;
-    overflow: hidden;
-    border: 3px solid var(--ink);
-    background: var(--ink);
-    box-shadow: var(--shadow);
-    transform: rotate(1.5deg);
-}
-
-.terminal-card::after {
-    position: absolute;
-    inset: 7px;
-    border: 1.5px dashed rgba(217, 255, 81, 0.56);
-    content: "";
-    pointer-events: none;
-}
-
-.terminal-top {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 14px;
-    color: var(--ink);
-    background: var(--accent-2);
-    font-family: var(--font-roboto-mono);
-    font-size: 10px;
-    font-weight: 800;
-}
-
-.terminal-body {
-    padding: 28px;
-    color: #dceaff;
-    font-family: var(--font-roboto-mono);
-    font-size: 12px;
-    line-height: 1.75;
-}
-
-.terminal-body p {
-    margin: 6px 0;
-}
-
-.terminal-body span,
-.terminal-body b {
-    color: var(--accent-2);
-}
-
-.terminal-success {
-    margin-top: 22px !important;
-    color: #7fffb1;
-}
-
-
 
 .memory-section {
     padding: 72px max(20px, calc((100vw - 1240px) / 2));
@@ -1196,7 +1053,6 @@ button {
     background: var(--white);
     box-shadow: 6px 6px 0 rgba(8, 45, 114, 0.22);
 }
-
 
 .memory-sketch-mark {
     position: absolute;
@@ -1321,7 +1177,6 @@ button {
     transform: rotate(-1.5deg);
 }
 
-
 .pin {
     position: absolute;
     top: 20px;
@@ -1330,9 +1185,6 @@ button {
     font-size: 28px;
     text-shadow: 2px 2px 0 var(--ink);
 }
-
-
-
 
 .event-details {
     display: grid;
@@ -1523,7 +1375,6 @@ button {
     transform: rotate(-1.5deg);
 }
 
-
 .clock-scribble {
     position: absolute;
     top: 38px;
@@ -1579,6 +1430,34 @@ button {
     letter-spacing: 0.1em;
 }
 
+.countdown-ended {
+    margin-top: 28px;
+    font-family: var(--font-doodle);
+    font-size: clamp(30px, 2.9vw, 40px);
+    font-weight: 750;
+    line-height: 1.1;
+    text-align: center;
+    white-space: nowrap;
+    transform: rotate(-2deg);
+}
+
+.countdown-ended.is-live {
+    color: var(--accent);
+    animation: countdown-live-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes countdown-live-pulse {
+    50% {
+        transform: rotate(-2deg) scale(1.06);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .countdown-ended.is-live {
+        animation: none;
+    }
+}
+
 .clock-face > b {
     margin-top: 27px;
     padding: 7px 12px;
@@ -1618,6 +1497,10 @@ button {
     transform: rotate(-3deg);
 }
 
+.gif-machine-copy {
+    container-type: inline-size;
+}
+
 .gif-machine-copy > span {
     display: inline-block;
     padding: 6px 9px;
@@ -1634,7 +1517,9 @@ button {
     position: relative;
     margin: 23px 0;
     font-family: var(--font-doodle);
-    font-size: clamp(46px, 6vw, 76px);
+    /* Cỡ chữ theo độ rộng cột: mỗi dòng ("BỐC MỘT CHIẾC" / "GIF TỐT NGHIỆP") dài ~8,5 lần cỡ chữ,
+       nên 11.4cqi giữ tiêu đề đúng 2 dòng ở mọi màn hình. */
+    font-size: clamp(28px, 11.4cqi, 64px);
     font-weight: 760;
     letter-spacing: -0.025em;
     line-height: 1.2;
@@ -1755,7 +1640,6 @@ button {
     transform: rotate(1.5deg);
 }
 
-
 .gif-notebook-frame img {
     display: block;
     width: 100%;
@@ -1864,6 +1748,8 @@ footer {
     justify-content: space-between;
     gap: 20px;
     padding: 48px max(20px, calc((100vw - 1240px) / 2));
+    /* Chừa chỗ cho nút STICKERS cố định ở góc dưới, để không che BACK_TO_TOP. */
+    padding-bottom: 84px;
     border-top: 3px solid var(--ink);
     color: var(--white);
     background: var(--ink);
@@ -1924,15 +1810,10 @@ footer .back-to-top {
     }
 
     .hero-section,
-    .story-section,
     .event-section,
     .countdown-section,
     .gif-machine {
-        grid-template-columns: 1fr;
-    }
-
-    .theme-shell[data-theme="notebook"] .story-section::after {
-        display: none;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .gif-machine-copy {
@@ -2098,7 +1979,6 @@ footer .back-to-top {
         display: none;
     }
 
-
     .sketchnote-map {
         grid-template-columns: 1fr 1fr;
         width: calc(100% - 28px);
@@ -2113,7 +1993,6 @@ footer .back-to-top {
         padding: 8px 0;
     }
 
-    .story-section,
     .event-section {
         width: calc(100% - 28px);
         padding: 48px 0 16px;
@@ -2154,15 +2033,9 @@ footer .back-to-top {
         display: none;
     }
 
-    .section-heading h2,
     .memory-intro h2,
     .event-paper h2 {
         font-size: 48px;
-    }
-
-    .terminal-body {
-        padding: 20px 16px 105px;
-        font-size: 10px;
     }
 
     .memory-section {
@@ -2226,6 +2099,10 @@ footer .back-to-top {
 
     .countdown-grid {
         gap: 4px;
+    }
+
+    .countdown-ended {
+        font-size: 26px;
     }
 
     .countdown-grid strong {

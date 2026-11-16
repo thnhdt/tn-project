@@ -19,6 +19,8 @@ export const ceremony = {
     title: "LỄ TỐT NGHIỆP",
     /** Mốc đồng hồ đếm ngược (giờ bắt đầu), luôn ghi kèm múi giờ +07:00. */
     startsAt: "2026-11-28T09:30:00+07:00",
+    /** Giờ kết thúc: qua mốc này đồng hồ báo buổi lễ đã xong. */
+    endsAt: "2026-11-28T12:00:00+07:00",
     /** Khung giờ hiển thị trên thiệp. Để `null` khi chưa chốt. */
     time: "9h30 – 12h" as string | null,
     /** Tên địa điểm ngắn gọn, ví dụ "Hội trường A5". */
@@ -74,21 +76,6 @@ export const journey = {
     ],
 };
 
-export const story = {
-    kicker: "03 / MY README",
-    title: ["MỘT CHẶNG ĐƯỜNG", "ĐƯỢC COMPILE"],
-    text: "Một chiếc thiệp không quá nghiêm túc cho một cột mốc rất nghiêm túc — được ghép từ code, meme, những đêm debug và thật nhiều kỷ niệm.",
-    equation: ["4 NĂM", "∞ CÀ PHÊ", "BUGS"],
-    equationResult: "1 TẤM BẰNG!",
-    terminalPrompt: "đạt@hcmut",
-    terminalCommand: "git log --oneline university",
-    commits: [
-        { hash: "c5f2026", message: "feat: officially graduate" },
-        { hash: "4y3ars", message: "fix: survive every deadline" },
-        { hash: "0coffee", message: "docs: thank everyone who stayed" },
-    ],
-};
-
 export const invite = {
     kicker: "01 / SAVE THE DATE",
     sideDoodle: "circle this date!",
@@ -98,12 +85,19 @@ export const invite = {
 
 export const countdown = {
     kicker: "02 / TICK TOCK",
-    title: ["ĐỒNG HỒ", "ĐẾM NGƯỢC !!!"],
+    /** Nhãn khi đồng hồ nằm trong thiệp (không có số thứ tự mục). */
+    inviteKicker: "TICK TOCK",
+    /** Dấu cách trước "!!!" là \u00a0 để "!!!" không rớt xuống dòng riêng. */
+    title: ["ĐỒNG HỒ", "ĐẾM NGƯỢC\u00a0!!!"],
     text: "Đồng hồ đang compile từng giây tới ngày",
+    /** Hiện thay cho các con số khi đã tới giờ làm lễ. */
+    live: { badge: "ĐANG DIỄN RA!", note: "Buổi lễ đang diễn ra ở", noteEnd: " — tới liền nha!", scribble: "it's live!" },
+    /** Hiện khi buổi lễ đã kết thúc. */
+    done: { badge: "XONG RỒI ✓", note: "Buổi lễ đã khép lại. Cảm ơn mọi người đã tới chung vui!", scribble: "shipped!" },
 };
 
 export const gifMachine = {
-    kicker: "04 / RANDOM JOY MACHINE",
+    kicker: "03 / RANDOM JOY MACHINE",
     title: ["BỐC MỘT CHIẾC", "GIF TỐT NGHIỆP"],
     text: "Bốc mọi chủ đề hoặc chọn tag meme quen thuộc bên dưới. Hợp mood thì tải về, chưa hợp thì bốc tiếp!",
     /** Tự bốc một GIF khi mở trang. */

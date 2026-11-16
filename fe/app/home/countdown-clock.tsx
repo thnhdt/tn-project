@@ -5,13 +5,20 @@ import { useEffect, useState } from "react";
 import { ceremony, countdown as content } from "../site-content";
 
 const target = new Date(ceremony.startsAt);
+const end = new Date(ceremony.endsAt);
 const [year, month, day] = ceremony.startsAt.slice(0, 10).split("-");
 const [hour, minute] = ceremony.startsAt.slice(11, 16).split(":");
 
+/** `upcoming`: còn đếm ngược, `live`: đang làm lễ, `done`: đã xong. */
+type Phase = "upcoming" | "live" | "done";
+
 function getRemaining() {
-    const remaining = Math.max(target.getTime() - Date.now(), 0);
+    const now = Date.now();
+    const remaining = Math.max(target.getTime() - now, 0);
+    const phase: Phase = remaining > 0 ? "upcoming" : now < end.getTime() ? "live" : "done";
 
     return {
+        phase,
         days: Math.floor(remaining / 86_400_000),
         hours: Math.floor((remaining / 3_600_000) % 24),
         minutes: Math.floor((remaining / 60_000) % 60),
@@ -19,7 +26,8 @@ function getRemaining() {
     };
 }
 
-export function CountdownClock() {
+/** `kicker` đổi nhãn nhỏ phía trên; thiệp riêng không đánh số mục như trang chủ. */
+export function CountdownClock({ kicker = content.kicker }: { kicker?: string } = {}) {
     const [remaining, setRemaining] = useState<ReturnType<typeof getRemaining> | null>(
         null,
     );
@@ -35,6 +43,9 @@ export function CountdownClock() {
         };
     }, []);
 
+    const phase = remaining?.phase ?? "upcoming";
+    const ended = phase === "live" ? content.live : phase === "done" ? content.done : null;
+
     const units = [
         { label: "NGÀY", value: remaining?.days },
         { label: "GIỜ", value: remaining?.hours },
@@ -45,17 +56,25 @@ export function CountdownClock() {
     return (
         <section className="countdown-section" aria-labelledby="countdown-title">
             <div className="countdown-copy">
-                <span>{content.kicker}</span>
+                <span>{kicker}</span>
                 <h2 id="countdown-title">
                     {content.title[0]}
                     <br />
                     {content.title[1]}
                 </h2>
-                <p>
-                    {content.text}{" "}
-                    <time dateTime={ceremony.startsAt}>{`${hour}h${minute} • ${day}.${month}.${year}`}</time>
-                    .
-                </p>
+                {phase === "done" ? (
+                    <p>{content.done.note}</p>
+                ) : (
+                    <p>
+                        {phase === "live" ? content.live.note : content.text}{" "}
+                        {phase === "live" && ceremony.location ? (
+                            <time dateTime={ceremony.startsAt}>{ceremony.location}</time>
+                        ) : (
+                            <time dateTime={ceremony.startsAt}>{`${hour}h${minute} • ${day}.${month}.${year}`}</time>
+                        )}
+                        {phase === "live" ? content.live.noteEnd : "."}
+                    </p>
+                )}
             </div>
 
             <div className="doodle-clock">
@@ -65,24 +84,30 @@ export function CountdownClock() {
                     ))}
                 </div>
                 <div className="clock-face">
-                    <span className="clock-scribble">tick tock!</span>
-                    <div
-                        className="countdown-grid"
-                        role="timer"
-                        aria-live="off"
-                        aria-label={`Thời gian còn lại đến ${hour}h${minute} ngày ${Number(day)} tháng ${Number(month)} năm ${year}`}
-                    >
-                        {units.map((unit) => (
-                            <div key={unit.label}>
-                                <strong>
-                                    {unit.value === undefined
-                                        ? "--"
-                                        : unit.value.toString().padStart(2, "0")}
-                                </strong>
-                                <small>{unit.label}</small>
-                            </div>
-                        ))}
-                    </div>
+                    <span className="clock-scribble">{ended ? ended.scribble : "tick tock!"}</span>
+                    {ended ? (
+                        <strong className={`countdown-ended is-${phase}`} role="status">
+                            {ended.badge}
+                        </strong>
+                    ) : (
+                        <div
+                            className="countdown-grid"
+                            role="timer"
+                            aria-live="off"
+                            aria-label={`Thời gian còn lại đến ${hour}h${minute} ngày ${Number(day)} tháng ${Number(month)} năm ${year}`}
+                        >
+                            {units.map((unit) => (
+                                <div key={unit.label}>
+                                    <strong>
+                                        {unit.value === undefined
+                                            ? "--"
+                                            : unit.value.toString().padStart(2, "0")}
+                                    </strong>
+                                    <small>{unit.label}</small>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     <b>{`${day} / ${month} / ${year}`}</b>
                 </div>
             </div>

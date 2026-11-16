@@ -73,6 +73,28 @@
     font-size: 10px;
 }
 
+.homie-home-link {
+    position: absolute;
+    top: 28px;
+    right: 28px;
+    z-index: 3;
+    padding: 9px 11px;
+    border: 1.5px dashed #082d72;
+    color: #082d72;
+    background: #ffffff;
+    font-family: var(--font-roboto-mono);
+    font-size: 11px;
+    font-weight: 800;
+    text-decoration: none;
+    transform: rotate(-1deg);
+}
+
+.homie-home-link:hover,
+.homie-home-link:focus-visible {
+    color: #ffffff;
+    background: #0868ff;
+}
+
 .homie-lookup-card {
     position: relative;
     z-index: 2;
@@ -514,6 +536,11 @@
     width: 100%;
     margin-top: 56px;
     padding: 0;
+}
+
+/* Cột chữ trong thiệp hẹp hơn trang chủ: thu nhỏ tiêu đề để "ĐẾM NGƯỢC !!!" nằm gọn một dòng. */
+.homie-invitation .countdown-copy h2 {
+    font-size: clamp(32px, 3.4vw, 44px);
 }
 
 .homie-map {

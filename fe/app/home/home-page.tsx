@@ -7,7 +7,6 @@ import {
     Footer,
     Hero,
     Journey,
-    Story,
     Toolbar,
 } from "./sections";
 
@@ -25,7 +24,6 @@ export function HomePage() {
             <EventInfo />
             <CountdownClock />
             <Journey />
-            <Story />
             <GifMachine />
             <Footer />
         </main>

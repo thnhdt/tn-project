@@ -154,7 +154,7 @@ export function PhotoDrop() {
                 return;
             }
             if (remaining === 0) {
-                setStatus({ tone: "error", text: "Ní thả đủ 4 ảnh rồi nha!" });
+                setStatus({ tone: "error", text: `Ní thả đủ ${access.quota.max} ảnh rồi nha!` });
                 return;
             }
 
@@ -196,7 +196,7 @@ export function PhotoDrop() {
             if (sent === 0) {
                 setStatus({ tone: "error", text: lastError || "Chưa gửi được ảnh nào." });
             } else {
-                const extra = skipped > 0 ? ` (mỗi người tối đa 4 ảnh, bỏ qua ${skipped})` : "";
+                const extra = skipped > 0 ? ` (mỗi người tối đa ${access.quota.max} ảnh, bỏ qua ${skipped})` : "";
                 const failed = sent < files.length ? `, ${files.length - sent} ảnh lỗi` : "";
                 setStatus({ tone: "ok", text: `Bay rồi! ${sent} ảnh đã lên trời${failed}${extra}.` });
             }

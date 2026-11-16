@@ -33,7 +33,8 @@ test("exports the graduation theme lab as static HTML", async () => {
     assert.match(html, /QUICK SKETCH/);
     assert.match(html, /4 NĂM TRONG 1 DÒNG/);
     assert.match(html, /BUILD PASSED/);
-    assert.match(html, /1 TẤM BẰNG!/);
+    assert.doesNotMatch(html, /MY README|1 TẤM BẰNG!/);
+    assert.match(html, /03 \/ RANDOM JOY MACHINE/);
     assert.match(html, /ĐẾM NGƯỢC/);
     assert.match(html, /28\.11\.2026/);
     assert.match(html, /NGÀY/);

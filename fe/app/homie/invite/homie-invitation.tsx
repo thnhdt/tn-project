@@ -23,7 +23,7 @@ import {
     directionsUrl,
 } from "../../lib/ceremony";
 import { inviteLines } from "../../lib/invite-lines";
-import { graduate } from "../../site-content";
+import { countdown, graduate } from "../../site-content";
 import { LoveEffects } from "./love-effects";
 import { LoveFloaters } from "./love-floaters";
 import { InviteMusic } from "./invite-music";
@@ -260,7 +260,7 @@ function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
                     </div>
                 </div>
 
-                <CountdownClock />
+                <CountdownClock kicker={countdown.inviteKicker} />
 
                 <VenueMaps />
 
@@ -376,7 +376,7 @@ function DiscordInvitation({ invitation }: LayoutProps) {
                                     <b>QUAN TÂM ✓</b>
                                 </div>
                             </div>
-                            <CountdownClock />
+                            <CountdownClock kicker={countdown.inviteKicker} />
                         </DiscordMessage>
 
                         <DiscordMessage author={discordHost.name} avatar={discordHost.avatar} time="hôm nay lúc 07:03">
@@ -452,7 +452,7 @@ function LoveInvitation({ invitation }: LayoutProps) {
 
                 <ImportedStickers group={1} />
 
-                <CountdownClock />
+                <CountdownClock kicker={countdown.inviteKicker} />
 
                 <ImportedStickers group={2} />
 

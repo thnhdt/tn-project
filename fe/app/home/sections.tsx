@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Fragment } from "react";
 import { BackToTop } from "./back-to-top";
 import {
     ceremony,
@@ -8,7 +7,6 @@ import {
     hero,
     invite,
     journey,
-    story,
     toolbar,
 } from "../site-content";
 import { VenueMaps } from "../homie/invite/venue-maps";
@@ -145,53 +143,6 @@ export function Journey() {
                     <b>{step.label}</b>
                 </article>
             ))}
-        </section>
-    );
-}
-
-export function Story() {
-    return (
-        <section className="story-section" id="story">
-            <div className="section-heading">
-                <span>{story.kicker}</span>
-                <h2>
-                    {story.title[0]}
-                    <br />
-                    {story.title[1]}
-                </h2>
-                <p>{story.text}</p>
-                <div
-                    className="sketch-equation"
-                    aria-label={`${story.equation.join(" + ")} = ${story.equationResult}`}
-                >
-                    {story.equation.map((term, index) => (
-                        <Fragment key={term}>
-                            {index > 0 ? <b>+</b> : null}
-                            <span>{term}</span>
-                        </Fragment>
-                    ))}
-                    <b>=</b>
-                    <strong>{story.equationResult}</strong>
-                </div>
-            </div>
-
-            <div className="terminal-card">
-                <div className="terminal-top">
-                    <span>terminal — zsh</span>
-                    <b>⌁ □ ×</b>
-                </div>
-                <div className="terminal-body">
-                    <p>
-                        <span>{story.terminalPrompt}</span> ~ % {story.terminalCommand}
-                    </p>
-                    {story.commits.map((commit) => (
-                        <p key={commit.hash}>
-                            <b>{commit.hash}</b> {commit.message}
-                        </p>
-                    ))}
-                    <p className="terminal-success">Process finished with exit code 0 ▮</p>
-                </div>
-            </div>
         </section>
     );
 }
