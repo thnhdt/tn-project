@@ -122,10 +122,10 @@
     box-shadow: 3px 3px 0 #7a0f45;
 }
 
-/* Thiệp hồng không có nút "KHÔNG PHẢI BẠN?", nên nút cuối vẫn giữ màu hồng. */
-.is-love .homie-result-actions a:last-child {
-    color: #ffffff;
-    background: #ff2f86;
+/* Nút thả ảnh: vàng nổi bật giữa hai nút hồng. */
+.is-love .homie-result-actions a.is-photo-drop {
+    color: #7a0f45;
+    background: #ffd84d;
 }
 
 .is-love .doodle-clock {

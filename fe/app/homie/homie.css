@@ -532,6 +532,7 @@
 
 .homie-result-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     margin-top: 22px;
 }
@@ -549,9 +550,15 @@
     font-weight: 800;
 }
 
-.homie-result-actions a:last-child {
+.homie-result-actions a.is-directions {
     color: #082d72;
     background: #ffffff;
+}
+
+/* Nút sang trang thả ảnh bay bay. */
+.homie-result-actions a.is-photo-drop {
+    color: #082d72;
+    background: #d9ff51;
 }
 
 .result-doodle {

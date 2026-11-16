@@ -93,7 +93,7 @@ export const invite = {
     kicker: "01 / SAVE THE DATE",
     sideDoodle: "circle this date!",
     to: "TO: MY FAVORITE HUMAN(S)",
-    text: "Hành trình ngàn dặm bắt đầu từ một bước chân.\n(Thiên lý chi hành, thủy ư túc hạ)",
+    text: "A man with no pants fears no pickpockets.\n(Nhân vô khố, bất úy tặc)",
 };
 
 export const countdown = {

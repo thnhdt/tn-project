@@ -445,9 +445,15 @@
     box-shadow: 3px 3px 0 #11121f;
 }
 
-.is-discord .homie-result-actions a:last-child {
+.is-discord .homie-result-actions a.is-directions {
     color: #f2f3ff;
     background: #292b43;
+}
+
+.is-discord .homie-result-actions a.is-photo-drop {
+    border-color: #11121f;
+    color: #11121f;
+    background: #b8f5d8;
 }
 
 @media (max-width: 1100px) {

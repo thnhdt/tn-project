@@ -150,18 +150,24 @@ function GuestPhoto({
 function ResultActions({
     mainLabel = "XEM THIỆP CHÍNH →",
     directionsLabel = "CHỈ ĐƯỜNG ↗",
+    photoDropLabel = "THẢ ẢNH BAY BAY ↑",
 }: {
     mainLabel?: string;
     directionsLabel?: string;
+    /** Nút sang trang thả ảnh: khách đã quét QR thì thả được ảnh ở đó. */
+    photoDropLabel?: string;
 }) {
     return (
         <div className="homie-result-actions">
             <Link href="/">{mainLabel}</Link>
             {directionsUrl ? (
-                <a href={directionsUrl} target="_blank" rel="noreferrer">
+                <a className="is-directions" href={directionsUrl} target="_blank" rel="noreferrer">
                     {directionsLabel}
                 </a>
             ) : null}
+            <Link className="is-photo-drop" href="/tha-anh">
+                {photoDropLabel}
+            </Link>
         </div>
     );
 }
@@ -260,7 +266,8 @@ function DefaultInvitation({ invitation, publicInvitation }: LayoutProps) {
 
                 <p className="grad-closing">{inviteLines.defaultTheme.closing}</p>
 
-                <ResultActions />
+                {/* Thiệp chung: khách không có QR nên chỉ xem ảnh, không thả được. */}
+                <ResultActions photoDropLabel={publicInvitation ? "XEM ẢNH BAY BAY ↗" : undefined} />
             </section>
 
         </main>
@@ -464,6 +471,7 @@ function LoveInvitation({ invitation }: LayoutProps) {
                 <ResultActions
                     mainLabel="Vk iu xem thiệp chínhhh →"
                     directionsLabel="Google maps cho google maps của anhhh ↗"
+                    photoDropLabel="Vk iu thả ảnh bay bay dô đây nhaaaa ↑"
                 />
             </section>
 
