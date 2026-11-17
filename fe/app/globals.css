@@ -2164,7 +2164,11 @@ footer .back-to-top {
         scroll-behavior: auto;
     }
 
-    *,
+    /*
+     * Trừ ảnh bay ở /tha-anh: animation bay là cả tính năng, rút còn 0.01ms thì
+     * ảnh biến mất ngay. tha-anh.css đã tự làm chậm và bỏ lắc khi giảm chuyển động.
+     */
+    *:not(.drop-balloon),
     *::before,
     *::after {
         animation-duration: 0.01ms !important;
