@@ -9,6 +9,11 @@ export const photoBucket = "invitation-photos";
 const inviteCodeKey = "homie_invite_code";
 const visitorIdKey = "graduation_visitor_id";
 const reportedErrors = new Set<string>();
+/**
+ * Lỗi do trình duyệt trong app (Zalo, Facebook...) tự chèn script vào trang,
+ * không phải lỗi của website nên không báo.
+ */
+const ignoredErrorPatterns = [/zaloJSV2/i];
 
 /** Giao diện thiệp riêng: `love` là thiệp hồng dành cho người thương. */
 export const defaultTheme = "desktop";
@@ -94,6 +99,7 @@ export function reportError(source: string, error: unknown) {
         const key = `${source}:${message}`;
         if (
             !message ||
+            ignoredErrorPatterns.some((pattern) => pattern.test(message)) ||
             reportedErrors.has(key) ||
             ["localhost", "127.0.0.1"].includes(window.location.hostname) ||
             window.location.pathname.startsWith("/dev")
