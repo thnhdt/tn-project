@@ -153,6 +153,10 @@ export function PhotoDrop() {
             if (access.kind !== "member") {
                 return;
             }
+            if (access.quota.max === 0) {
+                setStatus({ tone: "error", text: "Đang tạm dừng thả ảnh nha!" });
+                return;
+            }
             if (remaining === 0) {
                 setStatus({ tone: "error", text: `Ní thả đủ ${access.quota.max} ảnh rồi nha!` });
                 return;
@@ -210,7 +214,7 @@ export function PhotoDrop() {
             Array.from(event.dataTransfer?.types ?? []).includes("Files");
 
         // Chỉ khách có QR mới thả ảnh được: người khác kéo file vào thì không hiện lớp phủ.
-        const canDrop = access.kind === "member";
+        const canDrop = access.kind === "member" && access.quota.max > 0;
 
         const onEnter = (event: DragEvent) => {
             if (!hasFiles(event) || !canDrop) {
@@ -258,7 +262,7 @@ export function PhotoDrop() {
             window.removeEventListener("dragleave", onLeave);
             window.removeEventListener("drop", onDrop);
         };
-    }, [access.kind, handleFiles]);
+    }, [access, handleFiles]);
 
     const removeBalloon = (key: number) =>
         setBalloons((current) => current.filter((balloon) => balloon.key !== key));
@@ -336,7 +340,14 @@ export function PhotoDrop() {
                 </p>
 
                 {/* Chỉ khách đã quét QR trên thiệp mới thấy phần thả ảnh. */}
-                {access.kind === "member" ? (
+                {access.kind === "member" && access.quota.max === 0 ? (
+                    <div className="drop-member">
+                        <p className="drop-member-badge">✓ NÍ CÓ THIỆP NÈ</p>
+                        <p className="drop-member-text">
+                            Hiện đang tạm dừng thả ảnh. Ní quay lại sau nha!
+                        </p>
+                    </div>
+                ) : access.kind === "member" ? (
                     <div className="drop-member">
                         <p className="drop-member-badge">✓ NÍ CÓ THIỆP NÈ</p>
                         <p className="drop-member-text">

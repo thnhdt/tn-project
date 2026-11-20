@@ -278,6 +278,43 @@ export async function regenerateQrCode(invitationId: string) {
     return data as Invitation;
 }
 
+/** Giới hạn hợp lệ của số ảnh mỗi khách được thả ở /tha-anh (khớp CHECK ở migration 017). */
+export const photoDropLimitRange = { min: 0, max: 50 };
+
+/** Số ảnh tối đa mỗi khách được thả ở /tha-anh. */
+export async function getPhotoDropLimit() {
+    const { data, error } = await getSupabase()
+        .from("photo_drop_settings")
+        .select("max_per_guest")
+        .maybeSingle();
+
+    if (error || !data) {
+        throw new Error("Không thể tải giới hạn thả ảnh.");
+    }
+
+    return data.max_per_guest as number;
+}
+
+export async function setPhotoDropLimit(maxPerGuest: number) {
+    const { min, max } = photoDropLimitRange;
+    if (!Number.isInteger(maxPerGuest) || maxPerGuest < min || maxPerGuest > max) {
+        throw new Error(`Số ảnh phải là số nguyên từ ${min} đến ${max}.`);
+    }
+
+    const { data, error } = await getSupabase()
+        .from("photo_drop_settings")
+        .update({ max_per_guest: maxPerGuest })
+        .eq("id", true)
+        .select("max_per_guest")
+        .maybeSingle();
+
+    if (error || !data) {
+        throw new Error("Không thể lưu giới hạn thả ảnh.");
+    }
+
+    return data.max_per_guest as number;
+}
+
 export async function listPageVisits(limit = 200) {
     const vietnamOffsetMs = 7 * 60 * 60 * 1_000;
     const vietnamToday = new Date(Date.now() + vietnamOffsetMs);

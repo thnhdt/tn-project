@@ -17,6 +17,7 @@ import {
 import { defaultTheme, discordTheme, errorMessage, invitationPhotoUrl, loveTheme } from "../lib/api";
 import { resizePhoto } from "../lib/photo";
 import { GuestQr } from "./guest-qr";
+import { PhotoDropLimit } from "./photo-drop-limit";
 
 type AuthStatus = "checking" | "signedOut" | "signedIn";
 
@@ -469,6 +470,8 @@ export function DevDashboard() {
                         <span>ký tự lời mời</span>
                     </article>
                 </section>
+
+                <PhotoDropLimit />
 
                 <section className="dev-content">
                     <div className="dev-form-panel">

@@ -2,7 +2,8 @@ import { callRpc, RpcError, supabaseKey, supabaseUrl } from "./api";
 
 /**
  * Bucket công khai của trang /tha-anh (xem migration 013_photo_drop.sql).
- * Chỉ khách có mã QR mới thả được, mỗi khách tối đa 4 ảnh (migration 015).
+ * Chỉ khách có mã QR mới thả được (migration 015). Số ảnh mỗi khách do quản
+ * trị viên chỉnh trên dashboard /dev (migration 017).
  */
 export const photoDropBucket = "photo-drop";
 
@@ -129,7 +130,7 @@ async function reservePhotoName(code: string, extension: string) {
     } catch (error) {
         const reason = error instanceof RpcError ? error.reason : "";
         if (reason.includes("photo_drop_quota_exceeded")) {
-            throw new Error("Ní thả đủ 4 ảnh rồi nha!");
+            throw new Error("Ní thả đủ số ảnh được phép rồi nha!");
         }
         if (reason.includes("photo_drop_invalid_code")) {
             throw new Error("Mã QR không đúng. Quét lại QR trên thiệp nhé.");
