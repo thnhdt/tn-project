@@ -1,0 +1,11 @@
+/* Chọn xuất thiệp có QR hay bản sạch không QR, cạnh nút PNG / PDF. */
+.dev-qr-variant {
+    padding: 5px 6px;
+    border: 1.5px solid #082d72;
+    border-radius: 0;
+    color: #082d72;
+    background: #ffffff;
+    font-family: var(--font-roboto-mono);
+    font-size: 8px;
+    font-weight: 800;
+}

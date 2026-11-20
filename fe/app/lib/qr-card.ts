@@ -492,7 +492,99 @@ async function drawDiscordChat(
 }
 
 /** Vẽ thiệp mời A4 của một khách (lời mời, thời gian, địa điểm, QR), trả về PNG. */
-export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
+/** Kích thước khung oval vẽ tay quanh QR (và quanh lời hẹn ở bản không QR). */
+const handOval = { radiusX: 430, radiusY: 330 };
+
+/** Khung oval có tia nắng và nét khoanh tay chồng nhẹ, tâm tại (x, y). */
+function drawHandOval(context: CanvasRenderingContext2D, x: number, y: number) {
+    const qr = handOval;
+    context.save();
+    context.translate(x, y);
+    context.lineCap = "round";
+    for (let index = 0; index < 16; index += 1) {
+        const accent = index % 3 === 2;
+        const angle = (index * Math.PI) / 8;
+        const radius = 1 / Math.sqrt(
+            (Math.cos(angle) / qr.radiusX) ** 2 + (Math.sin(angle) / qr.radiusY) ** 2,
+        );
+        const from = radius + 48 + (index % 4 === 3 ? 10 : 0);
+        context.save();
+        context.rotate((index * Math.PI) / 8);
+        context.strokeStyle = accent ? colors.blue : colors.ink;
+        context.lineWidth = accent ? 14 : 11;
+        context.beginPath();
+        context.moveTo(from, 0);
+        context.lineTo(from + (accent ? 62 : 42), 0);
+        context.stroke();
+        context.restore();
+    }
+    context.lineCap = "round";
+    context.rotate(-0.04);
+    context.fillStyle = colors.white;
+    context.strokeStyle = colors.ink;
+    context.lineWidth = 9;
+    context.beginPath();
+    context.ellipse(0, 0, qr.radiusX, qr.radiusY, 0, 0, Math.PI * 2);
+    context.fill();
+    // Đường cong lệch nhẹ, có đoạn vượt nét như khoanh bằng bút mực.
+    context.beginPath();
+    context.moveTo(420, -38);
+    context.bezierCurveTo(404, -228, 210, -342, -22, -330);
+    context.bezierCurveTo(-268, -320, -442, -194, -430, 14);
+    context.bezierCurveTo(-418, 226, -220, 342, 24, 328);
+    context.bezierCurveTo(276, 316, 452, 184, 426, -42);
+    context.bezierCurveTo(422, -92, 404, -134, 380, -164);
+    context.stroke();
+    context.strokeStyle = colors.blue;
+    context.lineWidth = 5;
+    context.beginPath();
+    context.moveTo(-342, 208);
+    context.bezierCurveTo(-148, 390, 226, 364, 390, 160);
+    context.bezierCurveTo(462, 72, 452, -70, 410, -132);
+    context.stroke();
+    context.restore();
+}
+
+/** Phần cuối của bản thiệp không QR: lời hẹn gặp trong khung oval và chữ ký (tâm khung ở y ≈ 2760). */
+function drawPlainClosing(
+    context: CanvasRenderingContext2D,
+    center: { x: number; y: number },
+    theme: { love: boolean; discord: boolean; sans: string; doodle: string },
+) {
+    drawHandOval(context, center.x, center.y);
+
+    const lines = theme.love
+        ? ["Đợi em ở đó", "nhaaa ♥"]
+        : theme.discord
+            ? ["Hẹn ae", "ngoài đời nhé!"]
+            : ["Hẹn gặp nhau", "ở buổi lễ nhaaa!"];
+    const innerWidth = handOval.radiusX * 2 - 180;
+    context.textAlign = "center";
+    context.fillStyle = colors.blue;
+    context.font = `700 104px ${theme.doodle}`;
+    context.fillText(lines[0], center.x, center.y - 20, innerWidth);
+    context.fillStyle = colors.ink;
+    context.font = `700 84px ${theme.doodle}`;
+    context.fillText(lines[1], center.x, center.y + 100, innerWidth);
+
+    // Thiệp hồng đã ký trong lá thư; các thiệp khác ký dưới khung, tránh vùng tia nắng.
+    if (!theme.love) {
+        context.fillStyle = colors.blue;
+        context.font = `700 72px ${theme.doodle}`;
+        context.fillText(graduate.signature, center.x, center.y + 530);
+    }
+}
+
+export type CardOptions = {
+    /**
+     * `false`: bản thiệp "sạch" để gửi/in, không có QR, link web hay QR chỉ đường;
+     * chỗ QR thay bằng lời hẹn gặp trong khung oval vẽ tay.
+     */
+    withQr?: boolean;
+};
+
+export async function renderInviteCard(guest: CardGuest, inviteUrl: string, options: CardOptions = {}) {
+    const withQr = options.withQr ?? true;
     const love = guest.themeVariant === "love";
     const discord = guest.themeVariant === "discord";
     colors = love ? palettes.love : discord ? palettes.discord : palettes.blue;
@@ -713,125 +805,86 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string) {
         cellX += cell.width + info.gap;
     }
 
-    // QR giữ vuông để dễ quét; khung oval có nét khoanh tay chồng nhẹ.
-    const qr = { x: 740, y: 2840, size: 500, radiusX: 430, radiusY: 330 };
-    context.save();
-    context.translate(qr.x, qr.y);
-    context.lineCap = "round";
-    for (let index = 0; index < 16; index += 1) {
-        const accent = index % 3 === 2;
-        const angle = (index * Math.PI) / 8;
-        const radius = 1 / Math.sqrt(
-            (Math.cos(angle) / qr.radiusX) ** 2 + (Math.sin(angle) / qr.radiusY) ** 2,
-        );
-        const from = radius + 48 + (index % 4 === 3 ? 10 : 0);
-        context.save();
-        context.rotate((index * Math.PI) / 8);
-        context.strokeStyle = accent ? colors.blue : colors.ink;
-        context.lineWidth = accent ? 14 : 11;
-        context.beginPath();
-        context.moveTo(from, 0);
-        context.lineTo(from + (accent ? 62 : 42), 0);
-        context.stroke();
-        context.restore();
-    }
-    context.lineCap = "round";
-    context.rotate(-0.04);
-    context.fillStyle = colors.white;
-    context.strokeStyle = colors.ink;
-    context.lineWidth = 9;
-    context.beginPath();
-    context.ellipse(0, 0, qr.radiusX, qr.radiusY, 0, 0, Math.PI * 2);
-    context.fill();
-    // Đường cong lệch nhẹ, có đoạn vượt nét như khoanh bằng bút mực.
-    context.beginPath();
-    context.moveTo(420, -38);
-    context.bezierCurveTo(404, -228, 210, -342, -22, -330);
-    context.bezierCurveTo(-268, -320, -442, -194, -430, 14);
-    context.bezierCurveTo(-418, 226, -220, 342, 24, 328);
-    context.bezierCurveTo(276, 316, 452, 184, 426, -42);
-    context.bezierCurveTo(422, -92, 404, -134, 380, -164);
-    context.stroke();
-    context.strokeStyle = colors.blue;
-    context.lineWidth = 5;
-    context.beginPath();
-    context.moveTo(-342, 208);
-    context.bezierCurveTo(-148, 390, 226, 364, 390, 160);
-    context.bezierCurveTo(462, 72, 452, -70, 410, -132);
-    context.stroke();
-    context.restore();
-    context.drawImage(
-        await loadImage(await qrDataUrl(inviteUrl, qr.size)),
-        qr.x - qr.size / 2,
-        qr.y - qr.size / 2,
-        qr.size,
-        qr.size,
-    );
-
-    const host = new URL(inviteUrl).host;
-    const copyX = 1350;
-    const copyWidth = card.width - card.margin - copyX - (directionsUrl ? 400 : 0);
-    context.textAlign = "left";
-    context.fillStyle = colors.blue;
-    if (love) {
-        context.font = `700 84px ${doodle}`;
-        context.fillText("iuu oiii iuuu", copyX, 2450, card.width - card.margin - copyX);
-        context.fillText("quét QR này nhaaaa", copyX, 2545, card.width - card.margin - copyX);
+    if (!withQr) {
+        drawPlainClosing(context, { x: centerX, y: 2760 }, { love, discord, sans, doodle });
     } else {
-        context.font = `700 92px ${doodle}`;
-        context.fillText("quét link này nhaaa", copyX, 2540, card.width - card.margin - copyX);
-    }
-    context.fillStyle = colors.ink;
-    context.font = `700 58px ${doodle}`;
-    context.fillText(
-        love ? "(hem có vi rút đâuuuuu!)" : "(không có vi rút đâu!)",
-        copyX + 20,
-        2632,
-        card.width - card.margin - copyX,
-    );
-
-    context.font = `800 60px ${sans}`;
-    context.fillText(love ? "hay iu vô web:" : "truy cập web", copyX, 2960, copyWidth);
-    context.font = `700 76px ${mono}`;
-    const hostWidth = Math.min(context.measureText(host).width, copyWidth);
-    context.fillStyle = colors.acid;
-    context.fillRect(copyX - 16, 3018, hostWidth + 32, 62);
-    context.fillStyle = colors.ink;
-    context.fillText(host, copyX, 3064, copyWidth);
-    context.fillStyle = colors.blue;
-    context.font = `700 80px ${doodle}`;
-    if (!love) {
-        context.fillText("để vàooo", copyX, 3176, copyWidth);
-    }
-    context.fillStyle = colors.muted;
-    context.font = `400 34px ${sans}`;
-    wrapText(context, `Hoặc tải file này lên ${host}/homie.`, copyWidth).forEach((line, index) => {
-        context.fillText(line, copyX, 3256 + index * 46, copyWidth);
-    });
-
-    drawArrow(context, [1620, 2690], [1500, 2800], [1262, 2760]);
-    drawArrow(context, [1320, 3110], [1250, 3170], [1160, 3112]);
-    drawArrow(context, [250, 2400], [370, 2400], [396, 2502]);
-    drawArrow(context, [250, 3290], [290, 3190], [394, 3180]);
-    drawArrow(context, [1010, 2330], [1060, 2400], [940, 2392]);
-
-    // QR chỉ đường, đặt xa QR chính để máy quét không nhầm.
-    if (directionsUrl) {
-        const map = { size: 300 };
-        const mapX = card.width - card.margin - map.size - 40;
-        const mapY = 3330 - map.size - 40;
-        drawBox(context, mapX, mapY, map.size + 40, map.size + 40);
+        // QR giữ vuông để dễ quét; khung oval có nét khoanh tay chồng nhẹ.
+        const qr = { x: 740, y: 2840, size: 500 };
+        drawHandOval(context, qr.x, qr.y);
         context.drawImage(
-            await loadImage(await qrDataUrl(directionsUrl, map.size)),
-            mapX + 20,
-            mapY + 20,
-            map.size,
-            map.size,
+            await loadImage(await qrDataUrl(inviteUrl, qr.size)),
+            qr.x - qr.size / 2,
+            qr.y - qr.size / 2,
+            qr.size,
+            qr.size,
         );
-        context.textAlign = "right";
+
+        const host = new URL(inviteUrl).host;
+        const copyX = 1350;
+        const copyWidth = card.width - card.margin - copyX - (directionsUrl ? 400 : 0);
+        context.textAlign = "left";
         context.fillStyle = colors.blue;
-        context.font = `700 56px ${doodle}`;
-        context.fillText("chỉ đường ↓", card.width - card.margin, mapY - 36);
+        if (love) {
+            context.font = `700 84px ${doodle}`;
+            context.fillText("iuu oiii iuuu", copyX, 2450, card.width - card.margin - copyX);
+            context.fillText("quét QR này nhaaaa", copyX, 2545, card.width - card.margin - copyX);
+        } else {
+            context.font = `700 92px ${doodle}`;
+            context.fillText("quét link này nhaaa", copyX, 2540, card.width - card.margin - copyX);
+        }
+        context.fillStyle = colors.ink;
+        context.font = `700 58px ${doodle}`;
+        context.fillText(
+            love ? "(hem có vi rút đâuuuuu!)" : "(không có vi rút đâu!)",
+            copyX + 20,
+            2632,
+            card.width - card.margin - copyX,
+        );
+
+        context.font = `800 60px ${sans}`;
+        context.fillText(love ? "hay iu vô web:" : "truy cập web", copyX, 2960, copyWidth);
+        context.font = `700 76px ${mono}`;
+        const hostWidth = Math.min(context.measureText(host).width, copyWidth);
+        context.fillStyle = colors.acid;
+        context.fillRect(copyX - 16, 3018, hostWidth + 32, 62);
+        context.fillStyle = colors.ink;
+        context.fillText(host, copyX, 3064, copyWidth);
+        context.fillStyle = colors.blue;
+        context.font = `700 80px ${doodle}`;
+        if (!love) {
+            context.fillText("để vàooo", copyX, 3176, copyWidth);
+        }
+        context.fillStyle = colors.muted;
+        context.font = `400 34px ${sans}`;
+        wrapText(context, `Hoặc tải file này lên ${host}/homie.`, copyWidth).forEach((line, index) => {
+            context.fillText(line, copyX, 3256 + index * 46, copyWidth);
+        });
+
+        drawArrow(context, [1620, 2690], [1500, 2800], [1262, 2760]);
+        drawArrow(context, [1320, 3110], [1250, 3170], [1160, 3112]);
+        drawArrow(context, [250, 2400], [370, 2400], [396, 2502]);
+        drawArrow(context, [250, 3290], [290, 3190], [394, 3180]);
+        drawArrow(context, [1010, 2330], [1060, 2400], [940, 2392]);
+
+        // QR chỉ đường, đặt xa QR chính để máy quét không nhầm.
+        if (directionsUrl) {
+            const map = { size: 300 };
+            const mapX = card.width - card.margin - map.size - 40;
+            const mapY = 3330 - map.size - 40;
+            drawBox(context, mapX, mapY, map.size + 40, map.size + 40);
+            context.drawImage(
+                await loadImage(await qrDataUrl(directionsUrl, map.size)),
+                mapX + 20,
+                mapY + 20,
+                map.size,
+                map.size,
+            );
+            context.textAlign = "right";
+            context.fillStyle = colors.blue;
+            context.font = `700 56px ${doodle}`;
+            context.fillText("chỉ đường ↓", card.width - card.margin, mapY - 36);
+        }
+
     }
 
     if (love) {

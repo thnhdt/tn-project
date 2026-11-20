@@ -731,6 +731,29 @@
     cursor: wait;
 }
 
+/* Chọn xuất thiệp có QR hay bản sạch không QR. */
+.public-invite-share .card-variant {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+    font-family: var(--font-roboto-mono);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.public-invite-share .card-variant select {
+    padding: 10px 12px;
+    border: 2px solid #082d72;
+    border-radius: 0;
+    color: #082d72;
+    background: #ffffff;
+    box-shadow: 3px 3px 0 #082d72;
+    font-family: var(--font-be-vietnam);
+    font-size: 14px;
+    font-weight: 700;
+}
+
 /* Nút nhạc nổi ở góc dưới thiệp thường / Discord / thiệp chung (thiệp hồng dùng máy đĩa than). */
 .invite-music {
     position: fixed;

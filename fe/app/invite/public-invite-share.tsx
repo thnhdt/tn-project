@@ -3,8 +3,12 @@
 import { useState } from "react";
 import { downloadBlob, inviteCardToPdf, renderInviteCard } from "../lib/qr-card";
 
-/** Cuối trang thiệp chung: tải thiệp PNG / PDF (QR in trên thiệp mở lại trang này). */
+/**
+ * Cuối trang thiệp chung: tải thiệp PNG / PDF. Chọn "có QR" (QR in trên thiệp mở lại
+ * trang này) hoặc "không QR" (thiệp sạch để gửi/in, không có QR hay link web).
+ */
 export function PublicInviteShare() {
+    const [withQr, setWithQr] = useState(true);
     const [error, setError] = useState("");
     const [busy, setBusy] = useState<"png" | "pdf" | null>(null);
 
@@ -17,8 +21,9 @@ export function PublicInviteShare() {
                 personalMessage: "",
                 themeVariant: "desktop",
                 hideName: true,
-            }, `${window.location.origin}/invite`);
-            downloadBlob(format === "pdf" ? await inviteCardToPdf(png) : png, `thiep-moi-chung.${format}`);
+            }, `${window.location.origin}/invite`, { withQr });
+            const fileName = `thiep-moi-chung${withQr ? "" : "-khong-qr"}.${format}`;
+            downloadBlob(format === "pdf" ? await inviteCardToPdf(png) : png, fileName);
         } catch {
             setError("Chưa tải được thiệp. Bạn thử lại nhé!");
         } finally {
@@ -29,6 +34,17 @@ export function PublicInviteShare() {
     return (
         <section className="public-invite-share" aria-label="Tải thiệp mời chung">
             <h2>Hẹn gặp bạn tại buổi lễ!</h2>
+            <label className="card-variant">
+                <span>KIỂU THIỆP</span>
+                <select
+                    value={withQr ? "qr" : "plain"}
+                    disabled={busy !== null}
+                    onChange={(event) => setWithQr(event.target.value === "qr")}
+                >
+                    <option value="qr">Có QR + link web</option>
+                    <option value="plain">Không QR (chỉ thiệp)</option>
+                </select>
+            </label>
             <div className="homie-result-actions">
                 <button disabled={busy !== null} onClick={() => void exportCard("png")}>
                     {busy === "png" ? "ĐANG VẼ THIỆP…" : "THIỆP PNG ↓"}

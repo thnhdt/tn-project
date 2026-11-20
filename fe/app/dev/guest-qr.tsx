@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { buildInviteUrl } from "../lib/qr";
 import { downloadBlob, inviteCardToPdf, qrDataUrl, renderInviteCard } from "../lib/qr-card";
+import "./guest-qr.css";
 
 type GuestQrProps = {
     displayName: string;
@@ -41,6 +42,8 @@ export function GuestQr({
 }: GuestQrProps) {
     const [preview, setPreview] = useState("");
     const [exporting, setExporting] = useState(false);
+    /** `false`: xuất thiệp sạch, không QR / link web. */
+    const [withQr, setWithQr] = useState(true);
     const [inviteUrl, setInviteUrl] = useState("");
 
     useEffect(() => {
@@ -56,8 +59,9 @@ export function GuestQr({
             const png = await renderInviteCard(
                 { displayName, personalMessage, themeVariant },
                 inviteUrl,
+                { withQr },
             );
-            const fileName = `thiep-moi-${fileSlug(displayName)}.${format}`;
+            const fileName = `thiep-moi-${fileSlug(displayName)}${withQr ? "" : "-khong-qr"}.${format}`;
             downloadBlob(format === "pdf" ? await inviteCardToPdf(png) : png, fileName);
         } catch (exportError) {
             onError(exportError instanceof Error ? exportError.message : "Không thể tạo file QR.");
@@ -78,6 +82,16 @@ export function GuestQr({
             ) : null}
             <div className="dev-qr-actions">
                 <code title={inviteUrl}>{inviteUrl}</code>
+                <select
+                    className="dev-qr-variant"
+                    aria-label="Kiểu thiệp khi xuất PNG/PDF"
+                    value={withQr ? "qr" : "plain"}
+                    disabled={exporting}
+                    onChange={(event) => setWithQr(event.target.value === "qr")}
+                >
+                    <option value="qr">Có QR</option>
+                    <option value="plain">Không QR</option>
+                </select>
                 <button type="button" disabled={exporting} onClick={() => void exportCard("png")}>
                     PNG ↓
                 </button>
