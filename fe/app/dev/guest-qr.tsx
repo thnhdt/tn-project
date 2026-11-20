@@ -42,7 +42,7 @@ export function GuestQr({
 }: GuestQrProps) {
     const [preview, setPreview] = useState("");
     const [exporting, setExporting] = useState(false);
-    /** `false`: xuất thiệp sạch, không QR / link web. */
+    /** `false`: dạng thiệp không QR / link web, tự xưng "Thành Đạt" thay cho "Ske". */
     const [withQr, setWithQr] = useState(true);
     const [inviteUrl, setInviteUrl] = useState("");
 
@@ -84,13 +84,13 @@ export function GuestQr({
                 <code title={inviteUrl}>{inviteUrl}</code>
                 <select
                     className="dev-qr-variant"
-                    aria-label="Kiểu thiệp khi xuất PNG/PDF"
+                    aria-label="Dạng thiệp khi xuất PNG/PDF"
                     value={withQr ? "qr" : "plain"}
                     disabled={exporting}
                     onChange={(event) => setWithQr(event.target.value === "qr")}
                 >
                     <option value="qr">Có QR</option>
-                    <option value="plain">Không QR</option>
+                    <option value="plain">Không QR · Thành Đạt</option>
                 </select>
                 <button type="button" disabled={exporting} onClick={() => void exportCard("png")}>
                     PNG ↓

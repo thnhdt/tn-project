@@ -44,6 +44,16 @@ const palettes = {
 };
 let colors = palettes.blue;
 
+/**
+ * Cách thiệp tự xưng. Thiệp có QR giữ biệt danh "Ske" (Skehjhj, Ske ngố xít…);
+ * thiệp không QR là dạng gửi/in, đổi mọi chỗ "Ske…" thành `graduate.callName`.
+ */
+let selfName = (text: string) => text;
+
+function formalSelfName(text: string) {
+    return text.replace(/Ske(?:hjhj|hihi)?/g, graduate.callName);
+}
+
 type CardGuest = {
     displayName: string;
     personalMessage: string;
@@ -292,7 +302,7 @@ function drawGradWindow(context: CanvasRenderingContext2D, area: Area, fonts: Fo
 
     context.fillStyle = colors.ink;
     context.font = `700 128px ${fonts.doodle}`;
-    context.fillText(inviteLines.headline, x + padding, y + 320, textWidth);
+    context.fillText(selfName(inviteLines.headline), x + padding, y + 320, textWidth);
 
     context.font = `700 54px ${fonts.sans}`;
     wrapText(context, inviteLines.defaultTheme.subline, textWidth).slice(0, 2).forEach((line, index) => {
@@ -376,7 +386,7 @@ async function drawDiscordChat(
     const topicX = x + 50 + context.measureText("# graduation-party").width + 36;
     context.fillStyle = dark.muted;
     context.font = `400 32px ${fonts.sans}`;
-    context.fillText(`lễ tốt nghiệp của Skehjhj • ${ceremonyDate}`, topicX, y + 56, x + width - 50 - topicX);
+    context.fillText(selfName(`lễ tốt nghiệp của Skehjhj • ${ceremonyDate}`), topicX, y + 56, x + width - 50 - topicX);
 
     const avatar = await loadImage(hostAvatarSrc);
     const messages = [
@@ -386,10 +396,10 @@ async function drawDiscordChat(
             time: "hôm nay lúc 07:00",
             mention: "@everyone",
             big: true,
-            paragraphs: [`@everyone ${inviteLines.headline}`],
+            paragraphs: [selfName(`@everyone ${inviteLines.headline}`)],
         },
         {
-            author: "Skehjhj",
+            author: selfName("Skehjhj"),
             bot: false,
             time: "hôm nay lúc 07:00",
             mention: `@${guestName}`,
@@ -397,7 +407,7 @@ async function drawDiscordChat(
             paragraphs: [`@${guestName} ní nhớ tới chung vui với tui nha, thiếu ní là buồn á`],
         },
         {
-            author: "Skehjhj",
+            author: selfName("Skehjhj"),
             bot: false,
             time: "hôm nay lúc 07:01",
             mention: "",
@@ -577,14 +587,16 @@ function drawPlainClosing(
 
 export type CardOptions = {
     /**
-     * `false`: bản thiệp "sạch" để gửi/in, không có QR, link web hay QR chỉ đường;
-     * chỗ QR thay bằng lời hẹn gặp trong khung oval vẽ tay.
+     * `false`: dạng thiệp không QR để gửi/in: không có QR, link web hay QR chỉ đường
+     * (chỗ QR thay bằng lời hẹn gặp trong khung oval vẽ tay), và mọi chỗ tự xưng
+     * "Ske" đổi thành `graduate.callName`.
      */
     withQr?: boolean;
 };
 
 export async function renderInviteCard(guest: CardGuest, inviteUrl: string, options: CardOptions = {}) {
     const withQr = options.withQr ?? true;
+    selfName = withQr ? (text: string) => text : formalSelfName;
     const love = guest.themeVariant === "love";
     const discord = guest.themeVariant === "discord";
     colors = love ? palettes.love : discord ? palettes.discord : palettes.blue;
@@ -592,7 +604,7 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string, opti
     const mono = fontFamily("--font-roboto-mono");
     const doodle = fontFamily("--font-doodle");
     // Chỉ thiệp hồng có lá thư (lời nhắn riêng, chưa viết thì in lời mời chung).
-    const message = guest.personalMessage.trim() || fallbackCardMessage;
+    const message = guest.personalMessage.trim() || selfName(fallbackCardMessage);
     const sample = love
         ? `${ceremony.title} ${guest.displayName} ${message}`
         : `${ceremony.title} ${guest.displayName} ${inviteLines.headline} ${inviteLines.defaultTheme.subline} ${inviteLines.discordTheme.messages.join(" ")}`;
@@ -747,7 +759,7 @@ export async function renderInviteCard(guest: CardGuest, inviteUrl: string, opti
         context.font = `700 64px ${doodle}`;
         // Chữ ký riêng của thiệp hồng.
         context.fillText(
-            "— Ske ngố xít của em ✦",
+            selfName("— Ske ngố xít của em ✦"),
             letter.x + letter.width - letter.padding,
             letter.y + letter.height - 60,
         );

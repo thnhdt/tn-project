@@ -7,6 +7,8 @@ export const graduate = {
     firstName: "LÊ THÀNH",
     lastName: "ĐẠT",
     fullName: "Lê Thành Đạt",
+    /** Tên tự xưng trên thiệp không QR, thay cho biệt danh "Ske". */
+    callName: "Thành Đạt",
     signature: "— Đạt ✦",
     initials: "LD",
     degree: "Cử nhân Khoa học Máy tính",

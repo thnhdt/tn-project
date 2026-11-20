@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { downloadBlob, inviteCardToPdf, renderInviteCard } from "../lib/qr-card";
+import { graduate } from "../site-content";
 
 /**
- * Cuối trang thiệp chung: tải thiệp PNG / PDF. Chọn "có QR" (QR in trên thiệp mở lại
- * trang này) hoặc "không QR" (thiệp sạch để gửi/in, không có QR hay link web).
+ * Cuối trang thiệp chung: tải thiệp PNG / PDF. Hai dạng thiệp: có QR (QR in trên thiệp
+ * mở lại trang này) hoặc không QR (để gửi/in, không có QR hay link web, tự xưng
+ * `graduate.callName` thay cho biệt danh "Ske").
  */
 export function PublicInviteShare() {
     const [withQr, setWithQr] = useState(true);
@@ -35,14 +37,14 @@ export function PublicInviteShare() {
         <section className="public-invite-share" aria-label="Tải thiệp mời chung">
             <h2>Hẹn gặp bạn tại buổi lễ!</h2>
             <label className="card-variant">
-                <span>KIỂU THIỆP</span>
+                <span>DẠNG THIỆP</span>
                 <select
                     value={withQr ? "qr" : "plain"}
                     disabled={busy !== null}
                     onChange={(event) => setWithQr(event.target.value === "qr")}
                 >
-                    <option value="qr">Có QR + link web</option>
-                    <option value="plain">Không QR (chỉ thiệp)</option>
+                    <option value="qr">Thiệp có QR + link web</option>
+                    <option value="plain">{`Thiệp không QR (ghi tên ${graduate.callName})`}</option>
                 </select>
             </label>
             <div className="homie-result-actions">
